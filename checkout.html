@@ -3,214 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floral Delivery Checkout — FloraBloom Boutique & Security Lab</title>
+    <title>Checkout — Floradise</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <!-- Security Lab Announcement -->
     <div class="lab-top-banner">
-        <span>🛡️ <strong>FloraBloom Fake Checkout Simulation:</strong> Creates orders stored in LocalStorage for IDOR testing.</span>
-        <a href="order.html?id=1001">Directly View Order #1001</a>
+        <span>🛡️ <strong>Floradise Fake Checkout:</strong> Creates simulated orders in LocalStorage to test IDOR</span>
+        <a href="order.html?id=1001">Track Order (IDOR)</a>
     </div>
 
-    <!-- Navigation Header -->
-    <header class="site-header">
-        <div class="container nav-wrapper">
-            <a href="index.html" class="brand-logo">
-                <span class="brand-icon">🌸</span>
-                <span>Flora<span class="accent">Bloom</span></span>
+    <!-- Floradise Green Header -->
+    <header class="main-store-header">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-wrap">
+                <span class="leaf-icon">🍃</span>
+                <span>Floradise</span>
             </a>
 
             <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="products.html">Flower Catalog</a></li>
-                    <li><a href="products.html?category=Mixed%20Bouquets">Bouquets</a></li>
-                    <li><a href="order.html?id=1001">Track Order <span class="nav-badge-lab">IDOR</span></a></li>
-                    <li><a href="admin.html">Admin <span class="nav-badge-lab">BAC</span></a></li>
+                <ul class="nav-menu-list">
+                    <li><a href="index.html">🏠 Home</a></li>
+                    <li><a href="index.html#about-us">ℹ️ About Us</a></li>
+                    <li><a href="index.html#contact-section">✉️ Contact</a></li>
+                    <li><a href="products.html">💐 Catalog</a></li>
+                    <li>
+                        <a href="cart.html" class="cart-pill-nav">
+                            🛒 Cart <span class="cart-count-bubble cart-count-badge">0</span>
+                        </a>
+                    </li>
+                    <li id="user-nav-slot">
+                        <a href="login.html" class="login-btn-nav">
+                            <span>➜]</span> Login
+                        </a>
+                    </li>
                 </ul>
             </nav>
-
-            <div class="nav-actions">
-                <form class="search-bar-form" action="products.html" method="GET">
-                    <input type="text" name="search" class="search-input-header" placeholder="Search flowers..." aria-label="Search">
-                    <button type="submit" class="search-submit-btn" aria-label="Submit search">🔍</button>
-                </form>
-
-                <a href="cart.html" class="cart-btn-link" title="View Cart">
-                    🛒
-                    <span class="cart-count-badge">0</span>
-                </a>
-
-                <div id="user-nav-slot" class="user-nav-action"></div>
-            </div>
         </div>
     </header>
 
-    <!-- Main Checkout Section -->
-    <main class="container section-padding" style="padding-top: 2rem;">
-        <div style="margin-bottom: 2rem;">
-            <span class="section-tag">Express Floral Dispatch</span>
-            <h1 style="font-family: var(--font-heading); font-size: 2.4rem;">Complete Your Flower Order</h1>
-            <p style="color: var(--text-secondary);">Enter recipient details for temperature-controlled bloom delivery.</p>
-        </div>
+    <!-- Main Content -->
+    <main class="container" style="padding: 3rem 1.5rem 4rem;">
+        <h1 style="font-size: 2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 2rem;">Checkout Delivery</h1>
 
-        <div class="checkout-layout">
+        <div style="display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 2.5rem; align-items: start;">
             <!-- Left: Checkout Form -->
-            <div class="checkout-box">
-                <h3 class="form-title">Recipient & Delivery Information</h3>
+            <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm);">
+                <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 1.2rem;">Recipient Details</h3>
 
-                <!-- Safety Notice -->
-                <div class="fake-payment-banner">
-                    <strong>🛡️ Sandbox Environment Notice:</strong> 
-                    This is a fictional cybersecurity training application. 
-                    <strong>No real payments are processed.</strong> 
-                    Use fictional contact details only (e.g. "Jane Doe", "123 Blossom Way").
+                <div style="background: #ecfdf5; border: 1px dashed var(--primary-green); border-radius: 8px; padding: 1rem; font-size: 0.85rem; color: #065f46; margin-bottom: 1.5rem;">
+                    🔒 <strong>Sandbox Notice:</strong> This is an educational lab. Do not enter real credit card numbers or sensitive personal details.
                 </div>
 
-                <form id="checkout-form">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="cust-name">Customer / Recipient Full Name:</label>
-                            <input type="text" id="cust-name" class="form-control" placeholder="e.g. Jane Doe" required>
+                <form id="chk-form" onsubmit="handlePlaceOrder(event)">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem;">Full Name</label>
+                            <input type="text" id="chk-name" class="login-clean-input" placeholder="e.g. Maria Santos" required>
                         </div>
-                        <div class="form-group">
-                            <label for="cust-email">Email Address:</label>
-                            <input type="email" id="cust-email" class="form-control" placeholder="e.g. jane.doe@example.fake" required>
-                        </div>
-                    </div>
-
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="cust-phone">Contact Phone Number:</label>
-                            <input type="tel" id="cust-phone" class="form-control" placeholder="e.g. +1 (555) 019-4822" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="delivery-date">Requested Delivery Date:</label>
-                            <input type="date" id="delivery-date" class="form-control" required>
+                        <div>
+                            <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem;">Email</label>
+                            <input type="email" id="chk-email" class="login-clean-input" placeholder="e.g. maria@example.fake" required>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="cust-address">Street Address & Apartment/Suite:</label>
-                        <input type="text" id="cust-address" class="form-control" placeholder="e.g. 742 Evergreen Terrace, Apt 4" required>
-                    </div>
-
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="cust-city">City:</label>
-                            <input type="text" id="cust-city" class="form-control" placeholder="e.g. Seattle" required>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem;">Phone Number</label>
+                            <input type="tel" id="chk-phone" class="login-clean-input" placeholder="+63 912 345 6789" required>
                         </div>
-                        <div class="form-group">
-                            <label for="cust-zip">ZIP / Postal Code:</label>
-                            <input type="text" id="cust-zip" class="form-control" placeholder="e.g. 98101" required>
+                        <div>
+                            <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem;">Target Delivery Date</label>
+                            <input type="date" id="chk-date" class="login-clean-input" required>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="order-notes">Special Card Inscription or Delivery Instructions:</label>
-                        <textarea id="order-notes" class="form-control" rows="3" placeholder="e.g. 'Happy Birthday! Please leave on porch behind the planter.'"></textarea>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem;">Delivery Address</label>
+                        <input type="text" id="chk-address" class="login-clean-input" placeholder="e.g. Unit 802, Kalayaan Ave, Makati City" required>
                     </div>
 
-                    <h4 style="font-family: var(--font-heading); margin: 1.8rem 0 1rem; color: var(--text-primary); font-size: 1.2rem;">
-                        Simulated Payment Option
-                    </h4>
-
-                    <div style="background: var(--bg-cream); padding: 1.2rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 1.8rem;">
-                        <label style="display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-weight: 600;">
-                            <input type="radio" name="payment_method" value="demo_card" checked>
-                            💳 Simulated Demo Card (Pre-approved sandbox test token)
-                        </label>
-                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem; padding-left: 1.5rem;">
-                            No card number required. Simulates immediate test authorization.
-                        </p>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem;">Delivery Notes / Card Greeting</label>
+                        <textarea id="chk-notes" class="login-clean-input" rows="2" placeholder="e.g. Happy Birthday! Leave with guard if not home."></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
-                        Place Fake Flower Order 🌸
+                    <button type="submit" class="btn-proceed-checkout" style="width: 100%; justify-content: center; font-size: 1.05rem; padding: 0.9rem;">
+                        Place Fake Order 🌸
                     </button>
                 </form>
             </div>
 
             <!-- Right: Order Summary Preview -->
-            <div>
-                <div class="cart-summary-card">
-                    <h3 class="summary-title">Summary of Items</h3>
+            <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm);">
+                <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 1.2rem;">Order Summary</h3>
+                <div id="checkout-items-list" style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem;">
+                    <!-- Filled by JS -->
+                </div>
 
-                    <div id="checkout-items-list" style="margin-bottom: 1.5rem; max-height: 280px; overflow-y: auto;">
-                        <!-- Filled by JS -->
-                    </div>
-
-                    <div class="summary-line">
-                        <span>Items Subtotal:</span>
-                        <strong id="chk-subtotal">$0.00</strong>
-                    </div>
-
-                    <div class="summary-line">
-                        <span>Eco Courier Delivery:</span>
-                        <span id="chk-shipping">$9.99</span>
-                    </div>
-
-                    <div class="summary-line">
-                        <span>Sales Tax (8%):</span>
-                        <span id="chk-tax">$0.00</span>
-                    </div>
-
-                    <div class="summary-line total">
-                        <span>Grand Total:</span>
-                        <span id="chk-total" style="color: var(--primary);">$0.00</span>
-                    </div>
-
-                    <div style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
-                        ℹ️ Upon placing order, a simulated order number (e.g. #1005) will be generated and you will be redirected to the order tracking receipt page.
-                    </div>
+                <div style="border-top: 1px dashed #cbd5e1; padding-top: 1rem; display: flex; justify-content: space-between; font-weight: 800; font-size: 1.3rem;">
+                    <span>Grand Total:</span>
+                    <span id="chk-grand-total" style="color: var(--primary-green-dark);">₱0.00</span>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="container footer-grid">
-            <div class="footer-about">
-                <div class="brand-logo" style="color: #ffffff;">
-                    <span>🌸 FloraBloom</span>
+    <!-- Floradise 3-Column Footer -->
+    <footer class="floradise-footer">
+        <div class="container footer-columns-grid">
+            <div>
+                <div class="footer-brand">
+                    <span>🍃</span>
+                    <span>FLORADISE</span>
                 </div>
-                <p>Artisanal online flower boutique creating bespoke bouquets and delivering botanical elegance right to your doorstep.</p>
-            </div>
-            <div class="footer-col">
-                <h4>Navigation</h4>
-                <ul class="footer-links">
-                    <li><a href="products.html">Flowers</a></li>
-                    <li><a href="cart.html">Cart</a></li>
-                    <li><a href="login.html">Login</a></li>
-                    <li><a href="admin.html">Admin</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Pentest Lab</h4>
-                <ul class="footer-links">
-                    <li><a href="order.html?id=1001">IDOR Exploit (#1001)</a></li>
-                    <li><a href="order.html?id=1002">Marcus's Order (#1002)</a></li>
-                    <li><a href="order.html?id=1003">Evelyn's Order (#1003)</a></li>
-                    <li><a href="admin.html?role=admin">Admin BAC Bypass</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Disclaimer</h4>
-                <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.6;">
-                    Educational cybersecurity simulation only. No real transactions or processing.
+                <p class="footer-brand-desc">
+                    Floradise is your green sanctuary, a community for everyone who shares a passion for plants. We believe in the simple joy of nurturing life and the peace that comes from a connection to nature.
                 </p>
             </div>
+            <div class="footer-col">
+                <h5>COMPANY</h5>
+                <ul class="footer-links-list">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about-us">About us</a></li>
+                    <li><a href="products.html">Delivery</a></li>
+                    <li><a href="admin.html?role=admin">Admin Dashboard</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>GET IN TOUCH</h5>
+                <div class="footer-contact-info">
+                    <p>+63 912 345 6789</p>
+                    <p>Support@Floradise.com</p>
+                </div>
+            </div>
         </div>
-        <div class="container footer-bottom">
-            <span>&copy; 2026 FloraBloom Security Lab.</span>
-            <span>Fake Checkout Flow</span>
+        <div class="container footer-bottom-bar">
+            Copyright 2026© Floradise.com - All Right Reserved.
         </div>
     </footer>
 
@@ -218,101 +152,78 @@
     <script src="products.js"></script>
     <script src="script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const cart = getCart();
-            const itemsList = document.getElementById('checkout-items-list');
+        let currentCart = [];
+        let orderTotal = 0;
 
-            // Default date: tomorrow
+        document.addEventListener('DOMContentLoaded', () => {
+            currentCart = getCart();
+            if (currentCart.length === 0) {
+                addToCart(1, 1);
+                currentCart = getCart();
+            }
+
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
-            document.getElementById('delivery-date').value = tomorrow.toISOString().split('T')[0];
+            document.getElementById('chk-date').value = tomorrow.toISOString().split('T')[0];
 
-            // Autofill user name & email if logged in
-            const session = JSON.parse(localStorage.getItem('florabloom_session') || 'null');
-            if (session) {
-                if (session.name) document.getElementById('cust-name').value = session.name;
-                if (session.email) document.getElementById('cust-email').value = session.email;
-            }
+            const list = document.getElementById('checkout-items-list');
+            orderTotal = 0;
 
-            if (cart.length === 0) {
-                // If cart is empty, redirect or add a sample item for testing convenience
-                addToCart(1, 1);
-                window.location.reload();
-                return;
-            }
-
-            let subtotal = 0;
-            itemsList.innerHTML = cart.map(item => {
-                const itemTotal = item.price * item.quantity;
-                subtotal += itemTotal;
+            list.innerHTML = currentCart.map(item => {
+                const sub = item.price * item.quantity;
+                orderTotal += sub;
                 return `
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; font-size:0.9rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.92rem;">
                         <div>
                             <strong>${item.name}</strong> × ${item.quantity}
-                            <div style="font-size:0.78rem; color:var(--text-muted);">${item.color || 'Standard'}</div>
                         </div>
-                        <div>$${itemTotal.toFixed(2)}</div>
+                        <span style="font-weight:700;">${formatCurrency(sub)}</span>
                     </div>
                 `;
             }).join('');
 
-            const shipping = subtotal > 80 ? 0 : 9.99;
-            const tax = subtotal * 0.08;
-            const grandTotal = subtotal + shipping + tax;
-
-            document.getElementById('chk-subtotal').textContent = `$${subtotal.toFixed(2)}`;
-            document.getElementById('chk-shipping').textContent = shipping === 0 ? "FREE" : `$${shipping.toFixed(2)}`;
-            document.getElementById('chk-tax').textContent = `$${tax.toFixed(2)}`;
-            document.getElementById('chk-total').textContent = `$${grandTotal.toFixed(2)}`;
-
-            // Place Order Handler
-            document.getElementById('checkout-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-
-                const name = document.getElementById('cust-name').value.trim();
-                const email = document.getElementById('cust-email').value.trim();
-                const phone = document.getElementById('cust-phone').value.trim();
-                const address = document.getElementById('cust-address').value.trim() + ', ' + 
-                                document.getElementById('cust-city').value.trim() + ' ' + 
-                                document.getElementById('cust-zip').value.trim();
-                const deliveryDate = document.getElementById('delivery-date').value;
-                const notes = document.getElementById('order-notes').value.trim();
-
-                const orders = getOrders();
-                
-                // Calculate next ID (e.g. 1005)
-                const numericIds = orders.map(o => parseInt(o.id)).filter(n => !isNaN(n));
-                const nextId = numericIds.length > 0 ? (Math.max(...numericIds) + 1).toString() : "1005";
-
-                const newOrder = {
-                    id: nextId,
-                    customerName: name,
-                    email: email,
-                    phone: phone,
-                    address: address,
-                    items: [...cart],
-                    subtotal: subtotal,
-                    shipping: shipping,
-                    tax: tax,
-                    total: grandTotal,
-                    status: "Processing",
-                    orderDate: new Date().toISOString().split('T')[0],
-                    deliveryDate: deliveryDate,
-                    notes: notes || "Standard doorstep delivery."
-                };
-
-                orders.push(newOrder);
-                localStorage.setItem('florabloom_orders', JSON.stringify(orders));
-
-                // Clear cart
-                saveCart([]);
-
-                showToast(`Order #${nextId} created successfully! Redirecting...`);
-                setTimeout(() => {
-                    window.location.href = `order.html?id=${nextId}`;
-                }, 1200);
-            });
+            document.getElementById('chk-grand-total').textContent = formatCurrency(orderTotal);
         });
+
+        function handlePlaceOrder(e) {
+            e.preventDefault();
+            const name = document.getElementById('chk-name').value.trim();
+            const email = document.getElementById('chk-email').value.trim();
+            const phone = document.getElementById('chk-phone').value.trim();
+            const address = document.getElementById('chk-address').value.trim();
+            const date = document.getElementById('chk-date').value;
+            const notes = document.getElementById('chk-notes').value.trim();
+
+            const orders = getOrders();
+            const numericIds = orders.map(o => parseInt(o.id)).filter(n => !isNaN(n));
+            const nextId = numericIds.length > 0 ? (Math.max(...numericIds) + 1).toString() : "1005";
+
+            const newOrd = {
+                id: nextId,
+                customerName: name,
+                email: email,
+                phone: phone,
+                address: address,
+                items: [...currentCart],
+                subtotal: orderTotal,
+                shipping: 0,
+                tax: 0,
+                total: orderTotal,
+                status: "Processing",
+                orderDate: new Date().toISOString().split('T')[0],
+                deliveryDate: date,
+                notes: notes || "Standard doorstep delivery."
+            };
+
+            orders.push(newOrd);
+            localStorage.setItem('florabloom_orders', JSON.stringify(orders));
+            saveCart([]);
+
+            showToast(`Order #${nextId} placed! Redirecting...`);
+            setTimeout(() => {
+                window.location.href = `order.html?id=${nextId}`;
+            }, 1000);
+        }
     </script>
 </body>
 </html>

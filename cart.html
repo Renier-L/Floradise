@@ -3,162 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Cart — FloraBloom Boutique & Security Lab</title>
+    <title>Shopping Cart — Floradise</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Security Lab Announcement -->
+    <!-- Security Lab Notice -->
     <div class="lab-top-banner">
-        <span>🛡️ <strong>FloraBloom E-Commerce Cart:</strong> Dynamic Client-Side Cart & Session State</span>
-        <a href="order.html?id=1001">Test IDOR (?id=1001)</a>
+        <span>🛡️ <strong>Floradise Client-Side Cart:</strong> Simulates e-commerce checkout & IDOR orders</span>
+        <a href="order.html?id=1001">Track Order (IDOR)</a>
+        <a href="admin.html?role=admin">Admin Dashboard</a>
     </div>
 
-    <!-- Navigation Header -->
-    <header class="site-header">
-        <div class="container nav-wrapper">
-            <a href="index.html" class="brand-logo">
-                <span class="brand-icon">🌸</span>
-                <span>Flora<span class="accent">Bloom</span></span>
+    <!-- Floradise Green Header -->
+    <header class="main-store-header">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-wrap">
+                <span class="leaf-icon">🍃</span>
+                <span>Floradise</span>
             </a>
 
             <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="products.html">Flower Catalog</a></li>
-                    <li><a href="products.html?category=Mixed%20Bouquets">Bouquets</a></li>
-                    <li><a href="order.html?id=1001">Track Order <span class="nav-badge-lab">IDOR</span></a></li>
-                    <li><a href="admin.html">Admin <span class="nav-badge-lab">BAC</span></a></li>
+                <ul class="nav-menu-list">
+                    <li><a href="index.html">🏠 Home</a></li>
+                    <li><a href="index.html#about-us">ℹ️ About Us</a></li>
+                    <li><a href="index.html#contact-section">✉️ Contact</a></li>
+                    <li><a href="products.html">💐 Catalog</a></li>
+                    <li>
+                        <a href="cart.html" class="cart-pill-nav active">
+                            🛒 Cart <span class="cart-count-bubble cart-count-badge">0</span>
+                        </a>
+                    </li>
+                    <li id="user-nav-slot">
+                        <a href="login.html" class="login-btn-nav">
+                            <span>➜]</span> Login
+                        </a>
+                    </li>
                 </ul>
             </nav>
-
-            <div class="nav-actions">
-                <form class="search-bar-form" action="products.html" method="GET">
-                    <input type="text" name="search" class="search-input-header" placeholder="Search flowers..." aria-label="Search">
-                    <button type="submit" class="search-submit-btn" aria-label="Submit search">🔍</button>
-                </form>
-
-                <a href="cart.html" class="cart-btn-link" title="View Cart">
-                    🛒
-                    <span class="cart-count-badge">0</span>
-                </a>
-
-                <div id="user-nav-slot" class="user-nav-action"></div>
-            </div>
         </div>
     </header>
 
-    <!-- Main Cart Section -->
-    <main class="container section-padding" style="padding-top: 2rem;">
-        <div style="margin-bottom: 2rem;">
-            <span class="section-tag">Your Flower Selection</span>
-            <h1 style="font-family: var(--font-heading); font-size: 2.4rem;">Botanical Shopping Cart</h1>
-        </div>
+    <!-- Main Shopping Cart Content (Matching Screenshot Image 3) -->
+    <main class="container cart-page-wrap">
+        <h1 class="cart-page-title">Shopping Cart</h1>
 
-        <div id="cart-content-wrapper" class="cart-layout">
-            <!-- Left: Items Table / List -->
-            <div class="cart-table-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 0.8rem; border-bottom: 1px solid var(--border-light);">
-                    <h3 style="font-family: var(--font-heading); font-size: 1.3rem;">Selected Arrangements</h3>
-                    <button onclick="clearAllCart()" class="btn btn-sm btn-outline" style="font-size: 0.8rem;">Clear Cart 🗑️</button>
-                </div>
-
-                <div id="cart-items-container">
-                    <!-- Populated dynamically via JS -->
-                </div>
+        <div id="cart-table-card" class="cart-table-card">
+            <div style="overflow-x: auto;">
+                <table class="cart-custom-table">
+                    <thead>
+                        <tr>
+                            <th>PRODUCT</th>
+                            <th>PRICE</th>
+                            <th>QUANTITY</th>
+                            <th>SUBTOTAL</th>
+                            <th style="text-align: right;">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-table-body">
+                        <!-- Filled by JS -->
+                    </tbody>
+                </table>
             </div>
 
-            <!-- Right: Order Summary Card -->
-            <div class="cart-summary-card">
-                <h3 class="summary-title">Order Summary</h3>
+            <!-- Dashed line divider -->
+            <div class="cart-dashed-divider"></div>
 
-                <div class="summary-line">
-                    <span>Bouquets Subtotal:</span>
-                    <strong id="cart-subtotal">$0.00</strong>
-                </div>
+            <!-- Total Banner -->
+            <div class="cart-total-banner">
+                Total: <span id="cart-grand-total">₱0.00</span>
+            </div>
 
-                <div class="summary-line">
-                    <span>Eco Courier Delivery:</span>
-                    <span id="cart-shipping">$9.99</span>
-                </div>
-
-                <div class="summary-line">
-                    <span>Estimated Sales Tax (8%):</span>
-                    <span id="cart-tax">$0.00</span>
-                </div>
-
-                <div class="summary-line total">
-                    <span>Total Amount:</span>
-                    <span id="cart-grand-total" style="color: var(--primary);">$0.00</span>
-                </div>
-
-                <div style="margin-top: 1.8rem; display: flex; flex-direction: column; gap: 0.8rem;">
-                    <a href="checkout.html" id="checkout-btn" class="btn btn-primary btn-lg" style="width: 100%;">
-                        Proceed to Checkout 🌸
-                    </a>
-                    <a href="products.html" class="btn btn-outline" style="width: 100%;">
-                        Continue Shopping
-                    </a>
-                </div>
-
-                <div style="margin-top: 1.5rem; background: var(--bg-cream); padding: 1rem; border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--text-secondary); text-align: center;">
-                    🌿 Includes complimentary flower food packet, satin gift wrap, and handwritten calligraphy note.
-                </div>
+            <!-- Actions Row -->
+            <div class="cart-actions-footer">
+                <a href="products.html" class="btn-continue-shop">← Continue Shopping</a>
+                <a href="checkout.html" class="btn-proceed-checkout">Proceed to Checkout →</a>
             </div>
         </div>
 
         <!-- Empty Cart Notice -->
-        <div id="empty-cart-state" style="display: none; text-align: center; padding: 5rem 1rem; background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px dashed var(--border-color); margin-top: 1rem;">
-            <div style="font-size: 4rem; margin-bottom: 1rem;">🛒</div>
-            <h2 style="font-family: var(--font-heading); font-size: 2rem; margin-bottom: 0.6rem;">Your Cart is Currently Empty</h2>
-            <p style="color: var(--text-secondary); max-width: 440px; margin: 0 auto 2rem;">
-                You haven't selected any floral bouquets yet. Explore our freshly picked seasonal blooms and bring elegance to your home!
-            </p>
-            <a href="products.html" class="btn btn-primary btn-lg">Browse Flower Catalog 💐</a>
+        <div id="empty-cart-state" style="display: none; text-align: center; padding: 5rem 1rem; background: #ffffff; border-radius: var(--radius-lg); border: 1px dashed var(--border-color);">
+            <div style="font-size: 3.5rem; margin-bottom: 1rem;">🛒</div>
+            <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text-dark);">Your Cart is Empty</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Explore our freshly harvested botanical arrangements!</p>
+            <a href="products.html" class="btn-proceed-checkout">Browse Catalog 🌸</a>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="container footer-grid">
-            <div class="footer-about">
-                <div class="brand-logo" style="color: #ffffff;">
-                    <span>🌸 FloraBloom</span>
+    <!-- Floradise 3-Column Footer -->
+    <footer class="floradise-footer">
+        <div class="container footer-columns-grid">
+            <div>
+                <div class="footer-brand">
+                    <span>🍃</span>
+                    <span>FLORADISE</span>
                 </div>
-                <p>Artisanal online flower boutique creating bespoke bouquets and delivering botanical elegance right to your doorstep.</p>
-            </div>
-            <div class="footer-col">
-                <h4>Navigation</h4>
-                <ul class="footer-links">
-                    <li><a href="products.html">Catalog</a></li>
-                    <li><a href="cart.html">Cart</a></li>
-                    <li><a href="checkout.html">Checkout</a></li>
-                    <li><a href="order.html?id=1001">Order Status</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Cybersecurity Lab</h4>
-                <ul class="footer-links">
-                    <li><a href="products.html?search=%3Cscript%3Ealert('XSS')%3C/script%3E">Reflected XSS</a></li>
-                    <li><a href="product.html?id=1">Stored XSS</a></li>
-                    <li><a href="order.html?id=1001">IDOR Exploit</a></li>
-                    <li><a href="admin.html?role=admin">Admin BAC Bypass</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Lab Notice</h4>
-                <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.6;">
-                    Educational cybersecurity simulation.
+                <p class="footer-brand-desc">
+                    Floradise is your green sanctuary, a community for everyone who shares a passion for plants. We believe in the simple joy of nurturing life and the peace that comes from a connection to nature.
                 </p>
             </div>
+            <div class="footer-col">
+                <h5>COMPANY</h5>
+                <ul class="footer-links-list">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about-us">About us</a></li>
+                    <li><a href="products.html">Delivery</a></li>
+                    <li><a href="admin.html?role=admin">Admin Dashboard</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>GET IN TOUCH</h5>
+                <div class="footer-contact-info">
+                    <p>+63 912 345 6789</p>
+                    <p>Support@Floradise.com</p>
+                </div>
+            </div>
         </div>
-        <div class="container footer-bottom">
-            <span>&copy; 2026 FloraBloom Security Lab.</span>
-            <span>Shopping Cart</span>
+        <div class="container footer-bottom-bar">
+            Copyright 2026© Floradise.com - All Right Reserved.
         </div>
     </footer>
 
@@ -166,92 +132,78 @@
     <script src="products.js"></script>
     <script src="script.js"></script>
     <script>
-        function updateItemQty(index, delta) {
+        function removeCartItem(idx) {
             const cart = getCart();
-            if (cart[index]) {
-                cart[index].quantity += delta;
-                if (cart[index].quantity <= 0) {
-                    cart.splice(index, 1);
-                }
-                saveCart(cart);
-                renderCart();
-            }
-        }
-
-        function removeCartItem(index) {
-            const cart = getCart();
-            cart.splice(index, 1);
+            cart.splice(idx, 1);
             saveCart(cart);
-            renderCart();
+            renderCartPage();
             showToast("Item removed from cart.");
         }
 
-        function clearAllCart() {
-            if (confirm("Are you sure you want to clear your floral cart?")) {
-                saveCart([]);
-                renderCart();
-                showToast("Cart cleared.");
+        function updateItemQty(idx, qty) {
+            const cart = getCart();
+            const val = parseInt(qty);
+            if (val > 0) {
+                cart[idx].quantity = val;
+            } else {
+                cart.splice(idx, 1);
             }
+            saveCart(cart);
+            renderCartPage();
         }
 
-        function renderCart() {
+        function renderCartPage() {
             const cart = getCart();
-            const wrapper = document.getElementById('cart-content-wrapper');
-            const emptyState = document.getElementById('empty-cart-state');
-            const itemsContainer = document.getElementById('cart-items-container');
+            const card = document.getElementById('cart-table-card');
+            const empty = document.getElementById('empty-cart-state');
+            const tbody = document.getElementById('cart-table-body');
 
             if (cart.length === 0) {
-                wrapper.style.display = 'none';
-                emptyState.style.display = 'block';
+                card.style.display = 'none';
+                empty.style.display = 'block';
                 return;
             }
 
-            wrapper.style.display = 'grid';
-            emptyState.style.display = 'none';
+            card.style.display = 'block';
+            empty.style.display = 'none';
 
-            let subtotal = 0;
-
-            itemsContainer.innerHTML = cart.map((item, idx) => {
-                const itemTotal = item.price * item.quantity;
-                subtotal += itemTotal;
+            let total = 0;
+            tbody.innerHTML = cart.map((item, idx) => {
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
 
                 return `
-                    <div class="cart-item-row">
-                        <img src="${item.image}" alt="${item.name}" class="cart-thumb">
-                        <div>
-                            <a href="product.html?id=${item.id}" class="cart-item-name">${item.name}</a>
-                            <div class="cart-item-color">Color: ${item.color || 'Standard'}</div>
-                            <div style="font-size:0.85rem; color:var(--primary); font-weight:600; margin-top:0.2rem;">$${item.price.toFixed(2)} each</div>
-                        </div>
-                        <div>
-                            <div class="qty-control" style="transform: scale(0.9); transform-origin: left center;">
-                                <button type="button" class="qty-btn" onclick="updateItemQty(${idx}, -1)">−</button>
-                                <input type="number" class="qty-input" value="${item.quantity}" readonly>
-                                <button type="button" class="qty-btn" onclick="updateItemQty(${idx}, 1)">+</button>
+                    <tr>
+                        <td>
+                            <div class="cart-prod-cell">
+                                <img src="${item.image}" alt="${item.name}" class="cart-prod-thumb">
+                                <div>
+                                    <div class="cart-prod-name">${item.name}</div>
+                                    <div style="font-size:0.8rem; color:var(--text-muted);">${item.color || 'Standard'}</div>
+                                </div>
                             </div>
-                        </div>
-                        <div style="font-weight:700; color:var(--text-primary); text-align:right;">
-                            $${itemTotal.toFixed(2)}
-                        </div>
-                        <div style="text-align: right;">
-                            <button onclick="removeCartItem(${idx})" title="Remove item" style="color:#ef4444; font-size:1.1rem; padding:0.3rem;">✕</button>
-                        </div>
-                    </div>
+                        </td>
+                        <td style="font-weight: 700;">${formatCurrency(item.price)}</td>
+                        <td>
+                            <input type="number" min="1" max="25" value="${item.quantity}" 
+                                style="width:55px; padding:0.35rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); font-weight:700; text-align:center;"
+                                onchange="updateItemQty(${idx}, this.value)">
+                        </td>
+                        <td style="font-weight: 800; color:var(--primary-green-dark);">${formatCurrency(subtotal)}</td>
+                        <td style="text-align: right;">
+                            <button onclick="removeCartItem(${idx})" class="cart-delete-circle" title="Remove item">
+                                🗑️
+                            </button>
+                        </td>
+                    </tr>
                 `;
             }).join('');
 
-            const shipping = subtotal > 80 ? 0 : 9.99;
-            const tax = subtotal * 0.08;
-            const grandTotal = subtotal + shipping + tax;
-
-            document.getElementById('cart-subtotal').textContent = `$${subtotal.toFixed(2)}`;
-            document.getElementById('cart-shipping').textContent = shipping === 0 ? "FREE" : `$${shipping.toFixed(2)}`;
-            document.getElementById('cart-tax').textContent = `$${tax.toFixed(2)}`;
-            document.getElementById('cart-grand-total').textContent = `$${grandTotal.toFixed(2)}`;
+            document.getElementById('cart-grand-total').textContent = formatCurrency(total);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            renderCart();
+            renderCartPage();
         });
     </script>
 </body>

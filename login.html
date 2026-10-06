@@ -3,161 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Login — FloraBloom Boutique & Security Lab</title>
+    <title>Login — Floradise</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <!-- Security Lab Announcement -->
     <div class="lab-top-banner">
-        <span>🛡️ <strong>Vulnerability #3 & #6:</strong> Client-Side Authentication & Insecure LocalStorage Session</span>
-        <a href="admin.html?role=admin">Test BAC (?role=admin)</a>
+        <span>🛡️ <strong>Vulnerability #3:</strong> Client-Side Authentication (Plaintext logic in browser JS)</span>
+        <a href="admin.html?role=admin">Test BAC Bypass (?role=admin)</a>
     </div>
 
-    <!-- Navigation Header -->
-    <header class="site-header">
-        <div class="container nav-wrapper">
-            <a href="index.html" class="brand-logo">
-                <span class="brand-icon">🌸</span>
-                <span>Flora<span class="accent">Bloom</span></span>
+    <!-- Floradise Green Header -->
+    <header class="main-store-header">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-wrap">
+                <span class="leaf-icon">🍃</span>
+                <span>Floradise</span>
             </a>
 
             <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="products.html">Flower Catalog</a></li>
-                    <li><a href="products.html?category=Mixed%20Bouquets">Bouquets</a></li>
-                    <li><a href="order.html?id=1001">Track Order <span class="nav-badge-lab">IDOR</span></a></li>
-                    <li><a href="admin.html">Admin <span class="nav-badge-lab">BAC</span></a></li>
+                <ul class="nav-menu-list">
+                    <li><a href="index.html">🏠 Home</a></li>
+                    <li><a href="index.html#about-us">ℹ️ About Us</a></li>
+                    <li><a href="index.html#contact-section">✉️ Contact</a></li>
+                    <li><a href="products.html">💐 Catalog</a></li>
+                    <li>
+                        <a href="cart.html" class="cart-pill-nav">
+                            🛒 Cart <span class="cart-count-bubble cart-count-badge">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="login.html" class="login-btn-nav">
+                            <span>➜]</span> Login
+                        </a>
+                    </li>
                 </ul>
             </nav>
-
-            <div class="nav-actions">
-                <form class="search-bar-form" action="products.html" method="GET">
-                    <input type="text" name="search" class="search-input-header" placeholder="Search flowers..." aria-label="Search">
-                    <button type="submit" class="search-submit-btn" aria-label="Submit search">🔍</button>
-                </form>
-
-                <a href="cart.html" class="cart-btn-link" title="View Cart">
-                    🛒
-                    <span class="cart-count-badge">0</span>
-                </a>
-
-                <div id="user-nav-slot" class="user-nav-action"></div>
-            </div>
         </div>
     </header>
 
-    <!-- Main Login Section -->
-    <main class="container auth-wrapper">
-        <div class="auth-card">
-            <div class="auth-header">
-                <span style="font-size: 2.4rem;">🌸</span>
-                <h2>Welcome Back</h2>
-                <p>Sign in to manage orders, addresses, and floral subscriptions.</p>
-            </div>
+    <!-- Main Content: Welcome Back (Matching Screenshots) -->
+    <main class="login-page-wrap">
+        <div class="login-clean-card">
+            <h2>Welcome Back</h2>
 
-            <!-- Demo Accounts Panel (Vulnerability 3 Helper) -->
-            <div class="demo-credentials-box">
-                <strong>🔑 Demo Lab Credentials (Client-Side Auth):</strong>
-                <p style="font-size:0.8rem; color:#14532d; margin-bottom:0.6rem;">
-                    These credentials are hardcoded directly in client JavaScript (<code>products.js</code> / <code>script.js</code>):
-                </p>
-                <div class="demo-account-item">
-                    <div>
-                        <strong>Administrator</strong>
-                        <span style="font-size: 0.8rem; color: #4b5563;">admin@florabloom.local / FlowerAdmin123</span>
-                    </div>
-                    <button type="button" class="demo-quick-btn" onclick="fillDemo('admin@florabloom.local', 'FlowerAdmin123')">Fill Admin</button>
+            <!-- Quick Demo Credentials Box for Security Testing -->
+            <div style="background: #ecfdf5; border: 1px dashed var(--primary-green); border-radius: var(--radius-sm); padding: 0.8rem; margin-bottom: 1.5rem; font-size: 0.8rem; text-align: left;">
+                <strong style="color: #065f46; display: block; margin-bottom: 0.3rem;">🔑 Security Lab Demo Logins:</strong>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
+                    <span>Admin: <code>admin</code> / <code>FlowerAdmin123</code></span>
+                    <button type="button" onclick="fillQuick('admin@floradise.local', 'FlowerAdmin123')" style="color:var(--primary-green-dark); font-weight:700; background:none; font-size:0.75rem;">Autofill</button>
                 </div>
-                <div class="demo-account-item">
-                    <div>
-                        <strong>Standard Customer</strong>
-                        <span style="font-size: 0.8rem; color: #4b5563;">customer@florabloom.local / CustomerPass123</span>
-                    </div>
-                    <button type="button" class="demo-quick-btn" onclick="fillDemo('customer@florabloom.local', 'CustomerPass123')">Fill Customer</button>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>User: <code>simp@gmail.com</code> / <code>UserPass123</code></span>
+                    <button type="button" onclick="fillQuick('simp@gmail.com', 'UserPass123')" style="color:var(--primary-green-dark); font-weight:700; background:none; font-size:0.75rem;">Autofill</button>
                 </div>
             </div>
 
-            <!-- Vulnerability Warning Strip -->
-            <div style="background: #fff1f2; border: 1px solid #fecdd3; border-radius: var(--radius-sm); padding: 0.8rem; margin-bottom: 1.5rem; font-size: 0.82rem; color: #9f1239;">
-                ⚠️ <strong>Client-Side Flaw:</strong> Authentication logic runs entirely in the user's browser. Inspect <code>script.js</code> in browser DevTools to read validation logic in plaintext.
-            </div>
+            <div id="login-error-msg" style="display: none; background: #fee2e2; border: 1px solid #f87171; color: #b91c1c; padding: 0.6rem; border-radius: var(--radius-sm); margin-bottom: 1.2rem; font-size: 0.85rem;"></div>
 
-            <!-- Error message placeholder -->
-            <div id="login-error" style="display: none; background: #fee2e2; border: 1px solid #f87171; color: #b91c1c; padding: 0.8rem; border-radius: var(--radius-sm); margin-bottom: 1.2rem; font-size: 0.88rem;"></div>
-
-            <!-- Login Form -->
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="login-email">Email or Username:</label>
-                    <input type="email" id="login-email" class="form-control" placeholder="e.g. admin@florabloom.local" required autocomplete="username">
+            <form id="clean-login-form">
+                <div class="login-input-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="text" id="login-email" class="login-clean-input" placeholder="you@example.com" required>
                 </div>
 
-                <div class="form-group">
-                    <label for="login-password">Password:</label>
-                    <input type="password" id="login-password" class="form-control" placeholder="••••••••••••" required autocomplete="current-password">
+                <div class="login-input-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" class="login-clean-input" placeholder="Enter your password" required>
                 </div>
 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; font-size: 0.85rem;">
-                    <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
-                        <input type="checkbox" id="remember-me" checked> Remember session
-                    </label>
-                    <a href="#" onclick="alert('Lab simulation: Use the demo credentials provided above.'); return false;" style="color: var(--primary);">Forgot password?</a>
-                </div>
-
-                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem;">
-                    Sign In to FloraBloom
+                <button type="submit" class="btn-login-submit">
+                    Login
                 </button>
-            </form>
 
-            <div style="text-align: center; margin-top: 1.8rem; font-size: 0.9rem; color: var(--text-secondary);">
-                Don't have an account yet? 
-                <a href="register.html" style="color: var(--primary); font-weight: 600;">Create Account</a>
-            </div>
+                <div style="margin-top: 1.5rem; font-size: 0.88rem; color: var(--text-muted);">
+                    Don't have an account? 
+                    <a href="register.html" style="color: var(--primary-green-dark); font-weight: 700;">Sign up</a>
+                </div>
+            </form>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="container footer-grid">
-            <div class="footer-about">
-                <div class="brand-logo" style="color: #ffffff;">
-                    <span>🌸 FloraBloom</span>
+    <!-- Floradise 3-Column Footer -->
+    <footer class="floradise-footer">
+        <div class="container footer-columns-grid">
+            <div>
+                <div class="footer-brand">
+                    <span>🍃</span>
+                    <span>FLORADISE</span>
                 </div>
-                <p>Artisanal online flower boutique creating bespoke bouquets and delivering botanical elegance right to your doorstep.</p>
-            </div>
-            <div class="footer-col">
-                <h4>Customer Center</h4>
-                <ul class="footer-links">
-                    <li><a href="login.html">Sign In</a></li>
-                    <li><a href="register.html">Register</a></li>
-                    <li><a href="order.html?id=1001">Track My Order</a></li>
-                    <li><a href="admin.html">Admin Portal</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Security Notes</h4>
-                <ul class="footer-links">
-                    <li><a href="javascript:inspectStorage()">Inspect LocalStorage Token</a></li>
-                    <li><a href="admin.html?role=admin">Test BAC Access</a></li>
-                    <li><a href="products.html?search=%3Cscript%3Ealert('XSS')%3C/script%3E">Test Reflected XSS</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Disclaimer</h4>
-                <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.6;">
-                    Educational cybersecurity simulation. Credentials and session tokens are entirely fictional.
+                <p class="footer-brand-desc">
+                    Floradise is your green sanctuary, a community for everyone who shares a passion for plants. We believe in the simple joy of nurturing life and the peace that comes from a connection to nature.
                 </p>
             </div>
+            <div class="footer-col">
+                <h5>COMPANY</h5>
+                <ul class="footer-links-list">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about-us">About us</a></li>
+                    <li><a href="products.html">Delivery</a></li>
+                    <li><a href="admin.html?role=admin">Admin Dashboard</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>GET IN TOUCH</h5>
+                <div class="footer-contact-info">
+                    <p>+63 912 345 6789</p>
+                    <p>Support@Floradise.com</p>
+                </div>
+            </div>
         </div>
-        <div class="container footer-bottom">
-            <span>&copy; 2026 FloraBloom Security Lab.</span>
-            <span>Client-Side Authentication Simulation</span>
+        <div class="container footer-bottom-bar">
+            Copyright 2026© Floradise.com - All Right Reserved.
         </div>
     </footer>
 
@@ -165,37 +128,31 @@
     <script src="products.js"></script>
     <script src="script.js"></script>
     <script>
-        function fillDemo(email, pass) {
+        function fillQuick(email, pass) {
             document.getElementById('login-email').value = email;
             document.getElementById('login-password').value = pass;
-            showToast(`Filled credentials for ${email}`);
-        }
-
-        function inspectStorage() {
-            const sess = localStorage.getItem('florabloom_session');
-            if (sess) {
-                alert("Current Insecure localStorage Session:\n\n" + JSON.stringify(JSON.parse(sess), null, 2));
-            } else {
-                alert("No active session stored in localStorage. Please log in first.");
-            }
+            showToast("Filled demo credentials!");
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('login-form');
-            const errDiv = document.getElementById('login-error');
+            const form = document.getElementById('clean-login-form');
+            const err = document.getElementById('login-error-msg');
 
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
-                errDiv.style.display = 'none';
+                err.style.display = 'none';
 
-                const email = document.getElementById('login-email').value.trim();
+                let email = document.getElementById('login-email').value.trim();
                 const pass = document.getElementById('login-password').value;
 
-                // VULNERABILITY 3: Verification in client JavaScript
-                const success = handleLogin(email, pass);
-                if (!success) {
-                    errDiv.textContent = "Invalid username or password! (Check the demo credentials box above)";
-                    errDiv.style.display = 'block';
+                if (email.toLowerCase() === 'admin') {
+                    email = 'admin@floradise.local';
+                }
+
+                const ok = handleLogin(email, pass);
+                if (!ok) {
+                    err.textContent = "Invalid email or password. (Check demo box above)";
+                    err.style.display = 'block';
                 }
             });
         });

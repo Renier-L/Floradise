@@ -3,303 +3,643 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard — FloraBloom Management & Security Lab</title>
+    <title>Floradise Admin — Management Console</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Dedicated Dark Theme Overrides for Admin Console */
+        body {
+            background-color: #0b111e !important;
+            color: #cbd5e1 !important;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .admin-layout-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100vw;
+        }
+
+        .admin-sidebar {
+            width: 250px;
+            background: #080d17;
+            border-right: 1px solid #1e293b;
+            padding: 1.5rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .admin-brand-header {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 2rem;
+        }
+
+        .admin-brand-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #0ea5e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1rem;
+        }
+
+        .admin-section-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 1.4rem 0 0.5rem;
+            padding-left: 0.6rem;
+        }
+
+        .admin-sidebar-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.7rem 0.9rem;
+            border-radius: 10px;
+            color: #94a3b8;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.35rem;
+            width: 100%;
+            text-align: left;
+            background: transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .admin-sidebar-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+
+        .admin-sidebar-btn.active {
+            background: #4f46e5;
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+        }
+
+        .admin-sidebar-btn.logout-btn {
+            color: #f87171;
+        }
+
+        .admin-sidebar-btn.logout-btn:hover {
+            background: rgba(239, 68, 68, 0.15);
+        }
+
+        .admin-profile-box {
+            margin-top: auto;
+            padding-top: 1.2rem;
+            border-top: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .admin-avatar-circle {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #0284c7;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.95rem;
+        }
+
+        .admin-main-viewport {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            background: #0b111e;
+        }
+
+        .admin-top-navbar {
+            height: 65px;
+            border-bottom: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            background: #090e1a;
+        }
+
+        .admin-tab-view {
+            display: none;
+            padding: 2rem;
+        }
+
+        .admin-tab-view.active {
+            display: block;
+        }
+
+        /* 4 Stat Cards */
+        .stat-card-deck {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dark-stat-card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .dark-stat-icon-wrap {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .dark-card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 1.6rem;
+        }
+
+        /* Chart grids */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .split-grid-lower {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .inventory-two-col {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 1.8rem;
+        }
+
+        /* Dark Table */
+        .dark-data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .dark-data-table th {
+            text-align: left;
+            padding: 0.8rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #1f2937;
+        }
+
+        .dark-data-table td {
+            padding: 0.95rem 1rem;
+            font-size: 0.88rem;
+            color: #cbd5e1;
+            border-bottom: 1px solid #182234;
+        }
+
+        .dark-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            background: #1f2937;
+            color: #ffffff;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .dark-input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-purple-submit {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: #ffffff;
+            font-weight: 700;
+            padding: 0.85rem;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+        }
+
+        .btn-purple-submit:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+        }
+
+        /* Avatar icon for users */
+        .initials-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #3b82f6;
+            color: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.82rem;
+            margin-right: 0.6rem;
+        }
+    </style>
 </head>
-<body style="background-color: #f8fafc;">
+<body>
 
     <!-- Security Lab Announcement -->
     <div class="lab-top-banner">
         <span>🛡️ <strong>Vulnerability #4 Testing Zone:</strong> Broken Access Control (BAC) via <code>admin.html?role=admin</code></span>
-        <button onclick="toggleBACBypass()">Toggle ?role=admin Bypass</button>
+        <button onclick="toggleBACBypass()">Toggle ?role=admin</button>
+        <a href="index.html">Live Floradise Storefront</a>
     </div>
 
-    <!-- Navigation Header -->
-    <header class="site-header">
-        <div class="container nav-wrapper">
-            <a href="index.html" class="brand-logo">
-                <span class="brand-icon">🌸</span>
-                <span>Flora<span class="accent">Bloom</span> <small style="font-size:0.8rem; color:#64748b; font-family:var(--font-body); font-weight:600;">ADMIN</small></span>
-            </a>
-
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html">Live Boutique</a></li>
-                    <li><a href="products.html">Catalog</a></li>
-                    <li><a href="order.html?id=1001">Track Order</a></li>
-                    <li><a href="admin.html" class="active">Admin Portal</a></li>
-                </ul>
-            </nav>
-
-            <div class="nav-actions">
-                <a href="products.html" class="btn btn-sm btn-outline">Storefront</a>
-                <div id="user-nav-slot" class="user-nav-action"></div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Admin Status Banner Bar -->
-    <div class="admin-header-strip">
-        <div class="container admin-header-flex">
-            <div>
-                <h2 style="font-size: 1.3rem; font-weight: 700;">FloraBloom Enterprise Florist Operations</h2>
-                <span style="font-size: 0.82rem; color: #94a3b8;">Central Management Dashboard & Diagnostic Console</span>
-            </div>
-            <div id="access-badge-container">
-                <!-- Access badge filled by JS -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Container -->
-    <main class="container" style="padding-bottom: 4rem;">
-
-        <!-- ===============================================================
-             VULNERABILITY 4: BROKEN ACCESS CONTROL (BAC) ACCESS RESTRICTION BANNER
-             Displayed if neither session.role==='admin' NOR ?role=admin is found
-             =============================================================== -->
-        <div id="access-denied-panel" style="display: none; background: #ffffff; border-radius: var(--radius-lg); border: 1px solid #fecaca; padding: 3rem; text-align: center; box-shadow: var(--shadow-md); margin-top: 1rem;">
-            <div style="font-size: 3.5rem; margin-bottom: 1rem;">🚫</div>
-            <h2 style="font-family: var(--font-heading); color: #991b1b; font-size: 2.2rem; margin-bottom: 0.8rem;">Access Restricted: Administrator Privileges Required</h2>
-            <p style="color: var(--text-secondary); max-width: 580px; margin: 0 auto 1.5rem; font-size: 1.05rem;">
-                You are currently viewing this page as an unauthenticated or standard customer visitor.
+    <!-- Access Denied Banner (If BAC check fails) -->
+    <div id="admin-access-denied" style="display: none; padding: 4rem 1.5rem; text-align: center; max-width: 650px; margin: 3rem auto; background: #111827; border-radius: 16px; border: 1px solid #dc2626;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">🚫</div>
+        <h2 style="color: #f87171; font-size: 2rem; margin-bottom: 0.6rem;">Access Restricted: Admin Only</h2>
+        <p style="color: #94a3b8; margin-bottom: 1.5rem;">
+            You do not currently possess administrator privileges to access Floradise Management.
+        </p>
+        
+        <div style="background: rgba(239, 68, 68, 0.1); border: 1px dashed #ef4444; border-radius: 10px; padding: 1.2rem; margin-bottom: 2rem; text-align: left;">
+            <strong style="color: #fca5a5;">⚠️ Broken Access Control (BAC) Lab Exploit:</strong>
+            <p style="font-size: 0.85rem; color: #fecaca; margin-top: 0.4rem;">
+                The client code inspects the URL query parameter <code>?role=admin</code>. Since this authorization check is client-side, you can bypass it simply by appending the parameter!
             </p>
-
-            <!-- Educational BAC Explanation & Bypass Exploit Button -->
-            <div style="background: #fef2f2; border: 1px dashed #ef4444; border-radius: var(--radius-md); padding: 1.5rem; max-width: 620px; margin: 0 auto 2rem; text-align: left;">
-                <h4 style="color: #991b1b; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                    <span>⚠️ Vulnerability 4: Broken Access Control (Client-Side Check)</span>
-                </h4>
-                <p style="font-size: 0.88rem; color: #7f1d1d; margin-bottom: 1rem; line-height: 1.6;">
-                    The developer checked authorization using client-side JavaScript that inspects the URL query parameter <code>?role=admin</code>! 
-                    Because the check happens in the browser instead of an authenticated server-side session, anyone can bypass this barrier simply by providing the parameter.
-                </p>
-                <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
-                    <a href="admin.html?role=admin" class="btn btn-sm btn-primary">
-                        ⚡ Exploit BAC: Bypass with ?role=admin
-                    </a>
-                    <a href="login.html" class="btn btn-sm btn-outline">
-                        Sign In as Admin Blossom
-                    </a>
-                </div>
-            </div>
-
-            <a href="index.html" class="btn btn-outline">Return to Homepage</a>
         </div>
 
-        <!-- ===============================================================
-             ADMIN DASHBOARD CONTENT (Accessible when BAC bypassed)
-             =============================================================== -->
-        <div id="admin-dashboard-content" style="display: none;">
-
-            <!-- Security Lab Alert Panel -->
-            <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-left: 5px solid #10b981; border-radius: var(--radius-sm); padding: 1rem 1.4rem; margin-bottom: 2rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem;">
-                    <div>
-                        <strong style="color: #065f46;">🔓 Access Granted (BAC Demonstration Mode):</strong>
-                        <span style="font-size: 0.88rem; color: #047857;" id="bac-reason-text">Authorized via query parameter <code>?role=admin</code>.</span>
-                    </div>
-                    <button onclick="window.location.href='admin.html'" class="btn btn-sm btn-outline-secondary" style="font-size: 0.78rem;">
-                        Remove ?role=admin (Test Block)
-                    </button>
-                </div>
-            </div>
-
-            <!-- Stats Overview Grid -->
-            <div class="admin-stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon pink">💐</div>
-                    <div>
-                        <div class="stat-val" id="stat-total-orders">0</div>
-                        <div class="stat-label">Total Orders Placed</div>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon green">🌸</div>
-                    <div >
-                        <div class="stat-val" id="stat-flowers-sold">0</div>
-                        <div class="stat-label">Total Blooms Sold</div>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon gold">💰</div>
-                    <div>
-                        <div class="stat-val" id="stat-revenue">$0.00</div>
-                        <div class="stat-label">Simulated Gross Revenue</div>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon purple">⭐</div>
-                    <div>
-                        <div class="stat-val" id="stat-active-reviews">0</div>
-                        <div class="stat-label">Customer Reviews</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Order Management Table -->
-            <div class="admin-table-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <div>
-                        <h3 style="font-family: var(--font-heading); font-size: 1.3rem;">Recent Customer Orders</h3>
-                        <p style="font-size: 0.85rem; color: var(--text-muted);">View all customer shipments (Click ID to test IDOR vulnerability).</p>
-                    </div>
-                    <button onclick="seedMoreOrders()" class="btn btn-sm btn-outline">+ Add Mock Order</button>
-                </div>
-
-                <div style="overflow-x: auto;">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Customer Name</th>
-                                <th>Contact Email</th>
-                                <th>Delivery Address</th>
-                                <th>Order Total</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-orders-tbody">
-                            <!-- Filled dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Product Management Table -->
-            <div class="admin-table-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <div>
-                        <h3 style="font-family: var(--font-heading); font-size: 1.3rem;">Floral Catalog Inventory</h3>
-                        <p style="font-size: 0.85rem; color: var(--text-muted);">Manage live flowers displayed on the store catalog.</p>
-                    </div>
-                    <button onclick="promptAddNewProduct()" class="btn btn-sm btn-primary">+ Add New Bouquet</button>
-                </div>
-
-                <div style="overflow-x: auto;">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Bouquet Name</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Stock</th>
-                                <th>Rating</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-products-tbody">
-                            <!-- Filled dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Customer Reviews Moderation -->
-            <div class="admin-table-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <div>
-                        <h3 style="font-family: var(--font-heading); font-size: 1.3rem;">Customer Reviews & Feedback Moderation</h3>
-                        <p style="font-size: 0.85rem; color: var(--text-muted);">Inspect persisted reviews (Contains Stored XSS payloads if submitted).</p>
-                    </div>
-                    <button onclick="resetDefaultReviews()" class="btn btn-sm btn-outline">Reset Reviews</button>
-                </div>
-
-                <div style="overflow-x: auto;">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Product ID</th>
-                                <th>Reviewer</th>
-                                <th>Rating</th>
-                                <th>Comment Content</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-reviews-tbody">
-                            <!-- Filled dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Registered Customer List -->
-            <div class="admin-table-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <div>
-                        <h3 style="font-family: var(--font-heading); font-size: 1.3rem;">Registered User Profiles</h3>
-                        <p style="font-size: 0.85rem; color: var(--text-muted);">Insecurely stored client-side accounts (Plaintext passwords demonstration).</p>
-                    </div>
-                </div>
-
-                <div style="overflow-x: auto;">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Full Name</th>
-                                <th>Email Address</th>
-                                <th>Role</th>
-                                <th>Plaintext Password (Insecure)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-users-tbody">
-                            <!-- Filled dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <a href="admin.html?role=admin" class="btn" style="background:#4f46e5; color:#fff; border-radius:30px; padding:0.7rem 1.5rem; font-weight:700;">
+                ⚡ Exploit BAC: Bypass with ?role=admin
+            </a>
+            <a href="login.html" class="btn" style="background:#374151; color:#fff; border-radius:30px; padding:0.7rem 1.5rem; font-weight:700;">
+                Sign In as Admin
+            </a>
         </div>
-    </main>
+    </div>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="container footer-grid">
-            <div class="footer-about">
-                <div class="brand-logo" style="color: #ffffff;">
-                    <span>🌸 FloraBloom Admin</span>
+    <!-- Full Admin Layout Container (Matching Screenshots 1, 2, 3) -->
+    <div id="admin-layout" class="admin-layout-container" style="display: none;">
+        
+        <!-- Left Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-brand-header">
+                <div class="admin-brand-icon">🌱</div>
+                <span>Floradise</span>
+            </div>
+
+            <div class="admin-section-label">MAIN</div>
+            <button class="admin-sidebar-btn active" onclick="switchAdminTab('dashboard', this)">
+                <span>📊</span> Dashboard
+            </button>
+            <button class="admin-sidebar-btn" onclick="switchAdminTab('inventory', this)">
+                <span>📦</span> Inventory
+            </button>
+            <button class="admin-sidebar-btn" onclick="switchAdminTab('customers', this)">
+                <span>👥</span> Customers
+            </button>
+            <button class="admin-sidebar-btn" onclick="switchAdminTab('orders', this)">
+                <span>🛍️</span> Orders <span style="font-size:0.7rem; background:#4f46e5; padding:1px 6px; border-radius:8px; margin-left:auto;">IDOR</span>
+            </button>
+
+            <div class="admin-section-label">SYSTEM</div>
+            <a href="index.html" class="admin-sidebar-btn">
+                <span>👁️</span> View Store
+            </a>
+            <button onclick="handleLogout()" class="admin-sidebar-btn logout-btn">
+                <span>🚪</span> Logout
+            </button>
+
+            <!-- Bottom Profile -->
+            <div class="admin-profile-footer">
+                <div class="admin-avatar-circle">A</div>
+                <div>
+                    <div style="font-weight: 700; color: #ffffff; font-size: 0.9rem;">Admin</div>
+                    <div style="font-size: 0.75rem; color: #64748b;">Super Administrator</div>
                 </div>
-                <p>Artisanal online flower boutique operational dashboard.</p>
             </div>
-            <div class="footer-col">
-                <h4>Navigation</h4>
-                <ul class="footer-links">
-                    <li><a href="index.html">Live Boutique</a></li>
-                    <li><a href="products.html">Catalog</a></li>
-                    <li><a href="admin.html?role=admin">Admin (BAC)</a></li>
-                    <li><a href="order.html?id=1001">Order #1001</a></li>
-                </ul>
+        </aside>
+
+        <!-- Main Viewport -->
+        <main class="admin-main-viewport">
+            <!-- Top Navbar -->
+            <header class="admin-top-navbar">
+                <div class="admin-top-title" id="admin-header-title">Dashboard Overview</div>
+                <div class="admin-live-badge">
+                    <span class="live-dot"></span>
+                    <span>Live — Tue, Oct 06 2026</span>
+                </div>
+            </header>
+
+            <!-- =======================================================
+                 TAB 1: DASHBOARD OVERVIEW (Matching Screenshot 1)
+                 ======================================================= -->
+            <div id="view-dashboard" class="admin-tab-view active">
+                <div style="margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.8rem; font-weight: 800; color: #ffffff; margin-bottom: 0.3rem;">Welcome back, Admin 👋</h2>
+                    <p style="color: #64748b; font-size: 0.95rem;">Here's what's happening with your Floradise store today.</p>
+                </div>
+
+                <!-- 4 Stat Metric Cards -->
+                <div class="stat-card-deck">
+                    <div class="dark-stat-card">
+                        <div class="dark-stat-icon-wrap" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">👥</div>
+                        <div>
+                            <div class="admin-stat-val" id="stat-total-cust">4</div>
+                            <div class="admin-stat-label">Total Customers</div>
+                        </div>
+                    </div>
+
+                    <div class="dark-stat-card">
+                        <div class="dark-stat-icon-wrap" style="background: rgba(34, 197, 94, 0.15); color: #4ade80;">📦</div>
+                        <div>
+                            <div class="admin-stat-val" id="stat-prod-listed">100</div>
+                            <div class="admin-stat-label">Products Listed</div>
+                        </div>
+                    </div>
+
+                    <div class="dark-stat-card">
+                        <div class="dark-stat-icon-wrap" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">🌾</div>
+                        <div>
+                            <div class="admin-stat-val" id="stat-total-stock">5,000</div>
+                            <div class="admin-stat-label">Total Stock Units</div>
+                        </div>
+                    </div>
+
+                    <div class="dark-stat-card">
+                        <div class="dark-stat-icon-wrap" style="background: rgba(239, 68, 68, 0.15); color: #f87171;">⚠️</div>
+                        <div>
+                            <div class="admin-stat-val">0</div>
+                            <div class="admin-stat-label">Low Stock Alerts</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Row: Area Curve Chart + Donut Chart -->
+                <div class="analytics-grid">
+                    <!-- New Customers 7 Days (SVG Curve Chart) -->
+                    <div class="dark-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+                            <h4 style="font-size: 1.05rem; font-weight: 700; color: #ffffff;">New Customers (7 days)</h4>
+                            <span style="font-size: 0.8rem; color: #64748b;">October 2026</span>
+                        </div>
+                        <div style="height: 190px; width: 100%;">
+                            <svg viewBox="0 0 500 160" style="width: 100%; height: 100%;">
+                                <defs>
+                                    <linearGradient id="purpleGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.45"/>
+                                        <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.0"/>
+                                    </linearGradient>
+                                </defs>
+                                <!-- Grid Lines -->
+                                <line x1="0" y1="30" x2="500" y2="30" stroke="#1f2937" stroke-width="1"/>
+                                <line x1="0" y1="70" x2="500" y2="70" stroke="#1f2937" stroke-width="1"/>
+                                <line x1="0" y1="110" x2="500" y2="110" stroke="#1f2937" stroke-width="1"/>
+                                <line x1="0" y1="140" x2="500" y2="140" stroke="#1f2937" stroke-width="1"/>
+                                
+                                <!-- Curve Fill -->
+                                <path d="M 0,140 L 70,140 Q 150,140 200,100 T 260,25 T 320,100 T 400,140 L 500,140 Z" fill="url(#purpleGrad)"/>
+                                <!-- Curve Line -->
+                                <path d="M 0,140 L 70,140 Q 150,140 200,100 T 260,25 T 320,100 T 400,140 L 500,140" fill="none" stroke="#a855f7" stroke-width="3"/>
+                                <!-- Highlight Peak Point -->
+                                <circle cx="260" cy="25" r="5" fill="#ffffff" stroke="#a855f7" stroke-width="3"/>
+                            </svg>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #64748b; margin-top: 0.5rem;">
+                            <span>Sep 30</span><span>Oct 01</span><span>Oct 02</span><span>Oct 03</span><span>Oct 04</span><span>Oct 05</span><span>Oct 06</span>
+                        </div>
+                    </div>
+
+                    <!-- Stock Levels Donut Chart -->
+                    <div class="dark-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+                            <h4 style="font-size: 1.05rem; font-weight: 700; color: #ffffff;">Stock Levels</h4>
+                            <span style="font-size: 0.8rem; color: #64748b;">Top 5 products</span>
+                        </div>
+                        <div style="display: flex; justify-content: center; align-items: center; height: 160px;">
+                            <svg width="150" height="150" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="38" stroke="#3b82f6" stroke-width="16" fill="transparent" stroke-dasharray="60 180" stroke-dashoffset="0"/>
+                                <circle cx="50" cy="50" r="38" stroke="#ef4444" stroke-width="16" fill="transparent" stroke-dasharray="50 190" stroke-dashoffset="-60"/>
+                                <circle cx="50" cy="50" r="38" stroke="#10b981" stroke-width="16" fill="transparent" stroke-dasharray="65 175" stroke-dashoffset="-110"/>
+                                <circle cx="50" cy="50" r="38" stroke="#f59e0b" stroke-width="16" fill="transparent" stroke-dasharray="45 195" stroke-dashoffset="-175"/>
+                                <circle cx="50" cy="50" r="38" stroke="#8b5cf6" stroke-width="16" fill="transparent" stroke-dasharray="25 215" stroke-dashoffset="-220"/>
+                            </svg>
+                        </div>
+                        <div style="display: flex; justify-content: center; gap: 0.6rem; flex-wrap: wrap; font-size: 0.72rem; color: #94a3b8; margin-top: 0.5rem;">
+                            <span>🟣 Daisy Charm</span>
+                            <span>🔵 Aloe Vera</span>
+                            <span>🟢 Rose Bouquet</span>
+                            <span>🟠 Sunflowers</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lower Row: Recent Customers + Top Products -->
+                <div class="split-grid-lower">
+                    <!-- Recent Customers Table -->
+                    <div class="dark-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h4 style="font-size: 1.05rem; font-weight: 700; color: #ffffff;">Recent Customers</h4>
+                            <button onclick="switchAdminTab('customers')" style="background:none; color:#6366f1; font-size:0.8rem; font-weight:700;">View all</button>
+                        </div>
+                        <table class="dark-data-table">
+                            <thead>
+                                <tr>
+                                    <th>NAME</th>
+                                    <th>EMAIL</th>
+                                    <th>JOINED</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dash-recent-cust-tbody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Top Products List -->
+                    <div class="dark-card">
+                        <h4 style="font-size: 1.05rem; font-weight: 700; color: #ffffff; margin-bottom: 1rem;">Top Products</h4>
+                        <div id="dash-top-products-list" style="display: flex; flex-direction: column; gap: 0.85rem;">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="footer-col">
-                <h4>Vulnerabilities</h4>
-                <ul class="footer-links">
-                    <li><a href="admin.html?role=admin">BAC (?role=admin)</a></li>
-                    <li><a href="order.html?id=1001">IDOR Parameter</a></li>
-                    <li><a href="products.html?search=%3Cscript%3Ealert('XSS')%3C/script%3E">Reflected XSS</a></li>
-                </ul>
+
+            <!-- =======================================================
+                 TAB 2: INVENTORY MANAGEMENT (Matching Screenshot 2)
+                 ======================================================= -->
+            <div id="view-inventory" class="admin-tab-view">
+                <div style="margin-bottom: 1.8rem;">
+                    <h2 style="font-size: 1.8rem; font-weight: 800; color: #ffffff; margin-bottom: 0.3rem;">Inventory Management</h2>
+                    <p style="color: #64748b; font-size: 0.95rem;">Manage your product catalogue, stock levels, and listings.</p>
+                </div>
+
+                <div class="inventory-two-col">
+                    <!-- Left: Current Catalogue -->
+                    <div class="dark-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+                            <h4 style="font-size: 1.1rem; font-weight: 700; color: #ffffff;">Current Catalogue</h4>
+                            <span style="font-size: 0.8rem; color: #64748b;"><span id="inv-count-badge">8</span> products</span>
+                        </div>
+
+                        <div style="margin-bottom: 1.2rem;">
+                            <input type="text" id="inventory-search-input" class="dark-input" placeholder="🔍 Search products..." oninput="filterInventoryTable()">
+                        </div>
+
+                        <div style="overflow-x: auto;">
+                            <table class="dark-data-table">
+                                <thead>
+                                    <tr>
+                                        <th>PRODUCT</th>
+                                        <th>PRICE</th>
+                                        <th>STOCK</th>
+                                        <th>ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventory-table-tbody">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right: Add New Product Form -->
+                    <div class="dark-card" style="height: fit-content;">
+                        <h4 style="font-size: 1.1rem; font-weight: 700; color: #ffffff; margin-bottom: 1.5rem;">Add New Product</h4>
+                        
+                        <form id="add-product-form" onsubmit="handleAddNewProduct(event)">
+                            <div style="margin-bottom: 1.2rem;">
+                                <label style="display:block; font-size:0.75rem; font-weight:700; color:#94a3b8; text-transform:uppercase; margin-bottom:0.4rem;">Product Name</label>
+                                <input type="text" id="new-prod-name" class="dark-input" placeholder="e.g. Red Tulip Bouquet" required>
+                            </div>
+
+                            <div style="margin-bottom: 1.2rem;">
+                                <label style="display:block; font-size:0.75rem; font-weight:700; color:#94a3b8; text-transform:uppercase; margin-bottom:0.4rem;">Price (₱)</label>
+                                <input type="number" id="new-prod-price" class="dark-input" placeholder="0.00" step="0.01" required>
+                            </div>
+
+                            <div style="margin-bottom: 1.2rem;">
+                                <label style="display:block; font-size:0.75rem; font-weight:700; color:#94a3b8; text-transform:uppercase; margin-bottom:0.4rem;">Initial Stock</label>
+                                <input type="number" id="new-prod-stock" class="dark-input" value="50" required>
+                            </div>
+
+                            <div style="margin-bottom: 1.6rem;">
+                                <label style="display:block; font-size:0.75rem; font-weight:700; color:#94a3b8; text-transform:uppercase; margin-bottom:0.4rem;">Image URL</label>
+                                <input type="url" id="new-prod-img" class="dark-input" placeholder="https://..." value="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80">
+                            </div>
+
+                            <button type="submit" class="btn-purple-submit">+ Add to Catalogue</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="footer-col">
-                <h4>Notice</h4>
-                <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.6;">
-                    Educational cybersecurity simulation only.
-                </p>
+
+            <!-- =======================================================
+                 TAB 3: CUSTOMER MANAGEMENT (Matching Screenshot 3)
+                 ======================================================= -->
+            <div id="view-customers" class="admin-tab-view">
+                <div style="margin-bottom: 1.8rem;">
+                    <h2 style="font-size: 1.8rem; font-weight: 800; color: #ffffff; margin-bottom: 0.3rem;">Customer Management</h2>
+                    <p style="color: #64748b; font-size: 0.95rem;"><span id="cust-count-text">4</span> registered customers in your store.</p>
+                </div>
+
+                <div class="dark-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+                        <h4 style="font-size: 1.1rem; font-weight: 700; color: #ffffff;">All Customers</h4>
+                    </div>
+
+                    <div style="margin-bottom: 1.5rem;">
+                        <input type="text" id="customer-search-input" class="dark-input" placeholder="🔍 Search by name or email..." oninput="filterCustomerTable()">
+                    </div>
+
+                    <div style="overflow-x: auto;">
+                        <table class="dark-data-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>NAME</th>
+                                    <th>EMAIL</th>
+                                    <th>JOINED</th>
+                                    <th style="text-align: right;">ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customers-table-tbody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="container footer-bottom">
-            <span>&copy; 2026 FloraBloom Security Lab.</span>
-            <span>Broken Access Control (BAC) Demo</span>
-        </div>
-    </footer>
+
+            <!-- =======================================================
+                 TAB 4: ORDERS MANAGEMENT (Connected to IDOR Demo)
+                 ======================================================= -->
+            <div id="view-orders" class="admin-tab-view">
+                <div style="margin-bottom: 1.8rem;">
+                    <h2 style="font-size: 1.8rem; font-weight: 800; color: #ffffff; margin-bottom: 0.3rem;">Order Management</h2>
+                    <p style="color: #64748b; font-size: 0.95rem;">Track customer shipments and test IDOR direct object references.</p>
+                </div>
+
+                <div class="dark-card">
+                    <div style="overflow-x: auto;">
+                        <table class="dark-data-table">
+                            <thead>
+                                <tr>
+                                    <th>ORDER ID</th>
+                                    <th>CUSTOMER NAME</th>
+                                    <th>CONTACT EMAIL</th>
+                                    <th>DELIVERY ADDRESS</th>
+                                    <th>TOTAL</th>
+                                    <th>STATUS</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-table-tbody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
 
     <!-- Scripts -->
     <script src="products.js"></script>
@@ -314,217 +654,256 @@
             }
         }
 
+        function switchAdminTab(tabName, btnElem) {
+            document.querySelectorAll('.admin-tab-view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.admin-sidebar-btn').forEach(b => b.classList.remove('active'));
+
+            const targetView = document.getElementById(`view-${tabName}`);
+            if (targetView) targetView.classList.add('active');
+
+            if (btnElem) {
+                btnElem.classList.add('active');
+            } else {
+                // If switched programmatically
+                const btns = document.querySelectorAll('.admin-sidebar-btn');
+                btns.forEach(b => {
+                    if (b.textContent.toLowerCase().includes(tabName)) b.classList.add('active');
+                });
+            }
+
+            const titleMap = {
+                'dashboard': 'Dashboard Overview',
+                'inventory': 'Inventory Management',
+                'customers': 'Customer Management',
+                'orders': 'Order Management'
+            };
+            document.getElementById('admin-header-title').textContent = titleMap[tabName] || 'Management Console';
+        }
+
         // =====================================================================
-        // VULNERABILITY 4: BROKEN ACCESS CONTROL IMPLEMENTATION
-        // Client-side evaluation checks URL parameter ?role=admin OR localStorage session!
+        // VULNERABILITY 4: BROKEN ACCESS CONTROL CHECK
         // =====================================================================
-        function verifyAdminAccess() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const roleParam = urlParams.get('role');
+        function checkAdminAccess() {
+            const params = new URLSearchParams(window.location.search);
+            const roleParam = params.get('role');
             const session = JSON.parse(localStorage.getItem('florabloom_session') || '{}');
 
-            const hasParamAccess = (roleParam === 'admin');
-            const hasSessionAccess = (session.role === 'admin');
+            const hasAccess = (roleParam === 'admin') || (session.role === 'admin');
 
-            const deniedPanel = document.getElementById('access-denied-panel');
-            const dashboardContent = document.getElementById('admin-dashboard-content');
-            const badgeContainer = document.getElementById('access-badge-container');
-            const reasonText = document.getElementById('bac-reason-text');
+            const denied = document.getElementById('admin-access-denied');
+            const layout = document.getElementById('admin-layout');
 
-            if (hasParamAccess || hasSessionAccess) {
-                deniedPanel.style.display = 'none';
-                dashboardContent.style.display = 'block';
-
-                if (hasParamAccess) {
-                    badgeContainer.innerHTML = `<span class="badge badge-warning" style="font-size:0.85rem; padding:0.4rem 0.8rem;">⚠️ Bypassed via ?role=admin</span>`;
-                    reasonText.innerHTML = `Authorized via URL parameter <code>?role=admin</code> (Broken Access Control).`;
-                } else {
-                    badgeContainer.innerHTML = `<span class="badge badge-success" style="font-size:0.85rem; padding:0.4rem 0.8rem;">Logged in as: ${session.name || 'Admin'}</span>`;
-                    reasonText.innerHTML = `Authorized via client-side session: <strong>${session.email}</strong>.`;
-                }
-
-                loadAdminData();
+            if (hasAccess) {
+                denied.style.display = 'none';
+                layout.style.display = 'flex';
+                loadAllAdminData();
             } else {
-                deniedPanel.style.display = 'block';
-                dashboardContent.style.display = 'none';
-                badgeContainer.innerHTML = `<span class="badge badge-danger" style="font-size:0.85rem; padding:0.4rem 0.8rem;">Access Restricted</span>`;
+                denied.style.display = 'block';
+                layout.style.display = 'none';
             }
         }
 
-        function loadAdminData() {
-            const orders = getOrders();
+        function loadAllAdminData() {
             const products = getProducts();
-            const reviews = getReviews();
             const users = getUsers();
+            const orders = getOrders();
 
-            // Compute statistics
-            const totalOrders = orders.length;
-            const flowersSold = orders.reduce((sum, o) => {
-                return sum + (o.items || []).reduce((itemSum, i) => itemSum + (i.quantity || 1), 0);
-            }, 0);
-            const revenue = orders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+            // Stats
+            document.getElementById('stat-total-cust').textContent = users.length;
+            document.getElementById('stat-prod-listed').textContent = products.length;
+            document.getElementById('inv-count-badge').textContent = products.length;
+            document.getElementById('cust-count-text').textContent = users.length;
 
-            document.getElementById('stat-total-orders').textContent = totalOrders;
-            document.getElementById('stat-flowers-sold').textContent = flowersSold;
-            document.getElementById('stat-revenue').textContent = `$${revenue.toFixed(2)}`;
-            document.getElementById('stat-active-reviews').textContent = reviews.length;
+            const totalStock = products.reduce((sum, p) => sum + (p.stock || 50), 0);
+            document.getElementById('stat-total-stock').textContent = totalStock.toLocaleString();
 
-            // Render Orders Table
-            const ordersTbody = document.getElementById('admin-orders-tbody');
-            ordersTbody.innerHTML = orders.map(o => `
-                <tr>
-                    <td>
-                        <a href="order.html?id=${o.id}" class="badge badge-primary" title="View order via IDOR" style="text-decoration:none;">
-                            #${o.id} 🔗
-                        </a>
-                    </td>
-                    <td><strong>${o.customerName}</strong></td>
-                    <td style="font-family: monospace; font-size: 0.85rem;">${o.email}</td>
-                    <td style="max-width: 220px; font-size: 0.85rem; color: var(--text-secondary);">${o.address}</td>
-                    <td style="font-weight: 700; color: var(--primary);">$${Number(o.total).toFixed(2)}</td>
-                    <td><span class="badge ${o.status === 'Delivered' ? 'badge-success' : 'badge-warning'}">${o.status}</span></td>
-                    <td>
-                        <a href="order.html?id=${o.id}" class="btn btn-sm btn-outline" style="padding:0.25rem 0.6rem; font-size:0.75rem;">View (IDOR)</a>
-                    </td>
-                </tr>
-            `).join('');
-
-            // Render Products Table
-            const productsTbody = document.getElementById('admin-products-tbody');
-            productsTbody.innerHTML = products.map((p, idx) => `
-                <tr>
-                    <td>
-                        <img src="${p.image}" alt="${p.name}" style="width:40px; height:40px; border-radius:6px; object-fit:cover;">
-                    </td>
-                    <td><strong>${p.name}</strong></td>
-                    <td><span class="badge badge-secondary">${p.category}</span></td>
-                    <td style="font-weight: 700;">$${Number(p.price).toFixed(2)}</td>
-                    <td>${p.stock || 12} in stock</td>
-                    <td>★ ${p.rating}</td>
-                    <td>
-                        <button onclick="deleteProduct(${idx})" class="btn btn-sm btn-outline" style="color:#ef4444; border-color:#ef4444; padding:0.2rem 0.5rem; font-size:0.75rem;">Delete</button>
-                    </td>
-                </tr>
-            `).join('');
-
-            // Render Reviews Table
-            const reviewsTbody = document.getElementById('admin-reviews-tbody');
-            reviewsTbody.innerHTML = reviews.map((r, idx) => `
-                <tr>
-                    <td>${r.id}</td>
-                    <td>#${r.productId}</td>
-                    <td><strong>${r.author}</strong></td>
-                    <td style="color:#e59819;">${'★'.repeat(r.rating || 5)}</td>
-                    <td style="max-width:320px; font-size:0.85rem; font-family:monospace; background:#fff5f7;">
-                        ${escapeHtml(r.comment)}
-                    </td>
-                    <td>
-                        <button onclick="deleteReview(${idx})" class="btn btn-sm btn-outline" style="color:#ef4444; border-color:#ef4444; padding:0.2rem 0.5rem; font-size:0.75rem;">Delete</button>
-                    </td>
-                </tr>
-            `).join('');
-
-            // Render Users Table (Insecure credentials exposure)
-            const usersTbody = document.getElementById('admin-users-tbody');
-            usersTbody.innerHTML = users.map(u => `
+            // Recent Customers on Dashboard
+            const recentCustTbody = document.getElementById('dash-recent-cust-tbody');
+            recentCustTbody.innerHTML = users.slice(0, 4).map(u => `
                 <tr>
                     <td><strong>${u.name}</strong></td>
-                    <td>${u.email}</td>
-                    <td><span class="badge ${u.role === 'admin' ? 'badge-warning' : 'badge-secondary'}">${u.role}</span></td>
-                    <td><code style="background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius:4px;">${u.password}</code></td>
+                    <td style="font-family: monospace; color:#94a3b8;">${u.email}</td>
+                    <td style="color:#64748b;">${u.joined || 'Oct 03, 2026'}</td>
+                </tr>
+            `).join('');
+
+            // Top Products on Dashboard
+            const topProdList = document.getElementById('dash-top-products-list');
+            topProdList.innerHTML = products.slice(0, 5).map((p, i) => `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; align-items:center; gap:0.6rem;">
+                        <span style="font-size:0.75rem; background:#1f2937; color:#94a3b8; width:20px; height:20px; border-radius:4px; display:flex; align-items:center; justify-content:center;">${i+1}</span>
+                        <img src="${p.image}" alt="${p.name}" style="width:28px; height:28px; border-radius:4px; object-fit:cover;">
+                        <span style="font-size:0.9rem; font-weight:600; color:#ffffff;">${p.name}</span>
+                    </div>
+                    <span style="font-weight:700; color:#10b981;">${formatCurrency(p.price)}</span>
+                </div>
+            `).join('');
+
+            // Render Inventory Table
+            renderInventoryTable();
+
+            // Render Customers Table
+            renderCustomersTable();
+
+            // Render Orders Table
+            renderOrdersTable();
+        }
+
+        function renderInventoryTable(filterQuery = "") {
+            const tbody = document.getElementById('inventory-table-tbody');
+            let list = getProducts();
+            if (filterQuery) {
+                const q = filterQuery.toLowerCase();
+                list = list.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+            }
+
+            tbody.innerHTML = list.map((p, idx) => `
+                <tr>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:0.8rem;">
+                            <img src="${p.image}" alt="${p.name}" style="width:36px; height:36px; border-radius:6px; object-fit:cover;">
+                            <span style="font-weight:700; color:#ffffff;">${p.name}</span>
+                        </div>
+                    </td>
+                    <td style="font-weight:700; color:#10b981;">${formatCurrency(p.price)}</td>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:0.6rem;">
+                            <div style="width:60px; height:6px; background:#1e293b; border-radius:3px; overflow:hidden;">
+                                <div style="width:80%; height:100%; background:#10b981;"></div>
+                            </div>
+                            <span style="font-size:0.8rem; color:#10b981;">• In Stock (${p.stock || 50})</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:0.4rem;">
+                            <input type="number" value="${p.stock || 50}" style="width:45px; background:#1f2937; border:1px solid #374151; color:#fff; border-radius:4px; text-align:center; padding:2px;" onchange="updateStock(${p.id}, this.value)">
+                            <button onclick="showToast('Stock updated!')" style="background:#3b82f6; color:#fff; border-radius:4px; padding:3px 8px; font-size:0.75rem;">✓</button>
+                            <button onclick="deleteProductById(${p.id})" style="background:#ef4444; color:#fff; border-radius:4px; padding:3px 8px; font-size:0.75rem;">🗑️</button>
+                        </div>
+                    </td>
                 </tr>
             `).join('');
         }
 
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
-
-        function deleteProduct(idx) {
-            const products = getProducts();
-            if (confirm(`Delete bouquet "${products[idx].name}"?`)) {
-                products.splice(idx, 1);
-                localStorage.setItem('florabloom_products', JSON.stringify(products));
-                loadAdminData();
-                showToast("Product deleted from catalog.");
+        function renderCustomersTable(filterQuery = "") {
+            const tbody = document.getElementById('customers-table-tbody');
+            let list = getUsers();
+            if (filterQuery) {
+                const q = filterQuery.toLowerCase();
+                list = list.filter(u => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q));
             }
+
+            tbody.innerHTML = list.map((u, idx) => {
+                const initials = u.name ? u.name.split(' ').map(n=>n[0]).join('').substring(0, 2) : 'U';
+                return `
+                    <tr>
+                        <td style="color:#64748b;">#${idx + 1}</td>
+                        <td>
+                            <div style="display:flex; align-items:center;">
+                                <span class="initials-avatar">${initials}</span>
+                                <strong>${u.name}</strong>
+                            </div>
+                        </td>
+                        <td style="font-family:monospace; color:#94a3b8;">${u.email}</td>
+                        <td style="color:#64748b;">${u.joined || 'Oct 03, 2026'}</td>
+                        <td style="text-align: right;">
+                            <button onclick="removeCustomer(${idx})" style="background:rgba(239,68,68,0.15); color:#f87171; border:1px solid #ef4444; border-radius:6px; padding:4px 10px; font-size:0.78rem; font-weight:700;">
+                                Remove
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
-        function deleteReview(idx) {
-            const reviews = getReviews();
-            reviews.splice(idx, 1);
-            localStorage.setItem('florabloom_reviews', JSON.stringify(reviews));
-            loadAdminData();
-            showToast("Review deleted.");
+        function renderOrdersTable() {
+            const tbody = document.getElementById('orders-table-tbody');
+            const orders = getOrders();
+
+            tbody.innerHTML = orders.map(o => `
+                <tr>
+                    <td><a href="order.html?id=${o.id}" style="color:#38bdf8; font-weight:700; text-decoration:underline;">#${o.id} 🔗</a></td>
+                    <td><strong>${o.customerName}</strong></td>
+                    <td style="font-family:monospace; color:#94a3b8;">${o.email}</td>
+                    <td style="max-width:240px; color:#64748b; font-size:0.82rem;">${o.address}</td>
+                    <td style="font-weight:700; color:#10b981;">${formatCurrency(o.total)}</td>
+                    <td><span style="background:${o.status==='Delivered'?'#065f46':'#854d0e'}; color:#fff; padding:2px 8px; border-radius:12px; font-size:0.75rem;">${o.status}</span></td>
+                    <td><a href="order.html?id=${o.id}" style="background:#374151; color:#fff; padding:3px 8px; border-radius:4px; font-size:0.75rem;">View (IDOR)</a></td>
+                </tr>
+            `).join('');
         }
 
-        function resetDefaultReviews() {
-            localStorage.setItem('florabloom_reviews', JSON.stringify(INITIAL_REVIEWS));
-            loadAdminData();
-            showToast("Reviews reset to default.");
+        function filterInventoryTable() {
+            const val = document.getElementById('inventory-search-input').value;
+            renderInventoryTable(val);
         }
 
-        function promptAddNewProduct() {
-            const name = prompt("Enter new Flower Bouquet Name:", "Royal Sapphire Hydrangeas");
-            if (!name) return;
-            const category = prompt("Enter Category (Roses, Tulips, Orchids, Lilies, Daisies, Mixed Bouquets):", "Mixed Bouquets");
-            const price = parseFloat(prompt("Enter Price ($):", "45.00")) || 45.00;
+        function filterCustomerTable() {
+            const val = document.getElementById('customer-search-input').value;
+            renderCustomersTable(val);
+        }
+
+        function handleAddNewProduct(e) {
+            e.preventDefault();
+            const name = document.getElementById('new-prod-name').value.trim();
+            const price = parseFloat(document.getElementById('new-prod-price').value) || 0;
+            const stock = parseInt(document.getElementById('new-prod-stock').value) || 50;
+            const img = document.getElementById('new-prod-img').value.trim();
 
             const products = getProducts();
-            const newProduct = {
+            const newProd = {
                 id: Date.now(),
                 name: name,
-                category: category || "Mixed Bouquets",
+                category: "Bouquets",
                 price: price,
-                originalPrice: price + 10,
+                originalPrice: price + 200,
                 rating: 5.0,
                 reviewCount: 1,
                 colors: ["Classic Variety"],
-                image: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80",
-                description: `Freshly curated ${name} with crisp foliage and boutique gift presentation.`,
-                featured: false,
-                stock: 15
+                image: img || "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80",
+                description: `Freshly hand-picked ${name} from Floradise greenhouse.`,
+                featured: true,
+                stock: stock
             };
 
-            products.unshift(newProduct);
+            products.unshift(newProd);
             localStorage.setItem('florabloom_products', JSON.stringify(products));
-            loadAdminData();
-            showToast(`Added "${name}" to floral inventory!`);
+
+            // Reset form
+            document.getElementById('add-product-form').reset();
+            loadAllAdminData();
+            showToast(`Added "${name}" to catalogue!`);
         }
 
-        function seedMoreOrders() {
-            const orders = getOrders();
-            const newId = (parseInt(orders[orders.length - 1].id) + 1).toString();
-            const mock = {
-                id: newId,
-                customerName: "Audrey Hepburn",
-                email: "audrey@classic.example.fake",
-                phone: "+1 (555) 018-9921",
-                address: "450 Broadway Ave, New York, NY 10012",
-                items: [{ id: 1, name: "Velvet Crimson Roses", quantity: 1, price: 49.99, color: "Crimson Red" }],
-                subtotal: 49.99,
-                shipping: 9.99,
-                tax: 4.00,
-                total: 63.98,
-                status: "In Transit",
-                orderDate: new Date().toISOString().split('T')[0],
-                deliveryDate: new Date().toISOString().split('T')[0],
-                notes: "Leave with building concierge."
-            };
-            orders.push(mock);
-            localStorage.setItem('florabloom_orders', JSON.stringify(orders));
-            loadAdminData();
-            showToast(`Created Mock Order #${newId}`);
+        function deleteProductById(id) {
+            let products = getProducts();
+            products = products.filter(p => p.id !== id);
+            localStorage.setItem('florabloom_products', JSON.stringify(products));
+            loadAllAdminData();
+            showToast("Product deleted from catalogue.");
+        }
+
+        function updateStock(id, newStock) {
+            const products = getProducts();
+            const p = products.find(x => x.id === id);
+            if (p) {
+                p.stock = parseInt(newStock) || 0;
+                localStorage.setItem('florabloom_products', JSON.stringify(products));
+                loadAllAdminData();
+            }
+        }
+
+        function removeCustomer(idx) {
+            const users = getUsers();
+            const removed = users.splice(idx, 1);
+            localStorage.setItem('florabloom_users', JSON.stringify(users));
+            loadAllAdminData();
+            showToast(`Removed customer: ${removed[0].name}`);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            verifyAdminAccess();
+            checkAdminAccess();
         });
     </script>
 </body>

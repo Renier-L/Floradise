@@ -3,369 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FloraBloom — Artisanal Flower Boutique & Cybersecurity Lab</title>
+    <title>Floradise — Botanical Store & Cybersecurity Lab</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Security Lab Top Announcement Bar -->
+    <!-- Security Lab Announcement Bar -->
     <div class="lab-top-banner">
-        <span>🛡️ <strong>FloraBloom Cybersecurity Lab</strong>: For authorized security education & pentesting practice.</span>
-        <button onclick="toggleLabModal()">Inspect Vulnerabilities</button>
+        <span>🛡️ <strong>Floradise Security Lab:</strong> Authorized Pentest Training Ground (Fictional Data)</span>
+        <a href="products.html?search=%3Cscript%3Ealert('Reflected-XSS')%3C/script%3E">Test XSS</a>
         <a href="admin.html?role=admin">Test BAC (?role=admin)</a>
+        <a href="order.html?id=1001">Test IDOR (?id=1001)</a>
     </div>
 
-    <!-- Navigation Header -->
-    <header class="site-header">
-        <div class="container nav-wrapper">
-            <a href="index.html" class="brand-logo">
-                <span class="brand-icon">🌸</span>
-                <span>Flora<span class="accent">Bloom</span></span>
+    <!-- Floradise Vibrant Green Header (Matching Screenshot) -->
+    <header class="main-store-header">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-wrap">
+                <span class="leaf-icon">🍃</span>
+                <span>Floradise</span>
             </a>
 
             <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html" class="active">Home</a></li>
-                    <li><a href="products.html">Flower Catalog</a></li>
-                    <li><a href="products.html?category=Mixed%20Bouquets">Bouquets</a></li>
-                    <li><a href="order.html?id=1001">Track Order <span class="nav-badge-lab">IDOR</span></a></li>
-                    <li><a href="admin.html">Admin <span class="nav-badge-lab">BAC</span></a></li>
+                <ul class="nav-menu-list">
+                    <li><a href="index.html" class="active">🏠 Home</a></li>
+                    <li><a href="#about-us">ℹ️ About Us</a></li>
+                    <li><a href="#contact-section">✉️ Contact</a></li>
+                    <li><a href="products.html">💐 Catalog</a></li>
+                    <li>
+                        <a href="cart.html" class="cart-pill-nav">
+                            🛒 Cart <span class="cart-count-bubble cart-count-badge">0</span>
+                        </a>
+                    </li>
+                    <li id="user-nav-slot">
+                        <a href="login.html" class="login-btn-nav">
+                            <span>➜]</span> Login
+                        </a>
+                    </li>
                 </ul>
             </nav>
-
-            <div class="nav-actions">
-                <form class="search-bar-form" action="products.html" method="GET">
-                    <input type="text" name="search" class="search-input-header" placeholder="Search flowers..." aria-label="Search">
-                    <button type="submit" class="search-submit-btn" aria-label="Submit search">🔍</button>
-                </form>
-
-                <a href="cart.html" class="cart-btn-link" title="View Cart">
-                    🛒
-                    <span class="cart-count-badge">0</span>
-                </a>
-
-                <div id="user-nav-slot" class="user-nav-action">
-                    <!-- Populated dynamically via script.js -->
-                </div>
-            </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container hero-grid">
-            <div class="hero-content">
-                <div class="hero-tag">
-                    <span>✨ Hand-Picked Fresh Daily</span>
-                </div>
-                <h1 class="hero-title">
-                    Breathtaking Floral Elegance, <span class="bloom">Delivered</span> to Your Door.
-                </h1>
-                <p class="hero-subtitle">
-                    Immerse in artisanal bouquets cultivated with passion. From timeless crimson roses to exotic orchids, we deliver emotion in full bloom.
-                </p>
-                <div class="hero-actions">
-                    <a href="products.html" class="btn btn-primary btn-lg">Shop Now 🌹</a>
-                    <a href="products.html?search=roses" class="btn btn-outline btn-lg">Search Roses (XSS Demo)</a>
-                </div>
-            </div>
+    <!-- Main Content -->
+    <main class="container">
 
-            <div class="hero-image-wrap">
-                <img src="https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=1000&q=80" alt="FloraBloom Signature Bouquet" class="hero-main-img">
-                <div class="hero-floating-card">
-                    <div class="hero-floating-icon">🌿</div>
-                    <div>
-                        <div class="hero-floating-title">100% Eco-Friendly Blooms</div>
-                        <div class="hero-floating-sub">Locally harvested and packaged in recycled kraft</div>
-                    </div>
+        <!-- Hero Section: Spring Bloom Sale Slider (Matching Screenshot 1) -->
+        <section class="hero-slider-wrap">
+            <div class="hero-banner-card" style="background-image: url('https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?auto=format&fit=crop&w=1200&q=80');">
+                <div class="hero-overlay"></div>
+                
+                <button class="slider-arrow left" aria-label="Previous slide" onclick="prevHeroSlide()">‹</button>
+                <button class="slider-arrow right" aria-label="Next slide" onclick="nextHeroSlide()">›</button>
+
+                <div class="hero-content">
+                    <h1 id="hero-title-text">Spring Bloom Sale</h1>
+                    <p id="hero-sub-text">Up to 30% off on all seasonal flowers!</p>
+                    <a href="products.html" class="btn-shop-now">Shop Now</a>
+                </div>
+
+                <div class="slider-dots">
+                    <span class="slider-dot active" onclick="setHeroSlide(0)"></span>
+                    <span class="slider-dot" onclick="setHeroSlide(1)"></span>
+                    <span class="slider-dot" onclick="setHeroSlide(2)"></span>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Categories Section -->
-    <section class="section-padding">
-        <div class="container">
-            <div class="section-head">
-                <div class="section-tag">Curated Collections</div>
-                <h2 class="section-title">Explore By Blossom Type</h2>
-                <p class="section-subtitle">Find the perfect flowers tailored for every celebration, anniversary, or gentle gesture.</p>
+        <!-- Product Grid: Discover Our Products (Matching Screenshots 1 & 2) -->
+        <section>
+            <div class="section-title-wrap">
+                <h2 class="section-main-heading">Discover Our Products</h2>
             </div>
 
-            <div class="categories-grid">
-                <a href="products.html?category=Roses" class="category-card">
-                    <div class="category-icon">🌹</div>
-                    <h3 class="category-name">Roses</h3>
-                    <span class="category-count">12 Varieties</span>
-                </a>
-                <a href="products.html?category=Tulips" class="category-card">
-                    <div class="category-icon">🌷</div>
-                    <h3 class="category-name">Tulips</h3>
-                    <span class="category-count">8 Varieties</span>
-                </a>
-                <a href="products.html?category=Sunflowers" class="category-card">
-                    <div class="category-icon">🌻</div>
-                    <h3 class="category-name">Sunflowers</h3>
-                    <span class="category-count">6 Varieties</span>
-                </a>
-                <a href="products.html?category=Lilies" class="category-card">
-                    <div class="category-icon">🌺</div>
-                    <h3 class="category-name">Lilies</h3>
-                    <span class="category-count">9 Varieties</span>
-                </a>
-                <a href="products.html?category=Orchids" class="category-card">
-                    <div class="category-icon">🌸</div>
-                    <h3 class="category-name">Orchids</h3>
-                    <span class="category-count">5 Varieties</span>
-                </a>
-                <a href="products.html?category=Daisies" class="category-card">
-                    <div class="category-icon">🌼</div>
-                    <h3 class="category-name">Daisies</h3>
-                    <span class="category-count">7 Varieties</span>
-                </a>
-                <a href="products.html?category=Mixed%20Bouquets" class="category-card">
-                    <div class="category-icon">💐</div>
-                    <h3 class="category-name">Mixed Bouquets</h3>
-                    <span class="category-count">15 Arrangements</span>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Featured Flowers Section -->
-    <section class="section-padding" style="background-color: #ffffff;">
-        <div class="container">
-            <div class="section-head">
-                <div class="section-tag">Season Favorites</div>
-                <h2 class="section-title">Featured Blooms of the Week</h2>
-                <p class="section-subtitle">Our master florists recommend these exceptional and freshly harvested centerpiece flowers.</p>
-            </div>
-
-            <div class="products-grid" id="featured-products-grid">
+            <div class="floradise-product-grid" id="homepage-products-grid">
                 <!-- Dynamically loaded from products.js -->
             </div>
+        </section>
 
-            <div style="text-align: center; margin-top: 3.5rem;">
-                <a href="products.html" class="btn btn-secondary btn-lg">Browse Full Flower Catalog →</a>
+        <!-- About Us Section (Matching Screenshot 3) -->
+        <section id="about-us" class="about-section">
+            <div class="about-title-row">
+                <span>ABOUT US</span>
+                <span class="bar"></span>
             </div>
-        </div>
-    </section>
 
-    <!-- About FloraBloom Section -->
-    <section class="section-padding" style="background: var(--bg-cream);">
-        <div class="container hero-grid" style="grid-template-columns: 0.9fr 1.1fr;">
-            <div class="hero-image-wrap">
-                <img src="https://images.unsplash.com/photo-1520763185298-1b434c919102?auto=format&fit=crop&w=900&q=80" alt="FloraBloom Greenhouse" style="border-radius: var(--radius-lg); box-shadow: var(--shadow-md);">
+            <div class="about-grid">
+                <div class="about-img-box">
+                    <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80" alt="Inside the greenhouse">
+                </div>
+
+                <div class="about-text-box">
+                    <p>
+                        Floradise was born from a deep love for nature and a desire to bring its beauty into people's lives. Our journey began with a simple idea: to create a platform where anyone could easily discover, explore, and purchase a stunning variety of plants and flowers to transform their living spaces.
+                    </p>
+                    <p>
+                        Since our inception, we've worked tirelessly to cultivate a diverse selection of high-quality botanical products that cater to every style and preference. Our products focus on helping you create your own personal paradise, whether through a single statement plant or an entire indoor garden. We source our collections from trusted local growers and suppliers to guarantee the freshest and most vibrant quality.
+                    </p>
+
+                    <h3>Our Mission</h3>
+                    <p>
+                        Our mission at Floradise is to empower customers with the joy, knowledge, and confidence to connect with nature. We're dedicated to providing a seamless shopping experience that exceeds expectations, from browsing and ordering to delivery and beyond.
+                    </p>
+                </div>
             </div>
+        </section>
+
+        <!-- Why Choose Us Section (Matching Screenshot 4) -->
+        <section>
+            <div class="about-title-row" style="margin-top: 2rem;">
+                <span>WHY CHOOSE US</span>
+                <span class="bar"></span>
+            </div>
+
+            <div class="why-choose-grid">
+                <div class="why-card">
+                    <h4>Quality Assurance</h4>
+                    <p>We meticulously select and vet each product to ensure it meets our stringent quality standards.</p>
+                </div>
+
+                <div class="why-card">
+                    <h4>Convenience</h4>
+                    <p>With our user-friendly interface and hassle-free ordering process, shopping has never been easier.</p>
+                </div>
+
+                <div class="why-card">
+                    <h4>Exceptional Customer Service</h4>
+                    <p>Our team of dedicated professionals is here to assist you every step of the way, ensuring your satisfaction is our top priority.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact & Location Map Section (Matching Screenshot Batch 2) -->
+        <section id="contact-section" style="margin: 2rem 0 3rem;">
+            <div style="background: #ffffff; border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow: hidden; box-shadow: var(--shadow-sm);">
+                <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--text-dark);">Visit Our Boutique & Greenhouse</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Kalayaan Avenue, Bel-Air, Makati City, Metro Manila</p>
+                    </div>
+                    <a href="https://maps.google.com" target="_blank" rel="noopener" style="background: var(--bg-light); border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 700; color: var(--text-dark);">
+                        Open in Maps ↗
+                    </a>
+                </div>
+                
+                <!-- Stylized Interactive Map Mockup -->
+                <div style="height: 320px; background: #e5e7eb; position: relative; overflow: hidden;">
+                    <iframe 
+                        title="Floradise Location Map"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15444.646549372138!2d121.037142!3d14.561386!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c8ff6715f3cb%3A0x7d6a5c17d848773!2sBGC%2C%20Taguig%2C%20Metro%20Manila!5e0!3m2!1sen!2sph!4v1680000000000!5m2!1sen!2sph" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Bar: Subscribe now & get 20% off (Matching Screenshot 5) -->
+        <section class="subscribe-section">
+            <h3>Subscribe now & get 20% off</h3>
+            <p>Subscribe now and enjoy 20% off your first order! Stay updated on exclusive deals and new arrivals.</p>
+
+            <form class="subscribe-form-box" onsubmit="event.preventDefault(); showToast('Subscribed! 20% discount code applied.');">
+                <input type="email" class="subscribe-input" placeholder="Enter your email id" required>
+                <button type="submit" class="subscribe-btn">SUBSCRIBE</button>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- Floradise 3-Column Footer (Matching Screenshot 2 & 5) -->
+    <footer class="floradise-footer">
+        <div class="container footer-columns-grid">
+            <!-- Col 1: Brand Description -->
             <div>
-                <div class="section-tag">Our Philosophy</div>
-                <h2 class="section-title">Rooted in Passion, Styled with Grace</h2>
-                <p style="color: var(--text-secondary); margin-bottom: 1.2rem; font-size: 1.05rem;">
-                    Founded in 2021 as an artisanal urban floral design studio, FloraBloom is dedicated to delivering fresh, ethically cultivated botanical masterpieces. Every bouquet is crafted by certified florists who treat petals as poetry.
-                </p>
-                <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.05rem;">
-                    We collaborate directly with sustainable floral farms, ensuring morning-cut blossoms reach your doorstep in peak condition with our specialized hydrating stem wraps.
-                </p>
-                <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
-                    <div>
-                        <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">100%</div>
-                        <div style="font-size: 0.85rem; color: var(--text-secondary);">Freshness Guaranteed</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 2rem; font-weight: 700; color: var(--secondary);">24h</div>
-                        <div style="font-size: 0.85rem; color: var(--text-secondary);">Fast Eco Delivery</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 2rem; font-weight: 700; color: var(--accent-gold);">50k+</div>
-                        <div style="font-size: 0.85rem; color: var(--text-secondary);">Smiles Delivered</div>
-                    </div>
+                <div class="footer-brand">
+                    <span>🍃</span>
+                    <span>FLORADISE</span>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Customer Reviews Showcase -->
-    <section class="section-padding" style="background: #ffffff;">
-        <div class="container">
-            <div class="section-head">
-                <div class="section-tag">Heartfelt Words</div>
-                <h2 class="section-title">What Our Customers Say</h2>
-                <p class="section-subtitle">Read feedback from flower enthusiasts who celebrated life's unforgettable moments with us.</p>
-            </div>
-
-            <div class="products-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-                <div class="review-card">
-                    <div class="review-header">
-                        <span class="review-author">Sophia Martinez</span>
-                        <span class="review-date">2 days ago</span>
-                    </div>
-                    <div style="color: #e59819; margin-bottom: 0.6rem;">★★★★★</div>
-                    <p class="review-comment">"The Velvet Crimson Roses arrived in impeccable condition. The vase was fragrant for over a week! Extraordinary service."</p>
-                </div>
-                <div class="review-card">
-                    <div class="review-header">
-                        <span class="review-author">Alexander Wright</span>
-                        <span class="review-date">1 week ago</span>
-                    </div>
-                    <div style="color: #e59819; margin-bottom: 0.6rem;">★★★★★</div>
-                    <p class="review-comment">"Ordered the Elysian Mixed Bouquet for my mother's birthday. She was moved to tears by the artistic packaging and colors."</p>
-                </div>
-                <div class="review-card">
-                    <div class="review-header">
-                        <span class="review-author">Claire Dupont</span>
-                        <span class="review-date">2 weeks ago</span>
-                    </div>
-                    <div style="color: #e59819; margin-bottom: 0.6rem;">★★★★★</div>
-                    <p class="review-comment">"Phalaenopsis Orchid was even more gorgeous than the photos online. The ceramic pot is truly luxury quality."</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="container footer-grid">
-            <div class="footer-about">
-                <div class="brand-logo" style="color: #ffffff;">
-                    <span>🌸 FloraBloom</span>
-                </div>
-                <p>
-                    Artisanal online flower boutique creating bespoke bouquets and delivering botanical elegance right to your doorstep.
+                <p class="footer-brand-desc">
+                    Floradise is your green sanctuary, a community for everyone who shares a passion for plants. We believe in the simple joy of nurturing life and the peace that comes from a connection to nature. Our mission is to be your trusted partner on your plant-parenting journey, providing not just carefully selected plants, but also the guidance and quality tools you need to help your green family thrive. Join us in cultivating your own piece of paradise, one leaf at a time.
                 </p>
             </div>
+
+            <!-- Col 2: Company Links -->
             <div class="footer-col">
-                <h4>Quick Links</h4>
-                <ul class="footer-links">
+                <h5>COMPANY</h5>
+                <ul class="footer-links-list">
                     <li><a href="index.html">Home</a></li>
-                    <li><a href="products.html">All Flowers</a></li>
-                    <li><a href="cart.html">View Cart</a></li>
-                    <li><a href="login.html">Customer Sign In</a></li>
-                    <li><a href="register.html">Create Account</a></li>
+                    <li><a href="#about-us">About us</a></li>
+                    <li><a href="products.html">Delivery</a></li>
+                    <li><a href="admin.html?role=admin">Admin Dashboard (BAC)</a></li>
+                    <li><a href="order.html?id=1001">Track Order (IDOR)</a></li>
                 </ul>
             </div>
+
+            <!-- Col 3: Get In Touch -->
             <div class="footer-col">
-                <h4>Cybersecurity Lab</h4>
-                <ul class="footer-links">
-                    <li><a href="products.html?search=%3Cscript%3Ealert('XSS')%3C/script%3E">Reflected XSS Test</a></li>
-                    <li><a href="product.html?id=1">Stored XSS (Reviews)</a></li>
-                    <li><a href="order.html?id=1001">IDOR (Order Tracking)</a></li>
-                    <li><a href="admin.html?role=admin">Broken Access Control</a></li>
-                    <li><a href="login.html">Client Authentication</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Lab Disclaimer</h4>
-                <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.6;">
-                    <strong>Fictional Training App:</strong> This website is an intentionally vulnerable educational web security lab. Do not enter real personal credentials or real payment cards.
-                </p>
+                <h5>GET IN TOUCH</h5>
+                <div class="footer-contact-info">
+                    <p>+63 912 345 6789</p>
+                    <p>Support@Floradise.com</p>
+                    <p style="margin-top: 1rem; font-size: 0.85rem; color: #94a3b8;">
+                        🔒 <em>Security Lab Demonstration Mode (Fake Data)</em>
+                    </p>
+                </div>
             </div>
         </div>
-        <div class="container footer-bottom">
-            <span>&copy; 2026 FloraBloom Security Lab. Built with vanilla HTML, CSS & JavaScript.</span>
-            <span>Educational Use Only</span>
+
+        <div class="container footer-bottom-bar">
+            Copyright 2026© Floradise.com - All Right Reserved.
         </div>
     </footer>
-
-    <!-- Lab Modal Overlay for Vulnerability Quick Overview -->
-    <div id="lab-modal" class="lab-modal-overlay">
-        <div class="lab-modal-content">
-            <button class="lab-modal-close" onclick="toggleLabModal()">✕</button>
-            <h3 style="font-family: var(--font-heading); color: var(--primary); margin-bottom: 0.5rem;">🛡️ FloraBloom Security Lab Matrix</h3>
-            <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                FloraBloom contains 7 controlled vulnerabilities designed for penetration-testing practice.
-            </p>
-            <table class="vuln-quick-table">
-                <thead>
-                    <tr>
-                        <th>Vulnerability</th>
-                        <th>Target Page</th>
-                        <th>Harmless Test</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Reflected XSS</strong></td>
-                        <td><code>products.html?search=...</code></td>
-                        <td><code>&lt;script&gt;alert('Reflected-XSS')&lt;/script&gt;</code></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Stored XSS</strong></td>
-                        <td><code>product.html?id=1</code></td>
-                        <td>Submit review containing <code>&lt;img src=x onerror=alert('Stored-XSS')&gt;</code></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Client-Side Auth</strong></td>
-                        <td><code>login.html</code></td>
-                        <td>Inspect <code>script.js</code> to find plaintext credentials</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Broken Access Control</strong></td>
-                        <td><code>admin.html</code></td>
-                        <td>Browse to <code>admin.html?role=admin</code> to bypass check</td>
-                    </tr>
-                    <tr>
-                        <td><strong>IDOR</strong></td>
-                        <td><code>order.html?id=1001</code></td>
-                        <td>Change ID to <code>1002</code>, <code>1003</code>, or <code>1004</code></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Insecure Storage</strong></td>
-                        <td>Browser Storage</td>
-                        <td>Check <code>localStorage.getItem('florabloom_session')</code></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Info Exposure</strong></td>
-                        <td><code>products.js</code> / Console</td>
-                        <td>Open DevTools console to view <code>FAKE_DEV_CONFIG</code></td>
-                    </tr>
-                </tbody>
-            </table>
-            <div style="text-align: right; margin-top: 1rem;">
-                <button onclick="toggleLabModal()" class="btn btn-sm btn-primary">Close Inspector</button>
-            </div>
-        </div>
-    </div>
 
     <!-- Scripts -->
     <script src="products.js"></script>
     <script src="script.js"></script>
     <script>
-        function toggleLabModal() {
-            const modal = document.getElementById('lab-modal');
-            modal.classList.toggle('active');
+        const heroSlides = [
+            {
+                title: "Spring Bloom Sale",
+                sub: "Up to 30% off on all seasonal flowers!",
+                bg: "https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?auto=format&fit=crop&w=1200&q=80"
+            },
+            {
+                title: "Exotic Orchid Showcase",
+                sub: "Curated greenhouse orchids & indoor botanical elegance",
+                bg: "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=1200&q=80"
+            },
+            {
+                title: "Fresh Hand-Tied Bouquets",
+                sub: "Morning-harvested floral arrangements delivered across Metro Manila",
+                bg: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=1200&q=80"
+            }
+        ];
+        let currentSlideIdx = 0;
+
+        function setHeroSlide(idx) {
+            currentSlideIdx = idx;
+            const slide = heroSlides[currentSlideIdx];
+            document.getElementById('hero-title-text').textContent = slide.title;
+            document.getElementById('hero-sub-text').textContent = slide.sub;
+            document.querySelector('.hero-banner-card').style.backgroundImage = `url('${slide.bg}')`;
+
+            const dots = document.querySelectorAll('.slider-dot');
+            dots.forEach((d, i) => {
+                if (i === idx) d.classList.add('active');
+                else d.classList.remove('active');
+            });
         }
 
-        // Render Featured Flowers on Homepage
-        document.addEventListener('DOMContentLoaded', () => {
-            const grid = document.getElementById('featured-products-grid');
-            if (!grid) return;
-            const featured = getProducts().filter(p => p.featured).slice(0, 4);
+        function nextHeroSlide() {
+            setHeroSlide((currentSlideIdx + 1) % heroSlides.length);
+        }
 
-            grid.innerHTML = featured.map(flower => `
-                <div class="product-card">
-                    <div class="product-img-wrap">
-                        <span class="badge badge-primary product-badge-float">Featured</span>
-                        <img src="${flower.image}" alt="${flower.name}" class="product-img">
+        function prevHeroSlide() {
+            setHeroSlide((currentSlideIdx - 1 + heroSlides.length) % heroSlides.length);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('homepage-products-grid');
+            if (!grid) return;
+            const products = getProducts();
+
+            grid.innerHTML = products.map(flower => `
+                <div class="floradise-product-card">
+                    <div class="product-thumb-wrap">
+                        <a href="product.html?id=${flower.id}">
+                            <img src="${flower.image}" alt="${flower.name}" loading="lazy">
+                        </a>
                     </div>
-                    <div class="product-body">
-                        <div class="product-cat">${flower.category}</div>
-                        <h3 class="product-title">${flower.name}</h3>
-                        <div class="product-rating">
-                            <span>★ ${flower.rating}</span>
-                            <span class="count">(${flower.reviewCount} reviews)</span>
-                        </div>
-                        <div class="product-price-row">
-                            <span class="product-price">$${flower.price.toFixed(2)}</span>
-                            <span class="product-price-orig">$${flower.originalPrice.toFixed(2)}</span>
-                        </div>
-                        <div class="product-footer-actions">
-                            <a href="product.html?id=${flower.id}" class="btn btn-sm btn-outline" style="flex:1;">Details</a>
-                            <button onclick="addToCart(${flower.id}, 1)" class="btn btn-sm btn-primary" style="flex:1;">Add 🛒</button>
-                        </div>
+                    <div class="product-card-title">${flower.name}</div>
+                    <div class="product-card-footer">
+                        <span class="product-card-price">${formatCurrency(flower.price)}</span>
+                        <button onclick="addToCart(${flower.id}, 1)" class="btn-card-add">
+                            🛒 Add
+                        </button>
                     </div>
                 </div>
             `).join('');

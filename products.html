@@ -3,173 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flower Catalog — FloraBloom Boutique & Security Lab</title>
+    <title>Flower Catalog — Floradise</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Security Lab Announcement -->
+    <!-- Security Lab Announcement Bar -->
     <div class="lab-top-banner">
         <span>🛡️ <strong>Vulnerability #1 Testing Zone:</strong> Reflected XSS via <code>products.html?search=...</code></span>
         <button onclick="fillXSSPayload()">Auto-Test Reflected XSS</button>
+        <a href="admin.html?role=admin">Test BAC (?role=admin)</a>
     </div>
 
-    <!-- Navigation Header -->
-    <header class="site-header">
-        <div class="container nav-wrapper">
-            <a href="index.html" class="brand-logo">
-                <span class="brand-icon">🌸</span>
-                <span>Flora<span class="accent">Bloom</span></span>
+    <!-- Floradise Green Header -->
+    <header class="main-store-header">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-wrap">
+                <span class="leaf-icon">🍃</span>
+                <span>Floradise</span>
             </a>
 
             <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="products.html" class="active">Flower Catalog</a></li>
-                    <li><a href="products.html?category=Mixed%20Bouquets">Bouquets</a></li>
-                    <li><a href="order.html?id=1001">Track Order <span class="nav-badge-lab">IDOR</span></a></li>
-                    <li><a href="admin.html">Admin <span class="nav-badge-lab">BAC</span></a></li>
+                <ul class="nav-menu-list">
+                    <li><a href="index.html">🏠 Home</a></li>
+                    <li><a href="index.html#about-us">ℹ️ About Us</a></li>
+                    <li><a href="index.html#contact-section">✉️ Contact</a></li>
+                    <li><a href="products.html" class="active">💐 Catalog</a></li>
+                    <li>
+                        <a href="cart.html" class="cart-pill-nav">
+                            🛒 Cart <span class="cart-count-bubble cart-count-badge">0</span>
+                        </a>
+                    </li>
+                    <li id="user-nav-slot">
+                        <a href="login.html" class="login-btn-nav">
+                            <span>➜]</span> Login
+                        </a>
+                    </li>
                 </ul>
             </nav>
-
-            <div class="nav-actions">
-                <form class="search-bar-form" action="products.html" method="GET">
-                    <input type="text" name="search" id="header-search-box" class="search-input-header" placeholder="Search flowers..." aria-label="Search">
-                    <button type="submit" class="search-submit-btn" aria-label="Submit search">🔍</button>
-                </form>
-
-                <a href="cart.html" class="cart-btn-link" title="View Cart">
-                    🛒
-                    <span class="cart-count-badge">0</span>
-                </a>
-
-                <div id="user-nav-slot" class="user-nav-action"></div>
-            </div>
         </div>
     </header>
 
-    <!-- Catalog Hero / Header -->
-    <section class="catalog-header">
-        <div class="container">
-            <div style="text-align: center; max-width: 600px; margin: 0 auto 1.5rem;">
-                <span class="section-tag">Fresh Floral Collection</span>
-                <h1 style="font-family: var(--font-heading); font-size: 2.6rem; color: var(--text-primary);">Artisan Flower Catalog</h1>
-                <p style="color: var(--text-secondary);">Browse our selection of roses, tulips, sunflowers, lilies, orchids, daisies, and mixed bouquets.</p>
+    <!-- Main Content -->
+    <main class="container" style="padding: 2.5rem 1.5rem 4rem;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+            <div>
+                <h1 style="font-size: 2.2rem; font-weight: 800; color: var(--text-dark);">Botanical Catalog</h1>
+                <p style="color: var(--text-muted);">Explore hand-picked blooms, succulents, and fresh arrangements.</p>
             </div>
 
-            <!-- In-page Search Bar Form -->
-            <div style="max-width: 680px; margin: 0 auto 1.5rem;">
-                <form id="catalog-search-form" method="GET" action="products.html" style="display:flex; gap:0.5rem;">
-                    <input type="text" name="search" id="catalog-search-input" class="form-control" placeholder="Search by name, color, or bloom (e.g. roses, tulips)..." style="background:#fff; border-radius:var(--radius-full); padding:0.85rem 1.4rem;">
-                    <button type="submit" class="btn btn-primary" style="border-radius:var(--radius-full);">Search</button>
-                    <a href="products.html" class="btn btn-outline" style="border-radius:var(--radius-full);">Reset</a>
-                </form>
+            <!-- Search Form -->
+            <form id="catalog-search-form" method="GET" action="products.html" style="display: flex; gap: 0.5rem; max-width: 400px; width: 100%;">
+                <input type="text" name="search" id="catalog-search-input" class="subscribe-input" placeholder="Search plants & blooms..." style="border: 1px solid var(--border-color); border-radius: var(--radius-sm);" required>
+                <button type="submit" class="btn-card-add" style="padding: 0.75rem 1.2rem; border-radius: var(--radius-sm); font-size: 0.95rem;">Search</button>
+            </form>
+        </div>
+
+        <!-- ===============================================================
+             VULNERABILITY 1: REFLECTED CROSS-SITE SCRIPTING (XSS)
+             The search value from URL (?search=...) is injected directly
+             into the DOM using innerHTML without HTML encoding or sanitization!
+             =============================================================== -->
+        <div id="search-results-banner" style="display: none; background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem 1.4rem; margin-bottom: 2rem; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <span id="search-query-display" style="font-size: 1.05rem;"></span>
+                <span id="results-count-badge" style="background: var(--bg-light); color: var(--text-muted); font-size: 0.8rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: var(--radius-full); margin-left: 0.6rem;">0 results</span>
+            </div>
+            <div style="font-size: 0.8rem; font-family: monospace; color: #b91c1c; background: #fee2e2; padding: 0.25rem 0.6rem; border-radius: 4px;">
+                ⚠️ Vulnerability 1 (Reflected XSS Active): Output rendered directly via <code>innerHTML</code>
             </div>
         </div>
-    </section>
 
-    <!-- Main Catalog Content -->
-    <section class="section-padding" style="padding-top: 2rem;">
-        <div class="container">
-
-            <!-- ===============================================================
-                 VULNERABILITY 1: REFLECTED CROSS-SITE SCRIPTING (XSS)
-                 The search value from URL (?search=...) is injected directly
-                 into the DOM using innerHTML without HTML encoding or sanitization!
-                 =============================================================== -->
-            <div id="search-results-banner" class="catalog-search-banner" style="display: none;">
-                <div>
-                    <!-- Unsanitized search output container (Reflected XSS sink) -->
-                    <span style="font-size: 1.05rem;" id="search-query-display"></span>
-                    <span id="results-count-badge" class="badge badge-secondary" style="margin-left: 0.8rem;">0 results</span>
-                </div>
-                <div class="search-vuln-indicator">
-                    ⚠️ Vulnerability 1 (Reflected XSS Active): Input directly rendered via <code>innerHTML</code>
-                </div>
-            </div>
-
-            <!-- Controls: Category Filter and Sort -->
-            <div class="catalog-controls">
-                <div class="filter-pills" id="category-filters">
-                    <button class="filter-pill active" data-category="All">All Flowers</button>
-                    <button class="filter-pill" data-category="Roses">Roses</button>
-                    <button class="filter-pill" data-category="Tulips">Tulips</button>
-                    <button class="filter-pill" data-category="Sunflowers">Sunflowers</button>
-                    <button class="filter-pill" data-category="Lilies">Lilies</button>
-                    <button class="filter-pill" data-category="Orchids">Orchids</button>
-                    <button class="filter-pill" data-category="Daisies">Daisies</button>
-                    <button class="filter-pill" data-category="Mixed Bouquets">Mixed Bouquets</button>
-                </div>
-
-                <div>
-                    <select id="sort-select" class="sort-select">
-                        <option value="default">Sort by: Featured</option>
-                        <option value="price-low">Price: Low to High</option>
-                        <option value="price-high">Price: High to Low</option>
-                        <option value="rating">Highest Rated</option>
-                        <option value="name">Alphabetical (A-Z)</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Flower Products Grid -->
-            <div class="products-grid" id="catalog-products-grid">
-                <!-- Populated dynamically via JS -->
-            </div>
-
-            <!-- Empty State -->
-            <div id="no-products-msg" style="display: none; text-align: center; padding: 4rem 1rem;">
-                <div style="font-size: 3rem; margin-bottom: 1rem;">🥀</div>
-                <h3 style="font-family: var(--font-heading); color: var(--text-primary); margin-bottom: 0.5rem;">No Blooms Found</h3>
-                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Try adjusting your search criteria or resetting filters.</p>
-                <a href="products.html" class="btn btn-outline">Clear Search & Filters</a>
-            </div>
-
+        <!-- Products Grid -->
+        <div class="floradise-product-grid" id="catalog-products-grid">
+            <!-- Dynamically populated -->
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="container footer-grid">
-            <div class="footer-about">
-                <div class="brand-logo" style="color: #ffffff;">
-                    <span>🌸 FloraBloom</span>
+        <!-- Empty state -->
+        <div id="no-products-msg" style="display: none; text-align: center; padding: 4rem 1rem;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">🥀</div>
+            <h3 style="font-weight: 800;">No Blooms Found</h3>
+            <p style="color: var(--text-muted); margin-bottom: 1.2rem;">Try clearing your search query.</p>
+            <a href="products.html" class="btn-card-add">View All Blooms</a>
+        </div>
+    </main>
+
+    <!-- Floradise 3-Column Footer -->
+    <footer class="floradise-footer">
+        <div class="container footer-columns-grid">
+            <div>
+                <div class="footer-brand">
+                    <span>🍃</span>
+                    <span>FLORADISE</span>
                 </div>
-                <p>Artisanal online flower boutique creating bespoke bouquets and delivering botanical elegance right to your doorstep.</p>
-            </div>
-            <div class="footer-col">
-                <h4>Categories</h4>
-                <ul class="footer-links">
-                    <li><a href="products.html?category=Roses">Roses</a></li>
-                    <li><a href="products.html?category=Tulips">Tulips</a></li>
-                    <li><a href="products.html?category=Sunflowers">Sunflowers</a></li>
-                    <li><a href="products.html?category=Lilies">Lilies</a></li>
-                    <li><a href="products.html?category=Orchids">Orchids</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Pentest Tools</h4>
-                <ul class="footer-links">
-                    <li><a href="products.html?search=%3Cscript%3Ealert('XSS')%3C/script%3E">Payload: &lt;script&gt;</a></li>
-                    <li><a href="products.html?search=%3Cimg%20src=x%20onerror=alert('Reflected-XSS')%3E">Payload: &lt;img onerror&gt;</a></li>
-                    <li><a href="products.html?search=%3Ch1%20style=color:red%3EHTML%20Injection%3C/h1%3E">Payload: HTML Injection</a></li>
-                    <li><a href="admin.html?role=admin">Bypass Admin Role</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Lab Notice</h4>
-                <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.6;">
-                    Educational cybersecurity simulation. Only test in authorized environments.
+                <p class="footer-brand-desc">
+                    Floradise is your green sanctuary, a community for everyone who shares a passion for plants. We believe in the simple joy of nurturing life and the peace that comes from a connection to nature.
                 </p>
             </div>
+            <div class="footer-col">
+                <h5>COMPANY</h5>
+                <ul class="footer-links-list">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about-us">About us</a></li>
+                    <li><a href="products.html">Delivery</a></li>
+                    <li><a href="admin.html?role=admin">Admin Dashboard</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>GET IN TOUCH</h5>
+                <div class="footer-contact-info">
+                    <p>+63 912 345 6789</p>
+                    <p>Support@Floradise.com</p>
+                </div>
+            </div>
         </div>
-        <div class="container footer-bottom">
-            <span>&copy; 2026 FloraBloom Security Lab.</span>
-            <span>Reflected XSS Demo Page</span>
+        <div class="container footer-bottom-bar">
+            Copyright 2026© Floradise.com - All Right Reserved.
         </div>
     </footer>
 
@@ -177,77 +131,44 @@
     <script src="products.js"></script>
     <script src="script.js"></script>
     <script>
-        let currentCategory = "All";
-        let currentSearchQuery = "";
-
-        // Quick button to demonstrate Reflected XSS
         function fillXSSPayload() {
-            window.location.href = "products.html?search=" + encodeURIComponent("<script>alert('Reflected XSS Executed on FloraBloom!')<\/script>");
+            window.location.href = "products.html?search=" + encodeURIComponent("<script>alert('Reflected XSS Executed on Floradise!')<\/script>");
         }
 
         // =====================================================================
-        // VULNERABILITY 1: REFLECTED CROSS-SITE SCRIPTING (XSS) IMPLEMENTATION
+        // VULNERABILITY 1: REFLECTED XSS
         // =====================================================================
-        function handleReflectedXSS(searchQuery) {
+        function handleReflectedXSS(query) {
             const banner = document.getElementById('search-results-banner');
-            const displaySpan = document.getElementById('search-query-display');
-            if (!banner || !displaySpan) return;
+            const display = document.getElementById('search-query-display');
+            if (!banner || !display) return;
 
-            if (searchQuery !== null && searchQuery !== undefined && searchQuery.trim() !== "") {
+            if (query !== null && query !== undefined && query.trim() !== '') {
                 banner.style.display = 'flex';
-                
-                /*
-                 * INTENTIONALLY VULNERABLE CODE:
-                 * Direct insertion into innerHTML without sanitization or encoding.
-                 * Attack payload like <img src=x onerror=alert('XSS')> or <script>alert(1)</script>
-                 * is rendered directly into the DOM!
-                 */
-                displaySpan.innerHTML = `Search results for: <strong>${searchQuery}</strong>`;
-
-                // Execute script tags if user injected <script> elements
-                executeScriptTags(displaySpan);
+                // Unsanitized innerHTML reflection
+                display.innerHTML = `Search results for: <strong>${query}</strong>`;
+                executeScriptTags(display);
             } else {
                 banner.style.display = 'none';
             }
         }
 
-        function renderProductsList() {
+        function renderProducts(searchQuery = "") {
             const grid = document.getElementById('catalog-products-grid');
             const noMsg = document.getElementById('no-products-msg');
             const countBadge = document.getElementById('results-count-badge');
             let list = getProducts();
 
-            // Filter by Category
-            if (currentCategory !== "All") {
-                list = list.filter(p => p.category.toLowerCase() === currentCategory.toLowerCase());
-            }
-
-            // Filter by Search
-            if (currentSearchQuery) {
-                const q = currentSearchQuery.toLowerCase();
+            if (searchQuery) {
+                const q = searchQuery.toLowerCase();
                 list = list.filter(p => 
-                    p.name.toLowerCase().includes(q) ||
-                    p.category.toLowerCase().includes(q) ||
-                    p.description.toLowerCase().includes(q) ||
-                    p.colors.some(c => c.toLowerCase().includes(q))
+                    p.name.toLowerCase().includes(q) || 
+                    p.category.toLowerCase().includes(q) || 
+                    p.description.toLowerCase().includes(q)
                 );
             }
 
-            // Sorting
-            const sortVal = document.getElementById('sort-select').value;
-            if (sortVal === 'price-low') {
-                list.sort((a, b) => a.price - b.price);
-            } else if (sortVal === 'price-high') {
-                list.sort((a, b) => b.price - a.price);
-            } else if (sortVal === 'rating') {
-                list.sort((a, b) => b.rating - a.rating);
-            } else if (sortVal === 'name') {
-                list.sort((a, b) => a.name.localeCompare(b.name));
-            }
-
-            if (countBadge) {
-                countBadge.textContent = `${list.length} blooms found`;
-            }
+            if (countBadge) countBadge.textContent = `${list.length} results`;
 
             if (list.length === 0) {
                 grid.innerHTML = '';
@@ -257,29 +178,18 @@
 
             noMsg.style.display = 'none';
             grid.innerHTML = list.map(flower => `
-                <div class="product-card">
-                    <div class="product-img-wrap">
-                        ${flower.featured ? '<span class="badge badge-primary product-badge-float">Bestseller</span>' : ''}
-                        <img src="${flower.image}" alt="${flower.name}" class="product-img" loading="lazy">
+                <div class="floradise-product-card">
+                    <div class="product-thumb-wrap">
+                        <a href="product.html?id=${flower.id}">
+                            <img src="${flower.image}" alt="${flower.name}" loading="lazy">
+                        </a>
                     </div>
-                    <div class="product-body">
-                        <div class="product-cat">${flower.category}</div>
-                        <h3 class="product-title">${flower.name}</h3>
-                        <div class="product-rating">
-                            <span>★ ${flower.rating}</span>
-                            <span class="count">(${flower.reviewCount} reviews)</span>
-                        </div>
-                        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1rem; line-height:1.5;">
-                            ${flower.description.length > 90 ? flower.description.substring(0, 90) + '...' : flower.description}
-                        </p>
-                        <div class="product-price-row">
-                            <span class="product-price">$${flower.price.toFixed(2)}</span>
-                            <span class="product-price-orig">$${flower.originalPrice.toFixed(2)}</span>
-                        </div>
-                        <div class="product-footer-actions">
-                            <a href="product.html?id=${flower.id}" class="btn btn-sm btn-outline" style="flex:1;">Details</a>
-                            <button onclick="addToCart(${flower.id}, 1)" class="btn btn-sm btn-primary" style="flex:1;">Add 🛒</button>
-                        </div>
+                    <div class="product-card-title">${flower.name}</div>
+                    <div class="product-card-footer">
+                        <span class="product-card-price">${formatCurrency(flower.price)}</span>
+                        <button onclick="addToCart(${flower.id}, 1)" class="btn-card-add">
+                            🛒 Add
+                        </button>
                     </div>
                 </div>
             `).join('');
@@ -288,42 +198,14 @@
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const searchParam = urlParams.get('search');
-            const categoryParam = urlParams.get('category');
 
             if (searchParam !== null) {
-                currentSearchQuery = searchParam;
-                const searchInput = document.getElementById('catalog-search-input');
-                if (searchInput) searchInput.value = searchParam;
+                document.getElementById('catalog-search-input').value = searchParam;
                 handleReflectedXSS(searchParam);
+                renderProducts(searchParam);
+            } else {
+                renderProducts();
             }
-
-            if (categoryParam) {
-                currentCategory = categoryParam;
-                document.querySelectorAll('.filter-pill').forEach(btn => {
-                    if (btn.getAttribute('data-category').toLowerCase() === categoryParam.toLowerCase()) {
-                        btn.classList.add('active');
-                    } else {
-                        btn.classList.remove('active');
-                    }
-                });
-            }
-
-            // Category buttons listener
-            document.querySelectorAll('.filter-pill').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentCategory = btn.getAttribute('data-category');
-                    renderProductsList();
-                });
-            });
-
-            // Sort dropdown listener
-            document.getElementById('sort-select').addEventListener('change', () => {
-                renderProductsList();
-            });
-
-            renderProductsList();
         });
     </script>
 </body>

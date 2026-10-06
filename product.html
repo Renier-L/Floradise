@@ -3,245 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Details — FloraBloom Boutique & Security Lab</title>
+    <title>Product Details — Floradise</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <!-- Security Lab Announcement -->
     <div class="lab-top-banner">
-        <span>🛡️ <strong>Vulnerability #2 Testing Zone:</strong> Stored XSS via Customer Reviews stored in <code>localStorage</code></span>
+        <span>🛡️ <strong>Vulnerability #2 Testing Zone:</strong> Stored XSS via Customer Reviews in <code>localStorage</code></span>
         <button onclick="fillStoredXSSPayload()">Auto-Fill Stored XSS Payload</button>
     </div>
 
-    <!-- Navigation Header -->
-    <header class="site-header">
-        <div class="container nav-wrapper">
-            <a href="index.html" class="brand-logo">
-                <span class="brand-icon">🌸</span>
-                <span>Flora<span class="accent">Bloom</span></span>
+    <!-- Floradise Green Header -->
+    <header class="main-store-header">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-wrap">
+                <span class="leaf-icon">🍃</span>
+                <span>Floradise</span>
             </a>
 
             <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="products.html">Flower Catalog</a></li>
-                    <li><a href="products.html?category=Mixed%20Bouquets">Bouquets</a></li>
-                    <li><a href="order.html?id=1001">Track Order <span class="nav-badge-lab">IDOR</span></a></li>
-                    <li><a href="admin.html">Admin <span class="nav-badge-lab">BAC</span></a></li>
+                <ul class="nav-menu-list">
+                    <li><a href="index.html">🏠 Home</a></li>
+                    <li><a href="index.html#about-us">ℹ️ About Us</a></li>
+                    <li><a href="index.html#contact-section">✉️ Contact</a></li>
+                    <li><a href="products.html">💐 Catalog</a></li>
+                    <li>
+                        <a href="cart.html" class="cart-pill-nav">
+                            🛒 Cart <span class="cart-count-bubble cart-count-badge">0</span>
+                        </a>
+                    </li>
+                    <li id="user-nav-slot">
+                        <a href="login.html" class="login-btn-nav">
+                            <span>➜]</span> Login
+                        </a>
+                    </li>
                 </ul>
             </nav>
-
-            <div class="nav-actions">
-                <form class="search-bar-form" action="products.html" method="GET">
-                    <input type="text" name="search" class="search-input-header" placeholder="Search flowers..." aria-label="Search">
-                    <button type="submit" class="search-submit-btn" aria-label="Submit search">🔍</button>
-                </form>
-
-                <a href="cart.html" class="cart-btn-link" title="View Cart">
-                    🛒
-                    <span class="cart-count-badge">0</span>
-                </a>
-
-                <div id="user-nav-slot" class="user-nav-action"></div>
-            </div>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="container section-padding" style="padding-top: 2rem;">
+    <main class="container" style="padding: 3rem 1.5rem 4rem;">
         
-        <!-- Breadcrumb -->
-        <nav style="margin-bottom: 1.5rem; font-size: 0.88rem; color: var(--text-secondary);">
-            <a href="index.html">Home</a> / 
-            <a href="products.html">Catalog</a> / 
-            <span id="breadcrumb-category">Roses</span> / 
-            <span id="breadcrumb-name" style="color: var(--text-primary); font-weight: 600;">Product</span>
-        </nav>
-
-        <!-- Product Details Showcase -->
-        <div class="product-detail-grid">
-            <!-- Left Column: Flower Image -->
-            <div class="detail-img-card">
-                <img id="detail-img" src="" alt="Flower Image">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: start; margin-bottom: 4rem;">
+            <!-- Left: Image -->
+            <div style="border-radius: var(--radius-lg); overflow: hidden; background: #fff; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+                <img id="detail-img" src="" alt="Flower Image" style="width: 100%; height: 420px; object-fit: cover;">
             </div>
 
-            <!-- Right Column: Details & Order Controls -->
-            <div class="detail-content">
-                <div class="detail-cat" id="detail-category">Botanical</div>
-                <h1 class="detail-title" id="detail-title">Loading Flower...</h1>
+            <!-- Right: Details -->
+            <div>
+                <span id="detail-category" style="color: var(--primary-green-dark); font-weight: 700; font-size: 0.85rem; text-transform: uppercase;">Category</span>
+                <h1 id="detail-name" style="font-size: 2.2rem; font-weight: 800; color: var(--text-dark); margin: 0.4rem 0 0.8rem;">Loading...</h1>
                 
-                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
-                    <span style="color: #e59819; font-weight: 700;" id="detail-rating">★ 4.9</span>
-                    <span style="color: var(--text-muted); font-size: 0.85rem;" id="detail-review-count">(0 customer reviews)</span>
-                    <span class="badge badge-success" style="margin-left: 0.5rem;">In Stock & Fresh</span>
+                <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.2rem;">
+                    <span id="detail-price" style="font-size: 1.8rem; font-weight: 800; color: var(--primary-green-dark);">₱0.00</span>
+                    <span id="detail-orig-price" style="font-size: 1.1rem; color: var(--text-muted); text-decoration: line-through;">₱0.00</span>
+                    <span style="background: var(--primary-green-subtle); color: var(--primary-green-dark); padding: 0.2rem 0.6rem; border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 700;">In Stock</span>
                 </div>
 
-                <div class="detail-price-box">
-                    <span class="detail-price" id="detail-price">$0.00</span>
-                    <span class="product-price-orig" id="detail-orig-price" style="font-size: 1.2rem;">$0.00</span>
-                </div>
-
-                <p class="detail-desc" id="detail-description">
-                    Detailed botanical description...
+                <p id="detail-desc" style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem;">
+                    Botanical description...
                 </p>
 
-                <!-- Color Palette Selection -->
-                <div class="option-group">
-                    <label class="option-label">Available Color Palette:</label>
-                    <div class="color-swatches" id="color-options">
-                        <!-- Filled by JS -->
-                    </div>
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                    <label style="font-weight: 700; font-size: 0.95rem;">Quantity:</label>
+                    <input type="number" id="detail-qty" min="1" max="25" value="1" style="width: 60px; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-weight: 700; text-align: center;">
                 </div>
 
-                <!-- Quantity Control -->
-                <div class="option-group">
-                    <label class="option-label">Bouquet Quantity:</label>
-                    <div class="qty-control">
-                        <button type="button" class="qty-btn" onclick="adjustQty(-1)">−</button>
-                        <input type="number" id="detail-qty" class="qty-input" value="1" min="1" max="20" readonly>
-                        <button type="button" class="qty-btn" onclick="adjustQty(1)">+</button>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="detail-actions-row">
-                    <button id="add-to-cart-btn" class="btn btn-primary btn-lg" style="flex: 2;">
+                <div style="display: flex; gap: 1rem;">
+                    <button id="detail-add-btn" class="btn-proceed-checkout" style="padding: 0.85rem 2.2rem; font-size: 1.05rem;">
                         Add to Cart 🛒
                     </button>
-                    <a href="cart.html" class="btn btn-secondary btn-lg" style="flex: 1;">
-                        View Cart
-                    </a>
-                </div>
-
-                <!-- Guarantees list -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; font-size: 0.85rem; color: var(--text-secondary); background: #ffffff; padding: 1.2rem; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
-                    <div>🌸 7-Day Freshness Guarantee</div>
-                    <div>🚚 Free Signature Delivery</div>
-                    <div>🎀 Free Satin Ribbon & Card</div>
-                    <div>🌿 Ethically Sourced Petals</div>
+                    <a href="cart.html" class="btn-continue-shop" style="display: flex; align-items: center;">View Cart</a>
                 </div>
             </div>
         </div>
 
-        <!-- ===================================================================
-             VULNERABILITY 2: STORED CROSS-SITE SCRIPTING (STORED XSS)
-             Reviews submitted are stored into localStorage (persisted database)
-             and rendered directly via innerHTML without escaping!
-             =================================================================== -->
-        <section class="reviews-section">
-            <div style="margin-bottom: 2rem;">
-                <span class="section-tag">Community Feedback</span>
-                <h2 style="font-family: var(--font-heading); font-size: 2rem;">Customer Reviews</h2>
-                <p style="color: var(--text-secondary);">Honest floral impressions from verified purchasers.</p>
-            </div>
-
-            <div class="reviews-grid">
-                <!-- Column 1: Existing Reviews List (Unsafe innerHTML rendering) -->
+        <!-- ===============================================================
+             VULNERABILITY 2: STORED XSS (Customer Reviews)
+             Reviews stored in localStorage and rendered via innerHTML
+             =============================================================== -->
+        <section style="border-top: 1px solid var(--border-color); padding-top: 3rem;">
+            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem;">
+                
+                <!-- Left: Existing Reviews -->
                 <div>
-                    <h3 style="font-family: var(--font-heading); margin-bottom: 1rem; font-size: 1.3rem;">
-                        Verified Reviews (<span id="reviews-total-num">0</span>)
-                    </h3>
-                    
-                    <div id="reviews-container" class="review-list">
-                        <!-- Reviews rendered unsanitized by renderReviews() -->
+                    <h3 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 1.2rem;">Customer Reviews (<span id="rev-count">0</span>)</h3>
+                    <div id="reviews-list-container" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <!-- Filled by JS -->
                     </div>
                 </div>
 
-                <!-- Column 2: Submit a Review Form -->
+                <!-- Right: Submit Review Form -->
                 <div>
-                    <div class="review-form-card">
-                        <h3 style="font-family: var(--font-heading); margin-bottom: 0.5rem; font-size: 1.4rem;">
-                            Share Your Floral Experience
-                        </h3>
-                        
-                        <div class="review-vuln-banner">
-                            <strong>⚠️ Vulnerability 2 Demo (Stored XSS):</strong> 
-                            This form saves raw text into <code>localStorage</code>. Comments are rendered via <code>element.innerHTML</code>. Any JavaScript payload entered here will execute every time any visitor views this page.
-                        </div>
+                    <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm);">
+                        <h4 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 0.6rem;">Leave a Review</h4>
+                        <p style="font-size: 0.85rem; color: #b91c1c; background: #fee2e2; padding: 0.5rem 0.8rem; border-radius: var(--radius-sm); margin-bottom: 1.2rem;">
+                            ⚠️ <strong>Stored XSS Sink:</strong> Comments are rendered into the DOM without sanitization.
+                        </p>
 
-                        <form id="review-submission-form">
-                            <div class="form-group">
-                                <label for="review-author">Your Name / Reviewer Handle:</label>
-                                <input type="text" id="review-author" class="form-control" placeholder="e.g. Eleanor Vance" required>
+                        <form id="add-review-form">
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem;">Your Name</label>
+                                <input type="text" id="rev-author" class="login-clean-input" placeholder="e.g. Maria Santos" required>
                             </div>
 
-                            <div class="form-group">
-                                <label for="review-rating">Rating:</label>
-                                <select id="review-rating" class="form-control">
-                                    <option value="5">★★★★★ (5/5 Exceptional)</option>
-                                    <option value="4">★★★★☆ (4/5 Very Fresh)</option>
-                                    <option value="3">★★★☆☆ (3/5 Average)</option>
-                                    <option value="2">★★☆☆☆ (2/5 Subpar)</option>
-                                    <option value="1">★☆☆☆☆ (1/5 Wilting)</option>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem;">Rating</label>
+                                <select id="rev-rating" class="login-clean-input">
+                                    <option value="5">★★★★★ (5 Stars)</option>
+                                    <option value="4">★★★★☆ (4 Stars)</option>
+                                    <option value="3">★★★☆☆ (3 Stars)</option>
                                 </select>
                             </div>
 
-                            <div class="form-group">
-                                <label for="review-comment">Your Comments (Supports HTML/JS payloads):</label>
-                                <textarea id="review-comment" class="form-control" rows="4" placeholder="How were your blooms arranged and delivered?" required></textarea>
+                            <div style="margin-bottom: 1.2rem;">
+                                <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem;">Your Comment (Supports HTML/JS)</label>
+                                <textarea id="rev-comment" class="login-clean-input" rows="3" placeholder="Share your experience..." required></textarea>
                             </div>
 
-                            <div style="display: flex; gap: 0.8rem; margin-bottom: 1rem; flex-wrap: wrap;">
-                                <button type="button" class="btn btn-sm btn-outline" onclick="fillStoredXSSPayload()">
-                                    ⚡ Fill Harmless XSS Payload
-                                </button>
-                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="resetProductReviews()">
-                                    🔄 Reset Default Reviews
-                                </button>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary" style="width: 100%;">
-                                Publish Customer Review
+                            <button type="submit" class="btn-proceed-checkout" style="width: 100%; justify-content: center;">
+                                Submit Review
                             </button>
                         </form>
                     </div>
                 </div>
+
             </div>
         </section>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="container footer-grid">
-            <div class="footer-about">
-                <div class="brand-logo" style="color: #ffffff;">
-                    <span>🌸 FloraBloom</span>
+    <!-- Floradise 3-Column Footer -->
+    <footer class="floradise-footer">
+        <div class="container footer-columns-grid">
+            <div>
+                <div class="footer-brand">
+                    <span>🍃</span>
+                    <span>FLORADISE</span>
                 </div>
-                <p>Artisanal online flower boutique creating bespoke bouquets and delivering botanical elegance right to your doorstep.</p>
-            </div>
-            <div class="footer-col">
-                <h4>Quick Links</h4>
-                <ul class="footer-links">
-                    <li><a href="products.html">All Flowers</a></li>
-                    <li><a href="cart.html">View Cart</a></li>
-                    <li><a href="login.html">Sign In</a></li>
-                    <li><a href="admin.html">Admin Dashboard</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Stored XSS Testing</h4>
-                <ul class="footer-links">
-                    <li><a href="javascript:fillStoredXSSPayload()">&lt;img onerror&gt; Payload</a></li>
-                    <li><a href="javascript:resetProductReviews()">Reset Reviews</a></li>
-                    <li><a href="products.html?search=%3Cscript%3Ealert('XSS')%3C/script%3E">Reflected XSS Test</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Security Notice</h4>
-                <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.6;">
-                    Intentionally vulnerable educational laboratory. Data is stored solely in local browser storage.
+                <p class="footer-brand-desc">
+                    Floradise is your green sanctuary, a community for everyone who shares a passion for plants. We believe in the simple joy of nurturing life and the peace that comes from a connection to nature.
                 </p>
             </div>
+            <div class="footer-col">
+                <h5>COMPANY</h5>
+                <ul class="footer-links-list">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about-us">About us</a></li>
+                    <li><a href="products.html">Delivery</a></li>
+                    <li><a href="admin.html?role=admin">Admin Dashboard</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>GET IN TOUCH</h5>
+                <div class="footer-contact-info">
+                    <p>+63 912 345 6789</p>
+                    <p>Support@Floradise.com</p>
+                </div>
+            </div>
         </div>
-        <div class="container footer-bottom">
-            <span>&copy; 2026 FloraBloom Security Lab.</span>
-            <span>Stored XSS Demonstration Page</span>
+        <div class="container footer-bottom-bar">
+            Copyright 2026© Floradise.com - All Right Reserved.
         </div>
     </footer>
 
@@ -249,162 +178,81 @@
     <script src="products.js"></script>
     <script src="script.js"></script>
     <script>
-        let currentProduct = null;
-        let selectedColor = null;
-
-        function adjustQty(delta) {
-            const qtyInput = document.getElementById('detail-qty');
-            let val = parseInt(qtyInput.value) + delta;
-            if (val < 1) val = 1;
-            if (val > 25) val = 25;
-            qtyInput.value = val;
-        }
+        let currentProd = null;
 
         function fillStoredXSSPayload() {
-            document.getElementById('review-author').value = "Attacker (Pentest Demo)";
-            document.getElementById('review-comment').value = "<img src='invalid-image' onerror=\"alert('Stored XSS Triggered via Persistent Review in LocalStorage!')\"> <p><em>Injected malicious HTML and script payload.</em></p>";
-            showToast("Stored XSS payload filled! Click 'Publish Customer Review' to persist.");
+            document.getElementById('rev-author').value = "Attacker (Pentest)";
+            document.getElementById('rev-comment').value = "<img src=x onerror=\"alert('Stored XSS Executed on Floradise!')\"> <em>Injected payload active.</em>";
+            showToast("Stored XSS payload filled! Submit to test.");
         }
 
-        function resetProductReviews() {
-            localStorage.setItem('florabloom_reviews', JSON.stringify(INITIAL_REVIEWS));
-            renderProductReviews(currentProduct.id);
-            showToast("Reviews reset to factory defaults.");
-        }
+        function renderReviews(prodId) {
+            const list = getReviews().filter(r => r.productId === parseInt(prodId));
+            const container = document.getElementById('reviews-list-container');
+            document.getElementById('rev-count').textContent = list.length;
 
-        // =====================================================================
-        // VULNERABILITY 2: STORED XSS RENDERING
-        // Renders customer reviews directly into the DOM via innerHTML
-        // =====================================================================
-        function renderProductReviews(productId) {
-            const container = document.getElementById('reviews-container');
-            const totalNum = document.getElementById('reviews-total-num');
-            const allReviews = getReviews();
-            const productReviews = allReviews.filter(r => r.productId === parseInt(productId));
-
-            totalNum.textContent = productReviews.length;
-
-            if (productReviews.length === 0) {
-                container.innerHTML = `
-                    <div style="background:var(--bg-surface); padding:2rem; border-radius:var(--radius-md); text-align:center; color:var(--text-muted); border:1px dashed var(--border-color);">
-                        No reviews yet for this bouquet. Be the first to write one!
-                    </div>
-                `;
+            if (list.length === 0) {
+                container.innerHTML = `<p style="color:var(--text-muted);">No reviews yet. Be the first to review!</p>`;
                 return;
             }
 
-            /*
-             * INTENTIONALLY VULNERABLE CODE:
-             * review.author and review.comment are directly concatenated into the HTML string.
-             * No HTML escaping (htmlspecialchars / DOM textNode) is performed!
-             */
-            container.innerHTML = productReviews.map(r => `
-                <div class="review-card">
-                    <div class="review-header">
-                        <!-- Unescaped Author Name -->
-                        <span class="review-author">${r.author}</span>
-                        <span class="review-date">${r.date || 'Recently'}</span>
+            // Unsanitized innerHTML rendering (Stored XSS)
+            container.innerHTML = list.map(r => `
+                <div style="background:#fff; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1.2rem;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;">
+                        <strong>${r.author}</strong>
+                        <span style="font-size:0.8rem; color:var(--text-muted);">${r.date || 'Oct 2026'}</span>
                     </div>
-                    <div style="color: #e59819; margin-bottom: 0.5rem;">
-                        ${'★'.repeat(r.rating || 5)}${'☆'.repeat(5 - (r.rating || 5))}
-                    </div>
-                    <!-- Unescaped User Comment (Stored XSS execution sink) -->
-                    <div class="review-comment">${r.comment}</div>
+                    <div style="color:#f59e0b; margin-bottom:0.4rem;">${'★'.repeat(r.rating || 5)}</div>
+                    <div style="color:var(--text-dark);">${r.comment}</div>
                 </div>
             `).join('');
 
-            // Execute script tags if user injected <script> elements
             executeScriptTags(container);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id') || 1;
-            currentProduct = getProductById(productId);
+            const id = new URLSearchParams(window.location.search).get('id') || 1;
+            currentProd = getProductById(id);
 
-            if (!currentProduct) {
-                document.querySelector('main').innerHTML = `
-                    <div style="text-align:center; padding:5rem 1rem;">
-                        <h2>Product Not Found</h2>
-                        <p style="margin:1rem 0 2rem; color:var(--text-secondary);">The requested flower arrangement does not exist.</p>
-                        <a href="products.html" class="btn btn-primary">Return to Catalog</a>
-                    </div>
-                `;
-                return;
+            if (currentProd) {
+                document.title = `${currentProd.name} — Floradise`;
+                document.getElementById('detail-img').src = currentProd.image;
+                document.getElementById('detail-name').textContent = currentProd.name;
+                document.getElementById('detail-category').textContent = currentProd.category;
+                document.getElementById('detail-price').textContent = formatCurrency(currentProd.price);
+                document.getElementById('detail-orig-price').textContent = formatCurrency(currentProd.originalPrice);
+                document.getElementById('detail-desc').textContent = currentProd.description;
+
+                renderReviews(currentProd.id);
+
+                document.getElementById('detail-add-btn').addEventListener('click', () => {
+                    const qty = parseInt(document.getElementById('detail-qty').value) || 1;
+                    addToCart(currentProd.id, qty);
+                });
+
+                document.getElementById('add-review-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const author = document.getElementById('rev-author').value.trim();
+                    const rating = parseInt(document.getElementById('rev-rating').value);
+                    const comment = document.getElementById('rev-comment').value.trim();
+
+                    const allRev = getReviews();
+                    allRev.unshift({
+                        id: Date.now(),
+                        productId: currentProd.id,
+                        author: author,
+                        rating: rating,
+                        date: new Date().toISOString().split('T')[0],
+                        comment: comment
+                    });
+                    localStorage.setItem('florabloom_reviews', JSON.stringify(allRev));
+                    document.getElementById('rev-comment').value = '';
+                    showToast("Review submitted!");
+                    renderReviews(currentProd.id);
+                });
             }
-
-            // Populate Product Data
-            document.title = `${currentProduct.name} — FloraBloom`;
-            document.getElementById('breadcrumb-category').textContent = currentProduct.category;
-            document.getElementById('breadcrumb-name').textContent = currentProduct.name;
-            document.getElementById('detail-img').src = currentProduct.image;
-            document.getElementById('detail-img').alt = currentProduct.name;
-            document.getElementById('detail-category').textContent = currentProduct.category;
-            document.getElementById('detail-title').textContent = currentProduct.name;
-            document.getElementById('detail-price').textContent = `$${currentProduct.price.toFixed(2)}`;
-            document.getElementById('detail-orig-price').textContent = `$${currentProduct.originalPrice.toFixed(2)}`;
-            document.getElementById('detail-rating').textContent = `★ ${currentProduct.rating}`;
-            document.getElementById('detail-review-count').textContent = `(${currentProduct.reviewCount} customer reviews)`;
-            document.getElementById('detail-description').textContent = currentProduct.description;
-
-            // Populate Color Swatches
-            const colorContainer = document.getElementById('color-options');
-            if (currentProduct.colors && currentProduct.colors.length > 0) {
-                selectedColor = currentProduct.colors[0];
-                colorContainer.innerHTML = currentProduct.colors.map((c, i) => `
-                    <button type="button" class="color-pill ${i === 0 ? 'active' : ''}" onclick="selectColor(this, '${c}')">
-                        ${c}
-                    </button>
-                `).join('');
-            } else {
-                colorContainer.innerHTML = `<span style="font-size:0.9rem; color:var(--text-muted);">Standard Arrangement</span>`;
-            }
-
-            // Render existing reviews (triggers stored XSS if payload previously saved)
-            renderProductReviews(currentProduct.id);
-
-            // Add to Cart Button
-            document.getElementById('add-to-cart-btn').addEventListener('click', () => {
-                const qty = parseInt(document.getElementById('detail-qty').value) || 1;
-                addToCart(currentProduct.id, qty, selectedColor);
-            });
-
-            // Review Submission Handler
-            document.getElementById('review-submission-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const author = document.getElementById('review-author').value.trim();
-                const rating = parseInt(document.getElementById('review-rating').value);
-                const comment = document.getElementById('review-comment').value.trim();
-
-                if (!author || !comment) return;
-
-                const allReviews = getReviews();
-                const newReview = {
-                    id: Date.now(),
-                    productId: currentProduct.id,
-                    author: author,
-                    rating: rating,
-                    date: new Date().toISOString().split('T')[0],
-                    comment: comment // Insecurely stored without sanitization
-                };
-
-                allReviews.unshift(newReview);
-                localStorage.setItem('florabloom_reviews', JSON.stringify(allReviews));
-
-                // Clear input
-                document.getElementById('review-comment').value = '';
-                showToast("Review published successfully!");
-
-                // Re-render reviews (triggers XSS)
-                renderProductReviews(currentProduct.id);
-            });
         });
-
-        function selectColor(btn, color) {
-            document.querySelectorAll('.color-pill').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            selectedColor = color;
-        }
     </script>
 </body>
 </html>

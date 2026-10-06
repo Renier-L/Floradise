@@ -3,235 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Receipt & Tracking — FloraBloom Boutique & Security Lab</title>
+    <title>Order Receipt — Floradise</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <!-- Security Lab Announcement -->
     <div class="lab-top-banner">
-        <span>🛡️ <strong>Vulnerability #5 Testing Zone:</strong> Insecure Direct Object Reference (IDOR) on <code>order.html?id=...</code></span>
+        <span>🛡️ <strong>Vulnerability #5:</strong> Insecure Direct Object Reference (IDOR) on <code>order.html?id=...</code></span>
         <a href="order.html?id=1003">Inspect Order #1003 (Dr. Evelyn Vance)</a>
     </div>
 
-    <!-- Navigation Header -->
-    <header class="site-header">
-        <div class="container nav-wrapper">
-            <a href="index.html" class="brand-logo">
-                <span class="brand-icon">🌸</span>
-                <span>Flora<span class="accent">Bloom</span></span>
+    <!-- Floradise Green Header -->
+    <header class="main-store-header">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-wrap">
+                <span class="leaf-icon">🍃</span>
+                <span>Floradise</span>
             </a>
 
             <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="products.html">Flower Catalog</a></li>
-                    <li><a href="products.html?category=Mixed%20Bouquets">Bouquets</a></li>
-                    <li><a href="order.html?id=1001" class="active">Track Order <span class="nav-badge-lab">IDOR</span></a></li>
-                    <li><a href="admin.html">Admin <span class="nav-badge-lab">BAC</span></a></li>
+                <ul class="nav-menu-list">
+                    <li><a href="index.html">🏠 Home</a></li>
+                    <li><a href="index.html#about-us">ℹ️ About Us</a></li>
+                    <li><a href="index.html#contact-section">✉️ Contact</a></li>
+                    <li><a href="products.html">💐 Catalog</a></li>
+                    <li>
+                        <a href="cart.html" class="cart-pill-nav">
+                            🛒 Cart <span class="cart-count-bubble cart-count-badge">0</span>
+                        </a>
+                    </li>
+                    <li id="user-nav-slot">
+                        <a href="login.html" class="login-btn-nav">
+                            <span>➜]</span> Login
+                        </a>
+                    </li>
                 </ul>
             </nav>
-
-            <div class="nav-actions">
-                <form class="search-bar-form" action="products.html" method="GET">
-                    <input type="text" name="search" class="search-input-header" placeholder="Search flowers..." aria-label="Search">
-                    <button type="submit" class="search-submit-btn" aria-label="Submit search">🔍</button>
-                </form>
-
-                <a href="cart.html" class="cart-btn-link" title="View Cart">
-                    🛒
-                    <span class="cart-count-badge">0</span>
-                </a>
-
-                <div id="user-nav-slot" class="user-nav-action"></div>
-            </div>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="container section-padding" style="padding-top: 2rem;">
+    <main class="container" style="padding: 3rem 1.5rem 4rem;">
         
-        <!-- Header -->
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
             <div>
-                <span class="section-tag">Order Confirmation & Tracking</span>
-                <h1 style="font-family: var(--font-heading); font-size: 2.4rem;">
-                    Floral Order <span id="display-order-id" style="color: var(--primary);">#1001</span>
+                <span style="color: var(--primary-green-dark); font-weight: 700; font-size: 0.85rem; text-transform: uppercase;">Order Tracking & Receipt</span>
+                <h1 style="font-size: 2.2rem; font-weight: 800; color: var(--text-dark);">
+                    Order <span id="ord-id-display" style="color: var(--primary-green-dark);">#1001</span>
                 </h1>
             </div>
-            <div>
-                <span id="order-status-badge" class="badge badge-success" style="font-size: 0.95rem; padding: 0.5rem 1rem;">
-                    Delivered
-                </span>
-            </div>
+            <span id="ord-badge" style="background: var(--primary-green-subtle); color: var(--primary-green-dark); padding: 0.4rem 1rem; border-radius: var(--radius-full); font-weight: 700; font-size: 0.9rem;">Delivered</span>
         </div>
 
-        <!-- ===================================================================
-             VULNERABILITY 5: INSECURE DIRECT OBJECT REFERENCE (IDOR)
-             The page retrieves the order ID from URL query param `?id=`
-             and displays the full customer PII and purchase details without
-             verifying whether the active logged-in user owns this record!
-             =================================================================== -->
-        <div class="idor-warning-panel">
-            <h4>⚠️ Vulnerability 5 Active: Insecure Direct Object Reference (IDOR)</h4>
-            <p>
-                The URL parameter <code>?id=<span class="current-id-text">1001</span></code> directly references the database record. 
-                Because there is <strong>zero authorization checking</strong> between the currently logged-in user and the order owner, any visitor can inspect another customer's private information by altering the ID in the URL.
+        <!-- ===============================================================
+             VULNERABILITY 5: IDOR EXPLANATION PANEL
+             =============================================================== -->
+        <div style="background: #fef2f2; border: 1px dashed #ef4444; border-radius: var(--radius-md); padding: 1.2rem; margin-bottom: 2rem;">
+            <strong style="color: #991b1b; display: block; margin-bottom: 0.3rem;">⚠️ Vulnerability 5: Insecure Direct Object Reference (IDOR)</strong>
+            <p style="font-size: 0.85rem; color: #7f1d1d; margin-bottom: 0.8rem;">
+                Because there is <strong>no authorization check</strong> between the active session and the order ID in the URL, changing the <code>?id=</code> parameter displays another customer's private delivery address, phone, and items.
             </p>
-            <div style="display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;">
-                <span style="font-size: 0.82rem; font-weight: 700; color: #991b1b;">Quick Switch Test IDs:</span>
-                <div class="idor-switch-btns">
-                    <a href="order.html?id=1001" class="btn btn-sm btn-outline">#1001 (Alice Green)</a>
-                    <a href="order.html?id=1002" class="btn btn-sm btn-outline">#1002 (Marcus Sterling)</a>
-                    <a href="order.html?id=1003" class="btn btn-sm btn-outline">#1003 (Dr. Evelyn Vance)</a>
-                    <a href="order.html?id=1004" class="btn btn-sm btn-outline">#1004 (Liam O'Connor)</a>
-                </div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <span style="font-size: 0.8rem; font-weight: 700; color: #991b1b;">Test Other Customer Orders:</span>
+                <a href="order.html?id=1001" style="background:#fff; border:1px solid #fca5a5; padding:2px 8px; border-radius:4px; font-size:0.75rem; color:#991b1b;">#1001 (Simplicio)</a>
+                <a href="order.html?id=1002" style="background:#fff; border:1px solid #fca5a5; padding:2px 8px; border-radius:4px; font-size:0.75rem; color:#991b1b;">#1002 (Rei Lopez)</a>
+                <a href="order.html?id=1003" style="background:#fff; border:1px solid #fca5a5; padding:2px 8px; border-radius:4px; font-size:0.75rem; color:#991b1b;">#1003 (Dr. Evelyn)</a>
+                <a href="order.html?id=1004" style="background:#fff; border:1px solid #fca5a5; padding:2px 8px; border-radius:4px; font-size:0.75rem; color:#991b1b;">#1004 (Jairus)</a>
             </div>
         </div>
 
-        <!-- Order Card Details -->
-        <div class="order-idor-card" id="order-card-content">
-            <!-- Delivery Status Tracker Visual -->
-            <div style="margin-bottom: 3rem;">
-                <h4 style="font-family: var(--font-heading); margin-bottom: 1.5rem; color: var(--text-primary);">Delivery Status Progress</h4>
-                <div style="display: flex; justify-content: space-between; position: relative; max-width: 700px; margin: 0 auto;">
-                    <div style="position: absolute; top: 18px; left: 10%; right: 10%; height: 4px; background: #e2e8f0; z-index: 1;"></div>
-                    <div id="progress-bar-fill" style="position: absolute; top: 18px; left: 10%; width: 100%; height: 4px; background: var(--secondary); z-index: 2; transition: var(--transition);"></div>
+        <!-- Order Receipt Card -->
+        <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2.5rem; box-shadow: var(--shadow-sm);">
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border-light); padding-bottom: 2rem;">
+                <div>
+                    <h4 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 0.8rem;">Customer Profile (Exposed via IDOR)</h4>
+                    <p><strong>Name:</strong> <span id="cust-name-val">Simplicio Juanir</span></p>
+                    <p><strong>Email:</strong> <span id="cust-email-val">simp@gmail.com</span></p>
+                    <p><strong>Contact:</strong> <span id="cust-phone-val">+63 912 345 6789</span></p>
+                    <p><strong>Order Date:</strong> <span id="cust-date-val">2026-10-03</span></p>
+                </div>
 
-                    <div style="position: relative; z-index: 3; text-align: center;">
-                        <div style="width: 38px; height: 38px; border-radius: 50%; background: var(--secondary); color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.4rem; font-weight: bold;">✓</div>
-                        <span style="font-size: 0.82rem; font-weight: 600;">Ordered</span>
-                    </div>
-                    <div style="position: relative; z-index: 3; text-align: center;">
-                        <div id="step-packed" style="width: 38px; height: 38px; border-radius: 50%; background: var(--secondary); color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.4rem; font-weight: bold;">✓</div>
-                        <span style="font-size: 0.82rem; font-weight: 600;">Florist Arranged</span>
-                    </div>
-                    <div style="position: relative; z-index: 3; text-align: center;">
-                        <div id="step-transit" style="width: 38px; height: 38px; border-radius: 50%; background: var(--secondary); color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.4rem; font-weight: bold;">✓</div>
-                        <span style="font-size: 0.82rem; font-weight: 600;">In Transit</span>
-                    </div>
-                    <div style="position: relative; z-index: 3; text-align: center;">
-                        <div id="step-delivered" style="width: 38px; height: 38px; border-radius: 50%; background: var(--secondary); color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.4rem; font-weight: bold;">✓</div>
-                        <span style="font-size: 0.82rem; font-weight: 600;">Delivered</span>
-                    </div>
+                <div>
+                    <h4 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 0.8rem;">Delivery Destination</h4>
+                    <p><strong>Address:</strong> <span id="cust-addr-val">Unit 12B, Horizon Tower, BGC, Taguig</span></p>
+                    <p><strong>Target Delivery:</strong> <span id="cust-target-val">2026-10-04</span></p>
+                    <p><strong>Special Inscription Notes:</strong> <span id="cust-notes-val" style="font-style: italic;">"Leave with reception if unattended."</span></p>
                 </div>
             </div>
 
-            <!-- Exposed Customer Information (IDOR Demonstration) -->
-            <div class="order-receipt-grid">
-                <div class="order-detail-col">
-                    <h4>Customer Profile (Exposed via IDOR)</h4>
-                    <p><strong>Customer Name:</strong> <span id="ord-cust-name">Alice Green</span></p>
-                    <p><strong>Contact Email:</strong> <span id="ord-cust-email">alice.green@example.fake</span></p>
-                    <p><strong>Phone Number:</strong> <span id="ord-cust-phone">+1 (555) 014-2289</span></p>
-                    <p><strong>Order Placement Date:</strong> <span id="ord-date">2026-09-28</span></p>
-                </div>
-
-                <div class="order-detail-col">
-                    <h4>Delivery Destination</h4>
-                    <p><strong>Recipient Address:</strong></p>
-                    <p id="ord-address" style="color: var(--text-secondary); margin-bottom: 0.6rem;">124 Rosewood Lane, Suite 3B, Seattle, WA 98101</p>
-                    <p><strong>Target Delivery:</strong> <span id="ord-delivery-date">2026-09-30</span></p>
-                    <p><strong>Special Inscription Notes:</strong> <span id="ord-notes" style="font-style: italic;">"Please leave on porch behind flower pot if not home."</span></p>
-                </div>
+            <!-- Items Table -->
+            <h4 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 1rem;">Purchased Items</h4>
+            <div style="overflow-x: auto;">
+                <table class="cart-custom-table">
+                    <thead>
+                        <tr>
+                            <th>ITEM</th>
+                            <th>QUANTITY</th>
+                            <th>UNIT PRICE</th>
+                            <th>SUBTOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody id="receipt-tbody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
             </div>
 
-            <!-- Ordered Bouquet Items -->
-            <div>
-                <h4 style="font-family: var(--font-heading); margin-bottom: 0.8rem; color: var(--text-primary);">Arrangements in This Order</h4>
-                <div style="overflow-x: auto;">
-                    <table class="order-items-table">
-                        <thead>
-                            <tr>
-                                <th>Flower Item</th>
-                                <th>Color Variety</th>
-                                <th>Qty</th>
-                                <th>Unit Price</th>
-                                <th>Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody id="order-items-tbody">
-                            <!-- Populated via JS -->
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="4" style="text-align: right; font-weight: 600; padding: 0.8rem 1rem;">Courier Delivery:</td>
-                                <td id="ord-shipping-fee" style="padding: 0.8rem 1rem;">$9.99</td>
-                            </tr>
-                            <tr>
-                                <td colspan="4" style="text-align: right; font-weight: 600; padding: 0.8rem 1rem;">Sales Tax:</td>
-                                <td id="ord-tax-fee" style="padding: 0.8rem 1rem;">$8.00</td>
-                            </tr>
-                            <tr style="font-size: 1.15rem; font-weight: 700; color: var(--primary);">
-                                <td colspan="4" style="text-align: right; padding: 0.8rem 1rem; border-top: 2px solid var(--border-color);">Total Billed:</td>
-                                <td id="ord-grand-total" style="padding: 0.8rem 1rem; border-top: 2px solid var(--border-color);">$117.97</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+            <div style="text-align: right; margin-top: 1.5rem; font-size: 1.4rem; font-weight: 800;">
+                Total Billed: <span id="receipt-total" style="color: var(--primary-green-dark);">₱0.00</span>
             </div>
 
-            <div style="margin-top: 2.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                <a href="products.html" class="btn btn-outline">← Back to Flower Catalog</a>
-                <button onclick="window.print()" class="btn btn-secondary">Print Floral Receipt 🖨️</button>
-            </div>
-        </div>
-
-        <!-- Order Not Found Container -->
-        <div id="order-not-found" style="display: none; text-align: center; padding: 4rem 1rem; background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px dashed var(--border-color);">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
-            <h2 style="font-family: var(--font-heading); margin-bottom: 0.5rem;">Order Not Found</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-                No order found matching ID: <code id="missing-id-display"></code>
-            </p>
-            <div style="display: flex; justify-content: center; gap: 0.8rem;">
-                <a href="order.html?id=1001" class="btn btn-primary">Try Default Order #1001</a>
-                <a href="products.html" class="btn btn-outline">Browse Catalog</a>
+            <div style="margin-top: 2rem; display: flex; justify-content: space-between;">
+                <a href="products.html" class="btn-continue-shop">← Back to Catalog</a>
+                <button onclick="window.print()" class="btn-proceed-checkout" style="background: #1e293b;">
+                    Print Receipt 🖨️
+                </button>
             </div>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="container footer-grid">
-            <div class="footer-about">
-                <div class="brand-logo" style="color: #ffffff;">
-                    <span>🌸 FloraBloom</span>
+    <!-- Floradise 3-Column Footer -->
+    <footer class="floradise-footer">
+        <div class="container footer-columns-grid">
+            <div>
+                <div class="footer-brand">
+                    <span>🍃</span>
+                    <span>FLORADISE</span>
                 </div>
-                <p>Artisanal online flower boutique creating bespoke bouquets and delivering botanical elegance right to your doorstep.</p>
-            </div>
-            <div class="footer-col">
-                <h4>Customer Navigation</h4>
-                <ul class="footer-links">
-                    <li><a href="products.html">Flowers</a></li>
-                    <li><a href="cart.html">Cart</a></li>
-                    <li><a href="login.html">Login</a></li>
-                    <li><a href="admin.html">Admin</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>IDOR Testing Matrix</h4>
-                <ul class="footer-links">
-                    <li><a href="order.html?id=1001">Order #1001 (Alice)</a></li>
-                    <li><a href="order.html?id=1002">Order #1002 (Marcus)</a></li>
-                    <li><a href="order.html?id=1003">Order #1003 (Evelyn)</a></li>
-                    <li><a href="order.html?id=1004">Order #1004 (Liam)</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Security Disclaimer</h4>
-                <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.6;">
-                    Intentionally vulnerable IDOR demonstration. All customer addresses and names are fictional.
+                <p class="footer-brand-desc">
+                    Floradise is your green sanctuary, a community for everyone who shares a passion for plants.
                 </p>
             </div>
+            <div class="footer-col">
+                <h5>COMPANY</h5>
+                <ul class="footer-links-list">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Delivery</a></li>
+                    <li><a href="admin.html?role=admin">Admin Dashboard</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>GET IN TOUCH</h5>
+                <div class="footer-contact-info">
+                    <p>+63 912 345 6789</p>
+                    <p>Support@Floradise.com</p>
+                </div>
+            </div>
         </div>
-        <div class="container footer-bottom">
-            <span>&copy; 2026 FloraBloom Security Lab.</span>
-            <span>IDOR Simulation Page</span>
+        <div class="container footer-bottom-bar">
+            Copyright 2026© Floradise.com - All Right Reserved.
         </div>
     </footer>
 
@@ -240,69 +166,33 @@
     <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const orderId = urlParams.get('id') || '1001';
-
-            document.querySelectorAll('.current-id-text').forEach(el => el.textContent = orderId);
-
-            // =================================================================
-            // VULNERABILITY 5: IDOR DATA RETRIEVAL
-            // Reads order from local database without checking current user credentials
-            // =================================================================
+            const id = new URLSearchParams(window.location.search).get('id') || '1001';
             const orders = getOrders();
-            const order = orders.find(o => String(o.id) === String(orderId));
+            const ord = orders.find(o => String(o.id) === String(id));
 
-            const card = document.getElementById('order-card-content');
-            const notFound = document.getElementById('order-not-found');
+            if (ord) {
+                document.getElementById('ord-id-display').textContent = `#${ord.id}`;
+                document.getElementById('ord-badge').textContent = ord.status;
+                document.getElementById('cust-name-val').textContent = ord.customerName;
+                document.getElementById('cust-email-val').textContent = ord.email;
+                document.getElementById('cust-phone-val').textContent = ord.phone;
+                document.getElementById('cust-date-val').textContent = ord.orderDate;
+                document.getElementById('cust-addr-val').textContent = ord.address;
+                document.getElementById('cust-target-val').textContent = ord.deliveryDate;
+                document.getElementById('cust-notes-val').textContent = ord.notes || 'None';
 
-            if (!order) {
-                card.style.display = 'none';
-                notFound.style.display = 'block';
-                document.getElementById('missing-id-display').textContent = orderId;
-                return;
+                const tbody = document.getElementById('receipt-tbody');
+                tbody.innerHTML = (ord.items || []).map(item => `
+                    <tr>
+                        <td><strong>${item.name}</strong></td>
+                        <td>${item.quantity}</td>
+                        <td>${formatCurrency(item.price)}</td>
+                        <td style="font-weight:700; color:var(--primary-green-dark);">${formatCurrency(item.price * item.quantity)}</td>
+                    </tr>
+                `).join('');
+
+                document.getElementById('receipt-total').textContent = formatCurrency(ord.total);
             }
-
-            // Populate Order Details
-            document.getElementById('display-order-id').textContent = `#${order.id}`;
-            document.getElementById('order-status-badge').textContent = order.status;
-
-            if (order.status === 'Delivered') {
-                document.getElementById('order-status-badge').className = 'badge badge-success';
-                document.getElementById('progress-bar-fill').style.width = '80%';
-            } else if (order.status === 'In Transit') {
-                document.getElementById('order-status-badge').className = 'badge badge-warning';
-                document.getElementById('step-delivered').style.background = '#cbd5e1';
-                document.getElementById('progress-bar-fill').style.width = '53%';
-            } else {
-                document.getElementById('order-status-badge').className = 'badge badge-primary';
-                document.getElementById('step-transit').style.background = '#cbd5e1';
-                document.getElementById('step-delivered').style.background = '#cbd5e1';
-                document.getElementById('progress-bar-fill').style.width = '26%';
-            }
-
-            document.getElementById('ord-cust-name').textContent = order.customerName;
-            document.getElementById('ord-cust-email').textContent = order.email;
-            document.getElementById('ord-cust-phone').textContent = order.phone;
-            document.getElementById('ord-date').textContent = order.orderDate;
-            document.getElementById('ord-address').textContent = order.address;
-            document.getElementById('ord-delivery-date').textContent = order.deliveryDate;
-            document.getElementById('ord-notes').textContent = order.notes || 'None specified';
-
-            // Items table
-            const tbody = document.getElementById('order-items-tbody');
-            tbody.innerHTML = (order.items || []).map(item => `
-                <tr>
-                    <td style="font-weight: 600;">${item.name}</td>
-                    <td>${item.color || 'Standard'}</td>
-                    <td>${item.quantity}</td>
-                    <td>$${Number(item.price).toFixed(2)}</td>
-                    <td style="font-weight: 700;">$${(item.price * item.quantity).toFixed(2)}</td>
-                </tr>
-            `).join('');
-
-            document.getElementById('ord-shipping-fee').textContent = order.shipping === 0 ? 'FREE' : `$${Number(order.shipping).toFixed(2)}`;
-            document.getElementById('ord-tax-fee').textContent = `$${Number(order.tax).toFixed(2)}`;
-            document.getElementById('ord-grand-total').textContent = `$${Number(order.total).toFixed(2)}`;
         });
     </script>
 </body>

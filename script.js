@@ -1,5 +1,5 @@
 /**
- * FloraBloom — E-Commerce Core & Vulnerability Simulation Engine
+ * Floradise — Core Application & Cybersecurity Simulation Engine
  * =========================================================================
  * CYBERSECURITY LABORATORY DISCLAIMER:
  * This software contains intentional web application vulnerabilities for
@@ -8,19 +8,7 @@
  * =========================================================================
  */
 
-// =========================================================================
-// VULNERABILITY 7: SENSITIVE INFORMATION EXPOSURE
-// CWE-200: Leftover Development Config and Testing Credentials
-// =========================================================================
-/*
- * DEV TEAM REMINDERS:
- * Test payment gateway bypass token: TEST_TOKEN_FLORABLOOM_SIM_88921
- * Cloud warehouse bucket: https://s3.florabloom-internal-staging.fake/assets/
- * Test admin account: admin@florabloom.local / FlowerAdmin123
- * Debug order reference: TEST_ORDER_1001
- */
-
-// 1. Initialize Local Storage State
+// 1. Initialize Local Storage State with Floradise seed data
 (function initializeDatabase() {
     if (!localStorage.getItem('florabloom_products')) {
         localStorage.setItem('florabloom_products', JSON.stringify(FLORABLOOM_PRODUCTS));
@@ -77,13 +65,16 @@ function showToast(message) {
         toast = document.createElement('div');
         toast.id = 'flora-toast';
         toast.className = 'toast-notice';
+        toast.style.cssText = "position:fixed; bottom:24px; right:24px; background:#065f46; color:#ffffff; padding:0.9rem 1.4rem; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.18); display:flex; align-items:center; gap:0.6rem; z-index:99999; font-weight:600; font-size:0.92rem; transition:all 0.3s ease; transform:translateY(100px); opacity:0;";
         document.body.appendChild(toast);
     }
-    toast.innerHTML = `<span>🌸</span> <span>${message}</span>`;
-    toast.classList.add('show');
+    toast.innerHTML = `<span>🍃</span> <span>${message}</span>`;
+    toast.style.transform = 'translateY(0)';
+    toast.style.opacity = '1';
     setTimeout(() => {
-        toast.classList.remove('show');
-    }, 3200);
+        toast.style.transform = 'translateY(100px)';
+        toast.style.opacity = '0';
+    }, 3000);
 }
 
 // Cart Badge
@@ -133,17 +124,19 @@ function updateAuthUI() {
 
     if (session && session.email) {
         userContainer.innerHTML = `
-            <div style="display:flex; align-items:center; gap:0.6rem;">
-                <span style="font-size:0.88rem; color:var(--text-secondary);">
-                    Hi, <strong>${session.name || session.email.split('@')[0]}</strong>
-                    ${session.role === 'admin' ? '<span class="badge badge-warning" style="font-size:0.7rem;">Admin</span>' : ''}
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+                <span style="font-size:0.85rem; color:#ffffff; font-weight:700;">
+                    ${session.name || session.email.split('@')[0]}
+                    ${session.role === 'admin' ? '<a href="admin.html" style="background:#064e3b; color:#34d399; padding:2px 8px; border-radius:12px; font-size:0.75rem; margin-left:4px;">Admin</a>' : ''}
                 </span>
-                <button onclick="handleLogout()" class="btn btn-sm btn-outline" style="padding:0.3rem 0.8rem; font-size:0.8rem;">Logout</button>
+                <button onclick="handleLogout()" style="background:rgba(255,255,255,0.25); color:#fff; border-radius:20px; padding:0.3rem 0.8rem; font-size:0.78rem; font-weight:700;">Logout</button>
             </div>
         `;
     } else {
         userContainer.innerHTML = `
-            <a href="login.html" class="btn btn-sm btn-primary">Login / Sign In</a>
+            <a href="login.html" class="login-btn-nav">
+                <span>➜]</span> Login
+            </a>
         `;
     }
 }
@@ -154,17 +147,21 @@ function updateAuthUI() {
 function handleLogin(email, password) {
     const users = getUsers();
     
-    // Client-side authentication flaw: Hardcoded credentials or client verification
-    const foundUser = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+    // Support typing 'admin' directly as email
+    let cleanEmail = email.toLowerCase();
+    if (cleanEmail === 'admin') cleanEmail = 'admin@floradise.local';
+
+    const foundUser = users.find(u => 
+        (u.email.toLowerCase() === cleanEmail || u.name.toLowerCase() === cleanEmail) && 
+        u.password === password
+    );
     
     if (foundUser) {
-        // VULNERABILITY 6: Sensitive session token stored unencrypted in localStorage
         const fakeSession = {
-            userId: foundUser.email === "admin@florabloom.local" ? "usr_admin_01" : "usr_cust_02",
+            userId: foundUser.role === 'admin' ? "usr_admin_01" : "usr_cust_02",
             email: foundUser.email,
             name: foundUser.name,
             role: foundUser.role, // 'admin' or 'customer'
-            // Insecure client-generated fake JWT token
             sessionToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({ email: foundUser.email, role: foundUser.role, exp: Date.now() + 86400000 })) + ".DEMO_UNVERIFIED_SIGNATURE",
             loginTimestamp: new Date().toISOString()
         };
@@ -176,9 +173,9 @@ function handleLogin(email, password) {
             if (foundUser.role === 'admin') {
                 window.location.href = 'admin.html';
             } else {
-                window.location.href = 'products.html';
+                window.location.href = 'index.html';
             }
-        }, 1000);
+        }, 800);
         return true;
     } else {
         return false;
@@ -190,7 +187,7 @@ function handleLogout() {
     showToast('Logged out successfully.');
     updateAuthUI();
     setTimeout(() => {
-        window.location.reload();
+        window.location.href = 'index.html';
     }, 600);
 }
 
@@ -203,14 +200,14 @@ function handleRegistration(name, email, password) {
     const newUser = {
         name,
         email,
-        password, // Insecurely stored plaintext password in client-side localStorage
-        role: "customer"
+        password,
+        role: "customer",
+        joined: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
     };
 
     users.push(newUser);
     localStorage.setItem('florabloom_users', JSON.stringify(users));
 
-    // Automatically log user in
     handleLogin(email, password);
     return { success: true };
 }
@@ -231,16 +228,4 @@ function executeScriptTags(container) {
 document.addEventListener('DOMContentLoaded', () => {
     updateCartCount();
     updateAuthUI();
-
-    // Setup global search forms
-    const searchForms = document.querySelectorAll('.search-bar-form');
-    searchForms.forEach(form => {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const input = form.querySelector('input[type="text"]');
-            if (input && input.value.trim()) {
-                window.location.href = `products.html?search=${encodeURIComponent(input.value.trim())}`;
-            }
-        });
-    });
 });
