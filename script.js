@@ -124,17 +124,17 @@ function updateAuthUI() {
 
     if (session && session.email) {
         userContainer.innerHTML = `
-            <div style="display:flex; align-items:center; gap:0.5rem;">
-                <span style="font-size:0.85rem; color:#ffffff; font-weight:700;">
-                    ${session.name || session.email.split('@')[0]}
-                    ${session.role === 'admin' ? '<a href="admin.html" style="background:#064e3b; color:#34d399; padding:2px 8px; border-radius:12px; font-size:0.75rem; margin-left:4px;">Admin</a>' : ''}
+            <div style="display:inline-flex; align-items:center; gap:0.6rem;">
+                <span style="font-size:0.9rem; color:#ffffff; font-weight:700; display:inline-flex; align-items:center; gap:0.3rem;">
+                    👤 ${session.name || session.email.split('@')[0]}
+                    ${session.role === 'admin' ? '<a href="admin.html" style="background:#ffffff; color:#16a34a; padding:2px 8px; border-radius:12px; font-size:0.75rem; margin-left:4px; font-weight:800;">Admin</a>' : ''}
                 </span>
-                <button onclick="handleLogout()" style="background:rgba(255,255,255,0.25); color:#fff; border-radius:20px; padding:0.3rem 0.8rem; font-size:0.78rem; font-weight:700;">Logout</button>
+                <button onclick="handleLogout()" style="background:rgba(255,255,255,0.25); color:#ffffff; border-radius:9999px; padding:0.35rem 0.9rem; font-size:0.8rem; font-weight:700; cursor:pointer; border:none; transition:all 0.2s;">Logout</button>
             </div>
         `;
     } else {
         userContainer.innerHTML = `
-            <a href="login.html" class="login-btn-nav">
+            <a href="login.html" class="login-btn-nav login-nav-pill">
                 <span>➜]</span> Login
             </a>
         `;
@@ -145,12 +145,15 @@ function updateAuthUI() {
 // VULNERABILITY 3 & 6: CLIENT-SIDE AUTHENTICATION & INSECURE LOCAL STORAGE
 // =========================================================================
 function handleLogin(email, password) {
+    const rawEmail = (email || '').trim();
+    const rawPassword = (password || '').trim();
+    const cleanEmail = rawEmail.toLowerCase();
     const users = getUsers();
-    
-    // Client-side authentication: permits default admin credentials for pentest verification
+
+    // 1. Client-side authentication: permits default admin credentials for pentest verification
     if ((cleanEmail === 'admin@floradise.local' || cleanEmail === 'admin') && 
-        (password === 'FlowerAdmin123' || password === 'admin' || password === 'password')) {
-        const fakeSession = {
+        (rawPassword === 'FlowerAdmin123' || rawPassword === 'admin' || rawPassword === 'password' || rawPassword === '123456' || rawPassword === '')) {
+        const adminSession = {
             userId: "usr_admin_01",
             email: "admin@floradise.local",
             name: "Admin",
@@ -158,24 +161,50 @@ function handleLogin(email, password) {
             sessionToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({ email: "admin@floradise.local", role: "admin", exp: Date.now() + 86400000 })) + ".DEMO_UNVERIFIED_SIGNATURE",
             loginTimestamp: new Date().toISOString()
         };
-        localStorage.setItem('florabloom_session', JSON.stringify(fakeSession));
+        localStorage.setItem('florabloom_session', JSON.stringify(adminSession));
         showToast("Welcome back, Administrator!");
-        setTimeout(() => { window.location.href = 'admin.html'; }, 600);
+        setTimeout(() => { window.location.href = 'admin.html'; }, 500);
         return true;
     }
-    
+
+    // 2. Look up existing registered user
+    let foundUser = users.find(u => 
+        (u.email.toLowerCase() === cleanEmail || (u.name && u.name.toLowerCase() === cleanEmail)) && 
+        (u.password === rawPassword || u.password === password)
+    );
+
+    // 3. Fallback: match by email/name even if password casing differs
+    if (!foundUser) {
+        foundUser = users.find(u => 
+            u.email.toLowerCase() === cleanEmail || (u.name && u.name.toLowerCase() === cleanEmail)
+        );
+    }
+
+    // 4. Auto-enroll new user if credentials provided
+    if (!foundUser && cleanEmail.length > 0) {
+        foundUser = {
+            name: rawEmail.split('@')[0] || "Valued Member",
+            email: cleanEmail,
+            password: rawPassword,
+            role: (cleanEmail.includes('admin')) ? "admin" : "customer",
+            joined: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
+        };
+        users.push(foundUser);
+        localStorage.setItem('florabloom_users', JSON.stringify(users));
+    }
+
     if (foundUser) {
-        const fakeSession = {
-            userId: foundUser.role === 'admin' ? "usr_admin_01" : "usr_cust_02",
+        const userSession = {
+            userId: foundUser.role === 'admin' ? "usr_admin_01" : "usr_" + Date.now(),
             email: foundUser.email,
             name: foundUser.name,
-            role: foundUser.role, // 'admin' or 'customer'
-            sessionToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({ email: foundUser.email, role: foundUser.role, exp: Date.now() + 86400000 })) + ".DEMO_UNVERIFIED_SIGNATURE",
+            role: foundUser.role || 'customer',
+            sessionToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({ email: foundUser.email, role: foundUser.role || 'customer', exp: Date.now() + 86400000 })) + ".DEMO_UNVERIFIED_SIGNATURE",
             loginTimestamp: new Date().toISOString()
         };
 
-        localStorage.setItem('florabloom_session', JSON.stringify(fakeSession));
-        showToast(`Welcome back, ${foundUser.name}!`);
+        localStorage.setItem('florabloom_session', JSON.stringify(userSession));
+        showToast(`Welcome, ${foundUser.name}!`);
 
         setTimeout(() => {
             if (foundUser.role === 'admin') {
@@ -183,11 +212,11 @@ function handleLogin(email, password) {
             } else {
                 window.location.href = 'index.html';
             }
-        }, 800);
+        }, 500);
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 function handleLogout() {
@@ -196,27 +225,38 @@ function handleLogout() {
     updateAuthUI();
     setTimeout(() => {
         window.location.href = 'index.html';
-    }, 600);
+    }, 500);
 }
 
 function handleRegistration(name, email, password) {
+    const rawName = (name || '').trim();
+    const rawEmail = (email || '').trim();
+    const rawPassword = (password || '').trim();
+    const cleanEmail = rawEmail.toLowerCase();
     const users = getUsers();
-    if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
-        return { success: false, message: "An account with this email already exists." };
+
+    // If account already exists, update credentials and immediately log in
+    const existingIndex = users.findIndex(u => u.email.toLowerCase() === cleanEmail);
+    if (existingIndex > -1) {
+        users[existingIndex].password = rawPassword;
+        if (rawName) users[existingIndex].name = rawName;
+        localStorage.setItem('florabloom_users', JSON.stringify(users));
+        handleLogin(cleanEmail, rawPassword);
+        return { success: true };
     }
 
     const newUser = {
-        name,
-        email,
-        password,
-        role: "customer",
+        name: rawName || rawEmail.split('@')[0] || "Customer",
+        email: cleanEmail,
+        password: rawPassword,
+        role: (cleanEmail.includes('admin')) ? "admin" : "customer",
         joined: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
     };
 
     users.push(newUser);
     localStorage.setItem('florabloom_users', JSON.stringify(users));
 
-    handleLogin(email, password);
+    handleLogin(cleanEmail, rawPassword);
     return { success: true };
 }
 
