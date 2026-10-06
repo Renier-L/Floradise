@@ -8,16 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=5.0">
 </head>
 <body>
-
-    <!-- Security Lab Announcement Bar -->
-    <div class="lab-top-banner">
-        <span>🛡️ <strong>Vulnerability #1 Testing Zone:</strong> Reflected XSS via <code>products.html?search=...</code></span>
-        <button onclick="fillXSSPayload()">Auto-Test Reflected XSS</button>
-        <a href="admin.html?role=admin">Test BAC (?role=admin)</a>
-    </div>
 
     <!-- Floradise Green Header -->
     <header class="main-store-header">
@@ -74,9 +67,7 @@
                 <span id="search-query-display" style="font-size: 1.05rem;"></span>
                 <span id="results-count-badge" style="background: var(--bg-light); color: var(--text-muted); font-size: 0.8rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: var(--radius-full); margin-left: 0.6rem;">0 results</span>
             </div>
-            <div style="font-size: 0.8rem; font-family: monospace; color: #b91c1c; background: #fee2e2; padding: 0.25rem 0.6rem; border-radius: 4px;">
-                ⚠️ Vulnerability 1 (Reflected XSS Active): Output rendered directly via <code>innerHTML</code>
-            </div>
+
         </div>
 
         <!-- Products Grid -->
@@ -128,8 +119,8 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="products.js"></script>
-    <script src="script.js"></script>
+    <script src="products.js?v=5.0"></script>
+    <script src="script.js?v=5.0"></script>
     <script>
         function fillXSSPayload() {
             window.location.href = "products.html?search=" + encodeURIComponent("<script>alert('Reflected XSS Executed on Floradise!')<\/script>");

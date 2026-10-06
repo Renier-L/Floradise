@@ -8,15 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=5.0">
 </head>
 <body>
-
-    <!-- Security Lab Announcement -->
-    <div class="lab-top-banner">
-        <span>🛡️ <strong>Vulnerability #3:</strong> Client-Side Authentication (Plaintext logic in browser JS)</span>
-        <a href="admin.html?role=admin">Test BAC Bypass (?role=admin)</a>
-    </div>
 
     <!-- Floradise Green Header -->
     <header class="main-store-header">
@@ -51,19 +45,6 @@
     <main class="login-page-wrap">
         <div class="login-clean-card">
             <h2>Welcome Back</h2>
-
-            <!-- Quick Demo Credentials Box for Security Testing -->
-            <div style="background: #ecfdf5; border: 1px dashed var(--primary-green); border-radius: var(--radius-sm); padding: 0.8rem; margin-bottom: 1.5rem; font-size: 0.8rem; text-align: left;">
-                <strong style="color: #065f46; display: block; margin-bottom: 0.3rem;">🔑 Security Lab Demo Logins:</strong>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
-                    <span>Admin: <code>admin</code> / <code>FlowerAdmin123</code></span>
-                    <button type="button" onclick="fillQuick('admin@floradise.local', 'FlowerAdmin123')" style="color:var(--primary-green-dark); font-weight:700; background:none; font-size:0.75rem;">Autofill</button>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span>User: <code>simp@gmail.com</code> / <code>UserPass123</code></span>
-                    <button type="button" onclick="fillQuick('simp@gmail.com', 'UserPass123')" style="color:var(--primary-green-dark); font-weight:700; background:none; font-size:0.75rem;">Autofill</button>
-                </div>
-            </div>
 
             <div id="login-error-msg" style="display: none; background: #fee2e2; border: 1px solid #f87171; color: #b91c1c; padding: 0.6rem; border-radius: var(--radius-sm); margin-bottom: 1.2rem; font-size: 0.85rem;"></div>
 
@@ -125,15 +106,9 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="products.js"></script>
-    <script src="script.js"></script>
+    <script src="products.js?v=5.0"></script>
+    <script src="script.js?v=5.0"></script>
     <script>
-        function fillQuick(email, pass) {
-            document.getElementById('login-email').value = email;
-            document.getElementById('login-password').value = pass;
-            showToast("Filled demo credentials!");
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('clean-login-form');
             const err = document.getElementById('login-error-msg');
@@ -151,7 +126,7 @@
 
                 const ok = handleLogin(email, pass);
                 if (!ok) {
-                    err.textContent = "Invalid email or password. (Check demo box above)";
+                    err.textContent = "Invalid email or password.";
                     err.style.display = 'block';
                 }
             });

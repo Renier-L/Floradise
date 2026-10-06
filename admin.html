@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=5.0">
     <style>
         /* Dedicated Dark Theme Overrides for Admin Console */
         body {
@@ -281,12 +281,7 @@
 </head>
 <body>
 
-    <!-- Security Lab Announcement -->
-    <div class="lab-top-banner">
-        <span>🛡️ <strong>Vulnerability #4 Testing Zone:</strong> Broken Access Control (BAC) via <code>admin.html?role=admin</code></span>
-        <button onclick="toggleBACBypass()">Toggle ?role=admin</button>
-        <a href="index.html">Live Floradise Storefront</a>
-    </div>
+
 
     <!-- Access Denied Banner (If BAC check fails) -->
     <div id="admin-access-denied" style="display: none; padding: 4rem 1.5rem; text-align: center; max-width: 650px; margin: 3rem auto; background: #111827; border-radius: 16px; border: 1px solid #dc2626;">

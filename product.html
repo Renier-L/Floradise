@@ -8,15 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=5.0">
 </head>
 <body>
-
-    <!-- Security Lab Announcement -->
-    <div class="lab-top-banner">
-        <span>🛡️ <strong>Vulnerability #2 Testing Zone:</strong> Stored XSS via Customer Reviews in <code>localStorage</code></span>
-        <button onclick="fillStoredXSSPayload()">Auto-Fill Stored XSS Payload</button>
-    </div>
 
     <!-- Floradise Green Header -->
     <header class="main-store-header">
@@ -103,10 +97,7 @@
                 <!-- Right: Submit Review Form -->
                 <div>
                     <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-sm);">
-                        <h4 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 0.6rem;">Leave a Review</h4>
-                        <p style="font-size: 0.85rem; color: #b91c1c; background: #fee2e2; padding: 0.5rem 0.8rem; border-radius: var(--radius-sm); margin-bottom: 1.2rem;">
-                            ⚠️ <strong>Stored XSS Sink:</strong> Comments are rendered into the DOM without sanitization.
-                        </p>
+                        <h4 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 1.2rem;">Leave a Review</h4>
 
                         <form id="add-review-form">
                             <div style="margin-bottom: 1rem;">
@@ -124,7 +115,7 @@
                             </div>
 
                             <div style="margin-bottom: 1.2rem;">
-                                <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem;">Your Comment (Supports HTML/JS)</label>
+                                <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem;">Your Comment</label>
                                 <textarea id="rev-comment" class="login-clean-input" rows="3" placeholder="Share your experience..." required></textarea>
                             </div>
 
@@ -175,8 +166,8 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="products.js"></script>
-    <script src="script.js"></script>
+    <script src="products.js?v=5.0"></script>
+    <script src="script.js?v=5.0"></script>
     <script>
         let currentProd = null;
 

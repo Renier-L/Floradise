@@ -8,15 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=5.0">
 </head>
 <body>
-
-    <!-- Security Lab Announcement -->
-    <div class="lab-top-banner">
-        <span>🛡️ <strong>Vulnerability #5:</strong> Insecure Direct Object Reference (IDOR) on <code>order.html?id=...</code></span>
-        <a href="order.html?id=1003">Inspect Order #1003 (Dr. Evelyn Vance)</a>
-    </div>
 
     <!-- Floradise Green Header -->
     <header class="main-store-header">
@@ -60,29 +54,12 @@
             <span id="ord-badge" style="background: var(--primary-green-subtle); color: var(--primary-green-dark); padding: 0.4rem 1rem; border-radius: var(--radius-full); font-weight: 700; font-size: 0.9rem;">Delivered</span>
         </div>
 
-        <!-- ===============================================================
-             VULNERABILITY 5: IDOR EXPLANATION PANEL
-             =============================================================== -->
-        <div style="background: #fef2f2; border: 1px dashed #ef4444; border-radius: var(--radius-md); padding: 1.2rem; margin-bottom: 2rem;">
-            <strong style="color: #991b1b; display: block; margin-bottom: 0.3rem;">⚠️ Vulnerability 5: Insecure Direct Object Reference (IDOR)</strong>
-            <p style="font-size: 0.85rem; color: #7f1d1d; margin-bottom: 0.8rem;">
-                Because there is <strong>no authorization check</strong> between the active session and the order ID in the URL, changing the <code>?id=</code> parameter displays another customer's private delivery address, phone, and items.
-            </p>
-            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                <span style="font-size: 0.8rem; font-weight: 700; color: #991b1b;">Test Other Customer Orders:</span>
-                <a href="order.html?id=1001" style="background:#fff; border:1px solid #fca5a5; padding:2px 8px; border-radius:4px; font-size:0.75rem; color:#991b1b;">#1001 (Simplicio)</a>
-                <a href="order.html?id=1002" style="background:#fff; border:1px solid #fca5a5; padding:2px 8px; border-radius:4px; font-size:0.75rem; color:#991b1b;">#1002 (Rei Lopez)</a>
-                <a href="order.html?id=1003" style="background:#fff; border:1px solid #fca5a5; padding:2px 8px; border-radius:4px; font-size:0.75rem; color:#991b1b;">#1003 (Dr. Evelyn)</a>
-                <a href="order.html?id=1004" style="background:#fff; border:1px solid #fca5a5; padding:2px 8px; border-radius:4px; font-size:0.75rem; color:#991b1b;">#1004 (Jairus)</a>
-            </div>
-        </div>
-
         <!-- Order Receipt Card -->
         <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2.5rem; box-shadow: var(--shadow-sm);">
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border-light); padding-bottom: 2rem;">
                 <div>
-                    <h4 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 0.8rem;">Customer Profile (Exposed via IDOR)</h4>
+                    <h4 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 0.8rem;">Customer Profile</h4>
                     <p><strong>Name:</strong> <span id="cust-name-val">Simplicio Juanir</span></p>
                     <p><strong>Email:</strong> <span id="cust-email-val">simp@gmail.com</span></p>
                     <p><strong>Contact:</strong> <span id="cust-phone-val">+63 912 345 6789</span></p>
@@ -162,8 +139,8 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="products.js"></script>
-    <script src="script.js"></script>
+    <script src="products.js?v=5.0"></script>
+    <script src="script.js?v=5.0"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const id = new URLSearchParams(window.location.search).get('id') || '1001';

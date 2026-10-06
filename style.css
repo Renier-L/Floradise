@@ -4,10 +4,10 @@
 
 :root {
     /* Floradise Signature Brand Palette */
-    --primary-green: #10b981;
-    --primary-green-dark: #059669;
-    --primary-green-light: #d1fae5;
-    --primary-green-subtle: #ecfdf5;
+    --primary-green: #22c55e;
+    --primary-green-dark: #16a34a;
+    --primary-green-light: #dcfce7;
+    --primary-green-subtle: #f0fdf4;
     
     --accent-gold: #f59e0b;
     --danger-red: #ef4444;
@@ -79,7 +79,7 @@ button {
     transition: all 0.2s ease;
 }
 
-.container {
+.container, .content-container {
     width: 100%;
     max-width: var(--container-max);
     margin: 0 auto;
@@ -87,55 +87,30 @@ button {
 }
 
 /* ==========================================================================
-   Security Lab Top Notice Banner
-   ========================================================================== */
-.lab-top-banner {
-    background: #064e3b;
-    color: #ffffff;
-    font-size: 0.82rem;
-    padding: 0.45rem 1rem;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.8rem;
-    flex-wrap: wrap;
-    z-index: 1000;
-}
-
-.lab-top-banner button, .lab-top-banner a {
-    background: rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    padding: 0.15rem 0.6rem;
-    border-radius: var(--radius-sm);
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.lab-top-banner button:hover, .lab-top-banner a:hover {
-    background: rgba(255, 255, 255, 0.35);
-}
-
-/* ==========================================================================
    Main Store Navigation Bar (Vibrant Green Header)
    ========================================================================== */
-.main-store-header {
+.main-store-header, .main-nav-bar {
     background-color: var(--primary-green);
     color: #ffffff;
     position: sticky;
     top: 0;
     z-index: 999;
     box-shadow: var(--shadow-md);
+    height: 68px;
+    width: 100%;
 }
 
-.nav-container {
+.nav-container, .nav-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 70px;
+    height: 100%;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 1.5rem;
 }
 
-.brand-wrap {
+.brand-wrap, .brand-logo-floradise {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -143,43 +118,56 @@ button {
     font-weight: 800;
     color: #ffffff;
     letter-spacing: -0.5px;
+    text-decoration: none;
 }
 
-.brand-wrap svg, .brand-wrap .leaf-icon {
-    font-size: 1.7rem;
+.brand-wrap svg, .brand-wrap .leaf-icon, .brand-logo-floradise span:first-child {
+    font-size: 1.6rem;
 }
 
-.nav-menu-list {
+.nav-menu-list, .nav-links-row {
     display: flex;
     align-items: center;
-    list-style: none;
+    list-style: none !important;
     gap: 1.8rem;
+    margin: 0;
+    padding: 0;
 }
 
-.nav-menu-list a {
-    display: flex;
+.nav-menu-list li, .nav-links-row li {
+    list-style: none !important;
+    display: inline-flex;
+    align-items: center;
+}
+
+.nav-menu-list a, .nav-link-item {
+    display: inline-flex;
     align-items: center;
     gap: 0.4rem;
     color: #ffffff;
     font-weight: 600;
     font-size: 0.95rem;
-    opacity: 0.92;
+    opacity: 0.95;
+    text-decoration: none;
+    transition: all 0.2s ease;
 }
 
-.nav-menu-list a:hover, .nav-menu-list a.active {
+.nav-menu-list a:hover, .nav-menu-list a.active,
+.nav-link-item:hover, .nav-link-item.active {
     opacity: 1;
     transform: translateY(-1px);
 }
 
-.cart-pill-nav {
-    display: flex;
+.cart-pill-nav, .cart-nav-link {
+    display: inline-flex;
     align-items: center;
     gap: 0.4rem;
     color: #ffffff;
     font-weight: 700;
+    text-decoration: none;
 }
 
-.cart-count-bubble {
+.cart-count-bubble, .cart-bubble {
     background: #ffffff;
     color: var(--primary-green-dark);
     font-size: 0.75rem;
@@ -190,12 +178,13 @@ button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    margin-left: 0.3rem;
 }
 
-.login-btn-nav {
-    background: #ffffff;
+.login-btn-nav, .login-nav-pill {
+    background: #ffffff !important;
     color: var(--primary-green-dark) !important;
-    padding: 0.45rem 1.2rem;
+    padding: 0.45rem 1.3rem;
     border-radius: var(--radius-full);
     font-weight: 700 !important;
     font-size: 0.9rem !important;
@@ -203,11 +192,13 @@ button {
     align-items: center;
     gap: 0.4rem;
     box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    transition: all 0.2s ease;
 }
 
-.login-btn-nav:hover {
-    background: #f0fdf4;
-    transform: translateY(-2px);
+.login-btn-nav:hover, .login-nav-pill:hover {
+    background: #f0fdf4 !important;
+    transform: translateY(-1px);
     box-shadow: var(--shadow-md);
 }
 
@@ -338,14 +329,14 @@ button {
     color: var(--text-dark);
 }
 
-.floradise-product-grid {
+.floradise-product-grid, .products-grid-4col {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1.5rem;
     margin-bottom: 3.5rem;
 }
 
-.floradise-product-card {
+.floradise-product-card, .product-item-card {
     background: #ffffff;
     border-radius: var(--radius-md);
     padding: 1.2rem;
@@ -356,13 +347,13 @@ button {
     flex-direction: column;
 }
 
-.floradise-product-card:hover {
+.floradise-product-card:hover, .product-item-card:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-md);
     border-color: #cbd5e1;
 }
 
-.product-thumb-wrap {
+.product-thumb-wrap, .product-card-img-wrap {
     width: 100%;
     height: 190px;
     border-radius: var(--radius-sm);
@@ -371,38 +362,39 @@ button {
     background: #f1f5f9;
 }
 
-.product-thumb-wrap img {
+.product-thumb-wrap img, .product-card-img-wrap img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.4s ease;
 }
 
-.floradise-product-card:hover .product-thumb-wrap img {
+.floradise-product-card:hover .product-thumb-wrap img,
+.product-item-card:hover .product-card-img-wrap img {
     transform: scale(1.05);
 }
 
-.product-card-title {
+.product-card-title, .product-card-name {
     font-size: 1.05rem;
     font-weight: 700;
     color: var(--text-dark);
     margin-bottom: 0.8rem;
 }
 
-.product-card-footer {
+.product-card-footer, .product-card-bottom {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: auto;
 }
 
-.product-card-price {
+.product-card-price, .product-card-price-tag {
     font-size: 1.15rem;
     font-weight: 800;
-    color: var(--primary-green-dark);
+    color: var(--primary-green);
 }
 
-.btn-card-add {
+.btn-card-add, .btn-card-add-green {
     background: var(--primary-green);
     color: #ffffff;
     font-weight: 700;
@@ -412,9 +404,12 @@ button {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
 }
 
-.btn-card-add:hover {
+.btn-card-add:hover, .btn-card-add-green:hover {
     background: var(--primary-green-dark);
 }
 

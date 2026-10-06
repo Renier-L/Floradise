@@ -3,44 +3,518 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floradise — Botanical Store & Cybersecurity Lab</title>
+    <title>Floradise — Botanical Store</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=5.0">
+    <style>
+        /* Standalone guaranteed styles to bypass any browser cache */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Nav Header */
+        .main-nav-bar {
+            background-color: #22c55e;
+            height: 68px;
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+        .nav-inner {
+            max-width: 1220px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
+        .brand-logo-floradise {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ffffff;
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .nav-links-row {
+            display: flex;
+            align-items: center;
+            list-style: none !important;
+            gap: 1.8rem;
+            margin: 0;
+            padding: 0;
+        }
+        .nav-links-row li {
+            list-style: none !important;
+            display: inline-flex;
+            align-items: center;
+        }
+        .nav-link-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            opacity: 0.95;
+            transition: all 0.2s;
+        }
+        .nav-link-item:hover, .nav-link-item.active {
+            opacity: 1;
+            transform: translateY(-1px);
+        }
+        .cart-bubble {
+            background: #ffffff;
+            color: #16a34a;
+            font-size: 0.75rem;
+            font-weight: 800;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 0.3rem;
+        }
+        .login-nav-pill {
+            background: #ffffff !important;
+            color: #16a34a !important;
+            padding: 0.45rem 1.3rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s;
+        }
+        .login-nav-pill:hover {
+            background: #f0fdf4 !important;
+            transform: translateY(-1px);
+        }
+
+        /* Container */
+        .content-container {
+            max-width: 1220px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Hero Banner */
+        .hero-banner-box {
+            position: relative;
+            height: 380px;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #ffffff;
+            background-image: url('https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+            margin: 2rem 0 2.5rem;
+        }
+        .hero-banner-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.45) 100%);
+        }
+        .hero-banner-text {
+            position: relative;
+            z-index: 2;
+            max-width: 650px;
+            padding: 0 1.5rem;
+        }
+        .hero-banner-text h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+        }
+        .hero-banner-text p {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 1.8rem;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+        }
+        .btn-shop-now-green {
+            background: #22c55e;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.05rem;
+            padding: 0.75rem 2.2rem;
+            border-radius: 9999px;
+            display: inline-block;
+            box-shadow: 0 4px 14px rgba(34, 197, 94, 0.4);
+            transition: all 0.2s;
+        }
+        .btn-shop-now-green:hover {
+            background: #16a34a;
+            transform: translateY(-2px);
+        }
+        .slider-arrow-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.35);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            z-index: 3;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        .slider-arrow-btn:hover {
+            background: rgba(0, 0, 0, 0.65);
+        }
+        .slider-arrow-btn.left { left: 24px; }
+        .slider-arrow-btn.right { right: 24px; }
+        .slider-dots-row {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 3;
+        }
+        .slider-dot-item {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+        }
+        .slider-dot-item.active {
+            background: #ffffff;
+            width: 24px;
+            border-radius: 9999px;
+        }
+
+        /* Products Grid */
+        .section-header-title {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin: 2.5rem 0 1.8rem;
+        }
+        .products-grid-4col {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+        .product-item-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 1.2rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.25s ease;
+        }
+        .product-item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.07);
+            border-color: #cbd5e1;
+        }
+        .product-card-img-wrap {
+            width: 100%;
+            height: 190px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            background: #f1f5f9;
+        }
+        .product-card-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        .product-item-card:hover .product-card-img-wrap img {
+            transform: scale(1.05);
+        }
+        .product-card-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.8rem;
+        }
+        .product-card-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+        }
+        .product-card-price-tag {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #15803d;
+        }
+        .btn-card-add-green {
+            background: #22c55e;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 0.45rem 1rem;
+            border-radius: 9999px;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-card-add-green:hover {
+            background: #16a34a;
+        }
+
+        /* About Us */
+        .section-bar-title {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 2rem;
+        }
+        .section-bar-title span.green-line {
+            width: 28px;
+            height: 4px;
+            background: #22c55e;
+            border-radius: 9999px;
+        }
+        .about-2col-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3.5rem;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+        .about-photo-wrap img {
+            border-radius: 18px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            height: 380px;
+            object-fit: cover;
+        }
+        .about-story-text p {
+            color: #64748b;
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 1.2rem;
+        }
+        .about-story-text h3 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            margin: 1.8rem 0 0.8rem;
+            color: #1e293b;
+        }
+
+        /* Why Choose Us */
+        .why-cards-3col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.8rem;
+            margin-bottom: 4rem;
+        }
+        .why-feature-card {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 2.2rem 1.8rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        .why-feature-card h4 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: #1e293b;
+        }
+        .why-feature-card p {
+            color: #64748b;
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        /* Newsletter */
+        .newsletter-bar-box {
+            text-align: center;
+            padding: 3.5rem 0 4.5rem;
+        }
+        .newsletter-bar-box h3 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 0.4rem;
+        }
+        .newsletter-bar-box p {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 1.6rem;
+        }
+        .newsletter-input-form {
+            display: flex;
+            max-width: 520px;
+            margin: 0 auto;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #cbd5e1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        .newsletter-input-form input {
+            flex: 1;
+            padding: 0.85rem 1.2rem;
+            border: none;
+            background: #ffffff;
+            outline: none;
+            font-size: 0.95rem;
+        }
+        .newsletter-input-form button {
+            background: #000000;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 0.85rem;
+            padding: 0 1.8rem;
+            letter-spacing: 0.5px;
+            border: none;
+            cursor: pointer;
+        }
+        .newsletter-input-form button:hover {
+            background: #1e293b;
+        }
+
+        /* Footer */
+        .site-footer-3col {
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            padding: 4rem 0 1.8rem;
+        }
+        .footer-3col-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3.5rem;
+            margin-bottom: 3.5rem;
+        }
+        .footer-logo-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 1rem;
+        }
+        .footer-brand-statement {
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            max-width: 380px;
+        }
+        .footer-col-header {
+            font-size: 0.9rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #1e293b;
+            margin-bottom: 1.2rem;
+        }
+        .footer-nav-list {
+            list-style: none !important;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin: 0;
+            padding: 0;
+        }
+        .footer-nav-list a {
+            color: #64748b;
+            font-size: 0.92rem;
+        }
+        .footer-nav-list a:hover {
+            color: #16a34a;
+        }
+        .footer-contact-details p {
+            color: #64748b;
+            font-size: 0.92rem;
+            margin-bottom: 0.6rem;
+        }
+        .footer-bottom-copy {
+            text-align: center;
+            padding-top: 1.8rem;
+            border-top: 1px solid #f1f5f9;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        @media (max-width: 992px) {
+            .products-grid-4col { grid-template-columns: repeat(2, 1fr); }
+            .about-2col-layout { grid-template-columns: 1fr; }
+            .why-cards-3col { grid-template-columns: 1fr; }
+            .footer-3col-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 600px) {
+            .products-grid-4col { grid-template-columns: 1fr; }
+            .nav-links-row { display: none; }
+            .hero-banner-text h1 { font-size: 2.2rem; }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Security Lab Announcement Bar -->
-    <div class="lab-top-banner">
-        <span>🛡️ <strong>Floradise Security Lab:</strong> Authorized Pentest Training Ground (Fictional Data)</span>
-        <a href="products.html?search=%3Cscript%3Ealert('Reflected-XSS')%3C/script%3E">Test XSS</a>
-        <a href="admin.html?role=admin">Test BAC (?role=admin)</a>
-        <a href="order.html?id=1001">Test IDOR (?id=1001)</a>
-    </div>
-
-    <!-- Floradise Vibrant Green Header (Matching Screenshot) -->
-    <header class="main-store-header">
-        <div class="container nav-container">
-            <a href="index.html" class="brand-wrap">
-                <span class="leaf-icon">🍃</span>
+    <!-- Floradise Vibrant Green Header Bar -->
+    <header class="main-nav-bar">
+        <div class="nav-inner">
+            <a href="index.html" class="brand-logo-floradise">
+                <span>🍃</span>
                 <span>Floradise</span>
             </a>
 
             <nav>
-                <ul class="nav-menu-list">
-                    <li><a href="index.html" class="active">🏠 Home</a></li>
-                    <li><a href="#about-us">ℹ️ About Us</a></li>
-                    <li><a href="#contact-section">✉️ Contact</a></li>
-                    <li><a href="products.html">💐 Catalog</a></li>
+                <ul class="nav-links-row">
+                    <li><a href="index.html" class="nav-link-item active">🏠 Home</a></li>
+                    <li><a href="#about-us" class="nav-link-item">ℹ️ About Us</a></li>
+                    <li><a href="#contact-section" class="nav-link-item">✉️ Contact</a></li>
                     <li>
-                        <a href="cart.html" class="cart-pill-nav">
-                            🛒 Cart <span class="cart-count-bubble cart-count-badge">0</span>
+                        <a href="cart.html" class="nav-link-item">
+                            🛒 Cart <span class="cart-bubble cart-count-badge">0</span>
                         </a>
                     </li>
                     <li id="user-nav-slot">
-                        <a href="login.html" class="login-btn-nav">
+                        <a href="login.html" class="login-nav-pill">
                             <span>➜]</span> Login
                         </a>
                     </li>
@@ -49,55 +523,50 @@
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="container">
+    <!-- Main Content Container -->
+    <main class="content-container">
 
-        <!-- Hero Section: Spring Bloom Sale Slider (Matching Screenshot 1) -->
-        <section class="hero-slider-wrap">
-            <div class="hero-banner-card" style="background-image: url('https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?auto=format&fit=crop&w=1200&q=80');">
-                <div class="hero-overlay"></div>
-                
-                <button class="slider-arrow left" aria-label="Previous slide" onclick="prevHeroSlide()">‹</button>
-                <button class="slider-arrow right" aria-label="Next slide" onclick="nextHeroSlide()">›</button>
+        <!-- Spring Bloom Sale Hero Slider -->
+        <section class="hero-banner-box">
+            <div class="hero-banner-overlay"></div>
+            
+            <button class="slider-arrow-btn left" aria-label="Previous slide" onclick="prevHeroSlide()">‹</button>
+            <button class="slider-arrow-btn right" aria-label="Next slide" onclick="nextHeroSlide()">›</button>
 
-                <div class="hero-content">
-                    <h1 id="hero-title-text">Spring Bloom Sale</h1>
-                    <p id="hero-sub-text">Up to 30% off on all seasonal flowers!</p>
-                    <a href="products.html" class="btn-shop-now">Shop Now</a>
-                </div>
+            <div class="hero-banner-text">
+                <h1 id="hero-title-text">Spring Bloom Sale</h1>
+                <p id="hero-sub-text">Up to 30% off on all seasonal flowers!</p>
+                <a href="products.html" class="btn-shop-now-green">Shop Now</a>
+            </div>
 
-                <div class="slider-dots">
-                    <span class="slider-dot active" onclick="setHeroSlide(0)"></span>
-                    <span class="slider-dot" onclick="setHeroSlide(1)"></span>
-                    <span class="slider-dot" onclick="setHeroSlide(2)"></span>
-                </div>
+            <div class="slider-dots-row">
+                <span class="slider-dot-item active" onclick="setHeroSlide(0)"></span>
+                <span class="slider-dot-item" onclick="setHeroSlide(1)"></span>
+                <span class="slider-dot-item" onclick="setHeroSlide(2)"></span>
             </div>
         </section>
 
-        <!-- Product Grid: Discover Our Products (Matching Screenshots 1 & 2) -->
+        <!-- Discover Our Products Grid -->
         <section>
-            <div class="section-title-wrap">
-                <h2 class="section-main-heading">Discover Our Products</h2>
-            </div>
-
-            <div class="floradise-product-grid" id="homepage-products-grid">
-                <!-- Dynamically loaded from products.js -->
+            <h2 class="section-header-title">Discover Our Products</h2>
+            <div class="products-grid-4col" id="homepage-products-grid">
+                <!-- Dynamically rendered directly from products.js -->
             </div>
         </section>
 
-        <!-- About Us Section (Matching Screenshot 3) -->
-        <section id="about-us" class="about-section">
-            <div class="about-title-row">
+        <!-- About Us Section -->
+        <section id="about-us" style="padding-top: 1rem;">
+            <div class="section-bar-title">
                 <span>ABOUT US</span>
-                <span class="bar"></span>
+                <span class="green-line"></span>
             </div>
 
-            <div class="about-grid">
-                <div class="about-img-box">
+            <div class="about-2col-layout">
+                <div class="about-photo-wrap">
                     <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80" alt="Inside the greenhouse">
                 </div>
 
-                <div class="about-text-box">
+                <div class="about-story-text">
                     <p>
                         Floradise was born from a deep love for nature and a desire to bring its beauty into people's lives. Our journey began with a simple idea: to create a platform where anyone could easily discover, explore, and purchase a stunning variety of plants and flowers to transform their living spaces.
                     </p>
@@ -113,46 +582,45 @@
             </div>
         </section>
 
-        <!-- Why Choose Us Section (Matching Screenshot 4) -->
+        <!-- Why Choose Us Section -->
         <section>
-            <div class="about-title-row" style="margin-top: 2rem;">
+            <div class="section-bar-title">
                 <span>WHY CHOOSE US</span>
-                <span class="bar"></span>
+                <span class="green-line"></span>
             </div>
 
-            <div class="why-choose-grid">
-                <div class="why-card">
+            <div class="why-cards-3col">
+                <div class="why-feature-card">
                     <h4>Quality Assurance</h4>
                     <p>We meticulously select and vet each product to ensure it meets our stringent quality standards.</p>
                 </div>
 
-                <div class="why-card">
+                <div class="why-feature-card">
                     <h4>Convenience</h4>
                     <p>With our user-friendly interface and hassle-free ordering process, shopping has never been easier.</p>
                 </div>
 
-                <div class="why-card">
+                <div class="why-feature-card">
                     <h4>Exceptional Customer Service</h4>
                     <p>Our team of dedicated professionals is here to assist you every step of the way, ensuring your satisfaction is our top priority.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Contact & Location Map Section (Matching Screenshot Batch 2) -->
-        <section id="contact-section" style="margin: 2rem 0 3rem;">
-            <div style="background: #ffffff; border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow: hidden; box-shadow: var(--shadow-sm);">
-                <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <!-- Contact Section -->
+        <section id="contact-section" style="margin-bottom: 2rem;">
+            <div style="background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                <div style="padding: 1.5rem; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                     <div>
-                        <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--text-dark);">Visit Our Boutique & Greenhouse</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem;">Kalayaan Avenue, Bel-Air, Makati City, Metro Manila</p>
+                        <h3 style="font-size: 1.25rem; font-weight: 800; color: #1e293b;">Visit Our Greenhouse Boutique</h3>
+                        <p style="color: #64748b; font-size: 0.9rem;">Kalayaan Avenue, Bel-Air, Makati City, Metro Manila</p>
                     </div>
-                    <a href="https://maps.google.com" target="_blank" rel="noopener" style="background: var(--bg-light); border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 700; color: var(--text-dark);">
+                    <a href="https://maps.google.com" target="_blank" rel="noopener" style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; color: #1e293b;">
                         Open in Maps ↗
                     </a>
                 </div>
                 
-                <!-- Stylized Interactive Map Mockup -->
-                <div style="height: 320px; background: #e5e7eb; position: relative; overflow: hidden;">
+                <div style="height: 320px; background: #e2e8f0;">
                     <iframe 
                         title="Floradise Location Map"
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15444.646549372138!2d121.037142!3d14.561386!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c8ff6715f3cb%3A0x7d6a5c17d848773!2sBGC%2C%20Taguig%2C%20Metro%20Manila!5e0!3m2!1sen!2sph!4v1680000000000!5m2!1sen!2sph" 
@@ -160,73 +628,65 @@
                         height="100%" 
                         style="border:0;" 
                         allowfullscreen="" 
-                        loading="lazy" 
-                        referrerpolicy="no-referrer-when-downgrade">
+                        loading="lazy">
                     </iframe>
                 </div>
             </div>
         </section>
 
-        <!-- Newsletter Bar: Subscribe now & get 20% off (Matching Screenshot 5) -->
-        <section class="subscribe-section">
+        <!-- Subscribe Section -->
+        <section class="newsletter-bar-box">
             <h3>Subscribe now & get 20% off</h3>
             <p>Subscribe now and enjoy 20% off your first order! Stay updated on exclusive deals and new arrivals.</p>
 
-            <form class="subscribe-form-box" onsubmit="event.preventDefault(); showToast('Subscribed! 20% discount code applied.');">
-                <input type="email" class="subscribe-input" placeholder="Enter your email id" required>
-                <button type="submit" class="subscribe-btn">SUBSCRIBE</button>
+            <form class="newsletter-input-form" onsubmit="event.preventDefault(); showToast('Subscribed! 20% discount code applied.');">
+                <input type="email" placeholder="Enter your email id" required>
+                <button type="submit">SUBSCRIBE</button>
             </form>
         </section>
 
     </main>
 
-    <!-- Floradise 3-Column Footer (Matching Screenshot 2 & 5) -->
-    <footer class="floradise-footer">
-        <div class="container footer-columns-grid">
-            <!-- Col 1: Brand Description -->
+    <!-- Floradise 3-Column Footer -->
+    <footer class="site-footer-3col">
+        <div class="content-container footer-3col-grid">
             <div>
-                <div class="footer-brand">
+                <div class="footer-logo-title">
                     <span>🍃</span>
                     <span>FLORADISE</span>
                 </div>
-                <p class="footer-brand-desc">
+                <p class="footer-brand-statement">
                     Floradise is your green sanctuary, a community for everyone who shares a passion for plants. We believe in the simple joy of nurturing life and the peace that comes from a connection to nature. Our mission is to be your trusted partner on your plant-parenting journey, providing not just carefully selected plants, but also the guidance and quality tools you need to help your green family thrive. Join us in cultivating your own piece of paradise, one leaf at a time.
                 </p>
             </div>
 
-            <!-- Col 2: Company Links -->
-            <div class="footer-col">
-                <h5>COMPANY</h5>
-                <ul class="footer-links-list">
+            <div>
+                <h5 class="footer-col-header">COMPANY</h5>
+                <ul class="footer-nav-list">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="#about-us">About us</a></li>
                     <li><a href="products.html">Delivery</a></li>
-                    <li><a href="admin.html?role=admin">Admin Dashboard (BAC)</a></li>
-                    <li><a href="order.html?id=1001">Track Order (IDOR)</a></li>
+                    <li><a href="admin.html?role=admin">Admin Dashboard</a></li>
                 </ul>
             </div>
 
-            <!-- Col 3: Get In Touch -->
-            <div class="footer-col">
-                <h5>GET IN TOUCH</h5>
-                <div class="footer-contact-info">
+            <div>
+                <h5 class="footer-col-header">GET IN TOUCH</h5>
+                <div class="footer-contact-details">
                     <p>+63 912 345 6789</p>
                     <p>Support@Floradise.com</p>
-                    <p style="margin-top: 1rem; font-size: 0.85rem; color: #94a3b8;">
-                        🔒 <em>Security Lab Demonstration Mode (Fake Data)</em>
-                    </p>
                 </div>
             </div>
         </div>
 
-        <div class="container footer-bottom-bar">
+        <div class="footer-bottom-copy">
             Copyright 2026© Floradise.com - All Right Reserved.
         </div>
     </footer>
 
     <!-- Scripts -->
-    <script src="products.js"></script>
-    <script src="script.js"></script>
+    <script src="products.js?v=5.0"></script>
+    <script src="script.js?v=5.0"></script>
     <script>
         const heroSlides = [
             {
@@ -252,9 +712,9 @@
             const slide = heroSlides[currentSlideIdx];
             document.getElementById('hero-title-text').textContent = slide.title;
             document.getElementById('hero-sub-text').textContent = slide.sub;
-            document.querySelector('.hero-banner-card').style.backgroundImage = `url('${slide.bg}')`;
+            document.querySelector('.hero-banner-box').style.backgroundImage = `url('${slide.bg}')`;
 
-            const dots = document.querySelectorAll('.slider-dot');
+            const dots = document.querySelectorAll('.slider-dot-item');
             dots.forEach((d, i) => {
                 if (i === idx) d.classList.add('active');
                 else d.classList.remove('active');
@@ -269,27 +729,36 @@
             setHeroSlide((currentSlideIdx - 1 + heroSlides.length) % heroSlides.length);
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+        // Always render products immediately
+        function renderProductsList() {
             const grid = document.getElementById('homepage-products-grid');
             if (!grid) return;
-            const products = getProducts();
 
-            grid.innerHTML = products.map(flower => `
-                <div class="floradise-product-card">
-                    <div class="product-thumb-wrap">
+            // Safe fallback to FLORABLOOM_PRODUCTS if localStorage isn't populated
+            const list = (typeof getProducts === 'function' && getProducts().length > 0) 
+                ? getProducts() 
+                : FLORABLOOM_PRODUCTS;
+
+            grid.innerHTML = list.map(flower => `
+                <div class="product-item-card">
+                    <div class="product-card-img-wrap">
                         <a href="product.html?id=${flower.id}">
                             <img src="${flower.image}" alt="${flower.name}" loading="lazy">
                         </a>
                     </div>
-                    <div class="product-card-title">${flower.name}</div>
-                    <div class="product-card-footer">
-                        <span class="product-card-price">${formatCurrency(flower.price)}</span>
-                        <button onclick="addToCart(${flower.id}, 1)" class="btn-card-add">
+                    <div class="product-card-name">${flower.name}</div>
+                    <div class="product-card-bottom">
+                        <span class="product-card-price-tag">₱${Number(flower.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <button onclick="addToCart(${flower.id}, 1)" class="btn-card-add-green">
                             🛒 Add
                         </button>
                     </div>
                 </div>
             `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProductsList();
         });
     </script>
 </body>
