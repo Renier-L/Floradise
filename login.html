@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Login — FloraBloom Boutique & Security Lab</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Security Lab Announcement -->
+    <div class="lab-top-banner">
+        <span>🛡️ <strong>Vulnerability #3 & #6:</strong> Client-Side Authentication & Insecure LocalStorage Session</span>
+        <a href="admin.html?role=admin">Test BAC (?role=admin)</a>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="site-header">
+        <div class="container nav-wrapper">
+            <a href="index.html" class="brand-logo">
+                <span class="brand-icon">🌸</span>
+                <span>Flora<span class="accent">Bloom</span></span>
+            </a>
+
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Flower Catalog</a></li>
+                    <li><a href="products.html?category=Mixed%20Bouquets">Bouquets</a></li>
+                    <li><a href="order.html?id=1001">Track Order <span class="nav-badge-lab">IDOR</span></a></li>
+                    <li><a href="admin.html">Admin <span class="nav-badge-lab">BAC</span></a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <form class="search-bar-form" action="products.html" method="GET">
+                    <input type="text" name="search" class="search-input-header" placeholder="Search flowers..." aria-label="Search">
+                    <button type="submit" class="search-submit-btn" aria-label="Submit search">🔍</button>
+                </form>
+
+                <a href="cart.html" class="cart-btn-link" title="View Cart">
+                    🛒
+                    <span class="cart-count-badge">0</span>
+                </a>
+
+                <div id="user-nav-slot" class="user-nav-action"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Login Section -->
+    <main class="container auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header">
+                <span style="font-size: 2.4rem;">🌸</span>
+                <h2>Welcome Back</h2>
+                <p>Sign in to manage orders, addresses, and floral subscriptions.</p>
+            </div>
+
+            <!-- Demo Accounts Panel (Vulnerability 3 Helper) -->
+            <div class="demo-credentials-box">
+                <strong>🔑 Demo Lab Credentials (Client-Side Auth):</strong>
+                <p style="font-size:0.8rem; color:#14532d; margin-bottom:0.6rem;">
+                    These credentials are hardcoded directly in client JavaScript (<code>products.js</code> / <code>script.js</code>):
+                </p>
+                <div class="demo-account-item">
+                    <div>
+                        <strong>Administrator</strong>
+                        <span style="font-size: 0.8rem; color: #4b5563;">admin@florabloom.local / FlowerAdmin123</span>
+                    </div>
+                    <button type="button" class="demo-quick-btn" onclick="fillDemo('admin@florabloom.local', 'FlowerAdmin123')">Fill Admin</button>
+                </div>
+                <div class="demo-account-item">
+                    <div>
+                        <strong>Standard Customer</strong>
+                        <span style="font-size: 0.8rem; color: #4b5563;">customer@florabloom.local / CustomerPass123</span>
+                    </div>
+                    <button type="button" class="demo-quick-btn" onclick="fillDemo('customer@florabloom.local', 'CustomerPass123')">Fill Customer</button>
+                </div>
+            </div>
+
+            <!-- Vulnerability Warning Strip -->
+            <div style="background: #fff1f2; border: 1px solid #fecdd3; border-radius: var(--radius-sm); padding: 0.8rem; margin-bottom: 1.5rem; font-size: 0.82rem; color: #9f1239;">
+                ⚠️ <strong>Client-Side Flaw:</strong> Authentication logic runs entirely in the user's browser. Inspect <code>script.js</code> in browser DevTools to read validation logic in plaintext.
+            </div>
+
+            <!-- Error message placeholder -->
+            <div id="login-error" style="display: none; background: #fee2e2; border: 1px solid #f87171; color: #b91c1c; padding: 0.8rem; border-radius: var(--radius-sm); margin-bottom: 1.2rem; font-size: 0.88rem;"></div>
+
+            <!-- Login Form -->
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email or Username:</label>
+                    <input type="email" id="login-email" class="form-control" placeholder="e.g. admin@florabloom.local" required autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="••••••••••••" required autocomplete="current-password">
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; font-size: 0.85rem;">
+                    <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+                        <input type="checkbox" id="remember-me" checked> Remember session
+                    </label>
+                    <a href="#" onclick="alert('Lab simulation: Use the demo credentials provided above.'); return false;" style="color: var(--primary);">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem;">
+                    Sign In to FloraBloom
+                </button>
+            </form>
+
+            <div style="text-align: center; margin-top: 1.8rem; font-size: 0.9rem; color: var(--text-secondary);">
+                Don't have an account yet? 
+                <a href="register.html" style="color: var(--primary); font-weight: 600;">Create Account</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-about">
+                <div class="brand-logo" style="color: #ffffff;">
+                    <span>🌸 FloraBloom</span>
+                </div>
+                <p>Artisanal online flower boutique creating bespoke bouquets and delivering botanical elegance right to your doorstep.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Customer Center</h4>
+                <ul class="footer-links">
+                    <li><a href="login.html">Sign In</a></li>
+                    <li><a href="register.html">Register</a></li>
+                    <li><a href="order.html?id=1001">Track My Order</a></li>
+                    <li><a href="admin.html">Admin Portal</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Security Notes</h4>
+                <ul class="footer-links">
+                    <li><a href="javascript:inspectStorage()">Inspect LocalStorage Token</a></li>
+                    <li><a href="admin.html?role=admin">Test BAC Access</a></li>
+                    <li><a href="products.html?search=%3Cscript%3Ealert('XSS')%3C/script%3E">Test Reflected XSS</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Disclaimer</h4>
+                <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.6;">
+                    Educational cybersecurity simulation. Credentials and session tokens are entirely fictional.
+                </p>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <span>&copy; 2026 FloraBloom Security Lab.</span>
+            <span>Client-Side Authentication Simulation</span>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="products.js"></script>
+    <script src="script.js"></script>
+    <script>
+        function fillDemo(email, pass) {
+            document.getElementById('login-email').value = email;
+            document.getElementById('login-password').value = pass;
+            showToast(`Filled credentials for ${email}`);
+        }
+
+        function inspectStorage() {
+            const sess = localStorage.getItem('florabloom_session');
+            if (sess) {
+                alert("Current Insecure localStorage Session:\n\n" + JSON.stringify(JSON.parse(sess), null, 2));
+            } else {
+                alert("No active session stored in localStorage. Please log in first.");
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('login-form');
+            const errDiv = document.getElementById('login-error');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                errDiv.style.display = 'none';
+
+                const email = document.getElementById('login-email').value.trim();
+                const pass = document.getElementById('login-password').value;
+
+                // VULNERABILITY 3: Verification in client JavaScript
+                const success = handleLogin(email, pass);
+                if (!success) {
+                    errDiv.textContent = "Invalid username or password! (Check the demo credentials box above)";
+                    errDiv.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
