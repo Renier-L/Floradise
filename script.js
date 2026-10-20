@@ -331,8 +331,46 @@ function executeScriptTags(container) {
     });
 }
 
+// Dynamic Cyber Threat Defense Shield UI indicator (Active when defense_server.py is running)
+async function initDefenseShieldUI() {
+    if (window.location.protocol === 'file:') return;
+    try {
+        const res = await fetch('/api/defense/status');
+        if (!res.ok) return;
+        const data = await res.json();
+        
+        let badge = document.getElementById('defense-shield-badge');
+        if (!badge) {
+            badge = document.createElement('div');
+            badge.id = 'defense-shield-badge';
+            badge.style.cssText = `
+                position: fixed; bottom: 20px; right: 20px; z-index: 999999;
+                background: ${data.defense_active ? '#15803d' : '#b91c1c'};
+                color: #ffffff; padding: 8px 16px; border-radius: 9999px;
+                font-size: 0.84rem; font-weight: 700; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                display: flex; align-items: center; gap: 8px; cursor: pointer;
+                border: 1px solid rgba(255,255,255,0.25); font-family: 'Plus Jakarta Sans', sans-serif;
+                transition: all 0.2s ease;
+            `;
+            badge.title = "Click to Toggle Defense Mode for Kali Linux Demo";
+            badge.onclick = async () => {
+                const tRes = await fetch('/api/defense/toggle');
+                const tData = await tRes.json();
+                showToast(`Defense Shield: ${tData.status}`);
+                initDefenseShieldUI();
+            };
+            document.body.appendChild(badge);
+        }
+        badge.style.background = data.defense_active ? '#15803d' : '#b91c1c';
+        badge.innerHTML = `🛡️ Python Defense: <strong>${data.defense_active ? 'ACTIVE (403 Block)' : 'OFF (Vulnerable)'}</strong> <span style="font-size:0.75rem; opacity:0.85; text-decoration:underline; margin-left:4px;">[Toggle]</span>`;
+    } catch (e) {
+        // Quietly ignore if running on GitHub Pages or static host
+    }
+}
+
 // Document Ready Setup
 document.addEventListener('DOMContentLoaded', () => {
     updateCartCount();
     updateAuthUI();
+    initDefenseShieldUI();
 });
