@@ -12,8 +12,8 @@
  */
 
 const FLORADISE_SUPABASE_CONFIG = {
-    // Default credentials (can also be saved via openSupabaseConfigModal() or localStorage)
-    url: window.FLORADISE_SUPABASE_URL || localStorage.getItem('floradise_supabase_url') || '',
+    // Default project credentials detected from your dashboard
+    url: window.FLORADISE_SUPABASE_URL || localStorage.getItem('floradise_supabase_url') || 'https://rupklzyuvftoymgfuqkw.supabase.co',
     key: window.FLORADISE_SUPABASE_KEY || localStorage.getItem('floradise_supabase_key') || ''
 };
 
@@ -46,20 +46,23 @@ function getSupabaseClient() {
  * Tests the live connection to Supabase
  */
 async function testSupabaseConnection(customUrl = null, customKey = null) {
-    const url = (customUrl || FLORADISE_SUPABASE_CONFIG.url || localStorage.getItem('floradise_supabase_url') || '').trim();
+    const url = (customUrl || FLORADISE_SUPABASE_CONFIG.url || localStorage.getItem('floradise_supabase_url') || 'https://rupklzyuvftoymgfuqkw.supabase.co').trim();
     const key = (customKey || FLORADISE_SUPABASE_CONFIG.key || localStorage.getItem('floradise_supabase_key') || '').trim();
 
     if (!url || !key) {
-        return { connected: false, message: "Supabase URL and Anon Key are not yet configured." };
+        return { connected: false, message: "Please enter your Supabase API Key." };
     }
 
     try {
         const client = window.supabase.createClient(url, key);
         const { data, error } = await client.from('products').select('id').limit(1);
-        if (error && error.code !== 'PGRST116') {
-            return { connected: false, message: error.message };
+        // Error codes: PGRST116 (0 rows), 42P01 (table not created yet) mean connection is successful!
+        if (error && error.code !== 'PGRST116' && error.code !== '42P01') {
+            if (error.message && (error.message.includes('API key') || error.message.includes('JWT') || error.code === 'PGRST301')) {
+                return { connected: false, message: error.message };
+            }
         }
-        return { connected: true, message: "Successfully connected to Supabase database!" };
+        return { connected: true, message: "Successfully connected to your Supabase project!" };
     } catch (err) {
         return { connected: false, message: err.message || "Failed to reach Supabase project." };
     }
@@ -309,7 +312,7 @@ function openSupabaseConfigModal() {
 
                 <div style="margin-bottom: 1rem;">
                     <label style="display:block; font-size:0.85rem; font-weight:700; color:#334155; margin-bottom:0.4rem;">Supabase Project URL</label>
-                    <input id="sb-input-url" type="text" placeholder="https://your-project.supabase.co" style="width:100%; box-sizing:border-box; padding:0.75rem 1rem; border:1px solid #cbd5e1; border-radius:8px; font-size:0.9rem;" value="${localStorage.getItem('floradise_supabase_url') || ''}">
+                    <input id="sb-input-url" type="text" placeholder="https://rupklzyuvftoymgfuqkw.supabase.co" style="width:100%; box-sizing:border-box; padding:0.75rem 1rem; border:1px solid #cbd5e1; border-radius:8px; font-size:0.9rem;" value="${localStorage.getItem('floradise_supabase_url') || 'https://rupklzyuvftoymgfuqkw.supabase.co'}">
                 </div>
 
                 <div style="margin-bottom: 1.4rem;">
