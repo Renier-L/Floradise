@@ -110,113 +110,176 @@ class FloradiseDefenseHandler(http.server.SimpleHTTPRequestHandler):
         return None
 
     def render_blocked_page(self, client_ip, reason):
-        """Render a security response page when privilege escalation is blocked."""
+        """Render a formal enterprise security response page when privilege escalation is blocked."""
+        incident_id = f"SEC-AUTH-{int(time.time())}"
         html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>403 Forbidden — Floradise Defense Shield</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>403 Forbidden — Access Denied | Floradise IAM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <style>
         body {{
-            background: #0f172a;
-            color: #f8fafc;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #0b1120;
+            color: #cbd5e1;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             padding: 1.5rem;
             box-sizing: border-box;
         }}
-        .shield-card {{
-            background: #1e293b;
-            border: 2px solid #ef4444;
-            border-radius: 16px;
-            max-width: 600px;
+        .barrier-container {{
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-top: 4px solid #ef4444;
+            border-radius: 12px;
+            max-width: 640px;
             width: 100%;
-            padding: 2.5rem;
-            box-shadow: 0 25px 50px -12px rgba(239, 68, 68, 0.25);
-            text-align: center;
+            padding: 2.8rem 2.4rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }}
-        .shield-badge {{
-            display: inline-flex;
+        .barrier-header {{
+            display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }}
+        .barrier-icon {{
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
             background: rgba(239, 68, 68, 0.15);
             color: #f87171;
-            padding: 0.4rem 1rem;
-            border-radius: 9999px;
-            font-weight: 800;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
             border: 1px solid rgba(239, 68, 68, 0.3);
         }}
-        h1 {{
-            color: #ffffff;
-            font-size: 2rem;
-            margin: 0 0 0.8rem 0;
+        .barrier-title-wrap h1 {{
+            font-size: 1.5rem;
             font-weight: 800;
+            color: #ffffff;
+            margin: 0;
+            letter-spacing: -0.3px;
         }}
-        p {{
+        .barrier-title-wrap span {{
+            font-size: 0.8rem;
+            color: #94a3b8;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }}
+        p.barrier-desc {{
             color: #94a3b8;
             font-size: 0.95rem;
             line-height: 1.6;
-            margin-bottom: 1.5rem;
+            margin: 0 0 1.8rem 0;
         }}
-        .incident-box {{
-            background: #0b1120;
-            border-radius: 10px;
-            padding: 1.2rem;
-            text-align: left;
-            font-family: monospace;
-            font-size: 0.85rem;
-            color: #cbd5e1;
-            margin-bottom: 1.8rem;
-            border: 1px solid #334155;
-        }}
-        .incident-box div {{
-            margin-bottom: 0.4rem;
-        }}
-        .incident-box span.key {{
-            color: #38bdf8;
-            font-weight: bold;
-        }}
-        .incident-box span.val {{
-            color: #fca5a5;
-        }}
-        .btn-return {{
-            display: inline-block;
-            background: #22c55e;
-            color: #ffffff;
-            font-weight: 700;
-            padding: 0.75rem 1.8rem;
+        .telemetry-card {{
+            background: #020617;
+            border: 1px solid #1e293b;
             border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.2s;
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
         }}
-        .btn-return:hover {{
-            background: #16a34a;
+        .telemetry-row {{
+            display: flex;
+            justify-content: space-between;
+            padding: 0.35rem 0;
+            border-bottom: 1px solid #0f172a;
+        }}
+        .telemetry-row:last-child {{
+            border-bottom: none;
+        }}
+        .telemetry-label {{
+            color: #64748b;
+            font-weight: 600;
+        }}
+        .telemetry-value {{
+            color: #f1f5f9;
+            font-weight: 500;
+        }}
+        .telemetry-value.danger {{
+            color: #f87171;
+            font-weight: 700;
+        }}
+        .telemetry-value.brand {{
+            color: #38bdf8;
+        }}
+        .barrier-footer {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.2rem;
+            border-top: 1px solid #1e293b;
+            font-size: 0.85rem;
+        }}
+        .barrier-footer a {{
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 600;
+        }}
+        .barrier-footer a:hover {{
+            text-decoration: underline;
+        }}
+        .badge-system {{
+            color: #64748b;
+            font-size: 0.78rem;
         }}
     </style>
 </head>
 <body>
-    <div class="shield-card">
-        <div class="shield-badge">🛡️ DEFENSE SHIELD ACTIVE — ACCESS DENIED</div>
-        <h1>403 Forbidden</h1>
-        <p>Your request was blocked by the <strong>Floradise Server-Side RBAC Guard</strong>. Privilege escalation attempts are prohibited and logged.</p>
-        
-        <div class="incident-box">
-            <div><span class="key">INCIDENT TYPE:</span> <span class="val">Unauthorized Privilege Escalation Attempt (CWE-285)</span></div>
-            <div><span class="key">CLIENT IP:</span> <span>{client_ip}</span></div>
-            <div><span class="key">TIMESTAMP:</span> <span>{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</span></div>
-            <div><span class="key">REASON:</span> <span class="val">{reason}</span></div>
-            <div><span class="key">DEFENSE RULE:</span> <span>Server-Side Authorization Boundary Active</span></div>
+    <div class="barrier-container">
+        <div class="barrier-header">
+            <div class="barrier-icon">🛡️</div>
+            <div class="barrier-title-wrap">
+                <h1>403 Forbidden — Access Denied</h1>
+                <span>Floradise Identity & Role-Based Access Control (RBAC)</span>
+            </div>
         </div>
 
-        <a href="index.html" class="btn-return">← Return to Safe Storefront</a>
+        <p class="barrier-desc">
+            You do not have authorization to access the <strong>Administrative Management Console (/admin.html)</strong>. This restricted endpoint requires verified System Administrator credentials. Unauthenticated requests and customer roles are strictly prohibited.
+        </p>
+
+        <div class="telemetry-card">
+            <div class="telemetry-row">
+                <span class="telemetry-label">SECURITY INCIDENT:</span>
+                <span class="telemetry-value danger">Privilege Escalation Blocked (CWE-285 / OWASP A01)</span>
+            </div>
+            <div class="telemetry-row">
+                <span class="telemetry-label">TARGET RESOURCE:</span>
+                <span class="telemetry-value brand">/admin.html</span>
+            </div>
+            <div class="telemetry-row">
+                <span class="telemetry-label">REASON:</span>
+                <span class="telemetry-value danger">{reason}</span>
+            </div>
+            <div class="telemetry-row">
+                <span class="telemetry-label">CLIENT IP:</span>
+                <span class="telemetry-value">{client_ip}</span>
+            </div>
+            <div class="telemetry-row">
+                <span class="telemetry-label">TIMESTAMP:</span>
+                <span class="telemetry-value">{datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")}</span>
+            </div>
+            <div class="telemetry-row">
+                <span class="telemetry-label">INCIDENT REF:</span>
+                <span class="telemetry-value">{incident_id}</span>
+            </div>
+        </div>
+
+        <div class="barrier-footer">
+            <a href="index.html">← Return to Safe Storefront</a>
+            <span class="badge-system">Floradise Defensive Security Shield v2.0</span>
+        </div>
     </div>
 </body>
 </html>"""
