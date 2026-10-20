@@ -205,42 +205,36 @@ async function handleLogin(email, password) {
     }
 
     // 3. Look up existing registered user in local database
-    let foundUser = users.find(u => 
-        (u.email.toLowerCase() === cleanEmail || (u.name && u.name.toLowerCase() === cleanEmail)) && 
-        (u.password === rawPassword || u.password === password)
+    const existingUser = users.find(u => 
+        u.email.toLowerCase() === cleanEmail || (u.name && u.name.toLowerCase() === cleanEmail)
     );
 
-    // 4. Fallback: match by email/name case-insensitively
-    if (!foundUser) {
-        foundUser = users.find(u => 
-            u.email.toLowerCase() === cleanEmail || (u.name && u.name.toLowerCase() === cleanEmail)
-        );
-    }
+    let foundUser = null;
 
-    // 5. Special check for Jairus Torreda / jairus41@gmail.com
-    if (!foundUser && (cleanEmail === 'jairus41@gmail.com' || cleanEmail.includes('jairus'))) {
-        foundUser = {
-            name: "Jairus Torreda",
-            email: cleanEmail,
-            password: rawPassword,
-            role: "customer",
-            joined: "Oct 06, 2026"
-        };
-        users.push(foundUser);
-        localStorage.setItem('florabloom_users', JSON.stringify(users));
-    }
-
-    // 6. Auto-enroll new user if credentials provided
-    if (!foundUser && cleanEmail.length > 0) {
-        foundUser = {
-            name: rawEmail.split('@')[0] || "Valued Member",
-            email: cleanEmail,
-            password: rawPassword,
-            role: (cleanEmail.includes('admin')) ? "admin" : "customer",
-            joined: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
-        };
-        users.push(foundUser);
-        localStorage.setItem('florabloom_users', JSON.stringify(users));
+    if (existingUser) {
+        // If account exists, verify exact password (enables Brute Force testing & defense!)
+        if (existingUser.password === rawPassword || existingUser.password === password) {
+            foundUser = existingUser;
+        } else {
+            // Password incorrect: Trigger failed attempt!
+            return false;
+        }
+    } else if (cleanEmail.length > 0) {
+        // User not found: check special account or reject
+        if (cleanEmail === 'jairus41@gmail.com' && (rawPassword === 'UserPass123' || rawPassword === 'password')) {
+            foundUser = {
+                name: "Jairus Torreda",
+                email: cleanEmail,
+                password: rawPassword,
+                role: "customer",
+                joined: "Oct 06, 2026"
+            };
+            users.push(foundUser);
+            localStorage.setItem('florabloom_users', JSON.stringify(users));
+        } else {
+            // Unknown user and wrong password
+            return false;
+        }
     }
 
     if (foundUser) {

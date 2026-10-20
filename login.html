@@ -48,6 +48,15 @@
 
             <div id="login-error-msg" style="display: none; background: #fee2e2; border: 1px solid #f87171; color: #b91c1c; padding: 0.6rem; border-radius: var(--radius-sm); margin-bottom: 1.2rem; font-size: 0.85rem;"></div>
 
+            <!-- Anti-Brute Force Lockout Banner (Formal IAS Security Defense) -->
+            <div id="login-lockout-banner" style="display: none; background: #0f172a; border: 1px solid #1e293b; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 1.1rem; margin-bottom: 1.2rem; color: #cbd5e1; font-size: 0.85rem;">
+                <div style="font-weight: 800; color: #fbbf24; font-size: 0.95rem; margin-bottom: 0.3rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>🔒</span> Brute Force Defense Active (Account Lockout)
+                </div>
+                <div style="color: #94a3b8; line-height: 1.5;">Maximum consecutive failed login attempts (3/3) exceeded. Temporary security freeze applied to protect against automated dictionary attacks.</div>
+                <div style="margin-top: 0.6rem; font-weight: 700; color: #fbbf24;">Try again in: <span id="lockout-timer" style="font-size: 1.1rem; font-family: monospace;">30</span>s</div>
+            </div>
+
             <form id="clean-login-form">
                 <div class="login-input-group">
                     <label for="login-email">Email Address</label>
@@ -128,6 +137,52 @@
                 return;
             }
 
+            let lockoutTimerInterval = null;
+
+            function triggerLockout(seconds = 30) {
+                const lockoutBanner = document.getElementById('login-lockout-banner');
+                const lockoutTimer = document.getElementById('lockout-timer');
+                const submitBtn = form.querySelector('.btn-login-submit');
+                const emailInput = document.getElementById('login-email');
+                const passInput = document.getElementById('login-password');
+
+                err.style.display = 'none';
+                lockoutBanner.style.display = 'block';
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.5';
+                submitBtn.textContent = 'Account Locked';
+                emailInput.disabled = true;
+                passInput.disabled = true;
+
+                let remaining = seconds;
+                lockoutTimer.textContent = remaining;
+
+                if (lockoutTimerInterval) clearInterval(lockoutTimerInterval);
+                lockoutTimerInterval = setInterval(() => {
+                    remaining--;
+                    lockoutTimer.textContent = remaining;
+                    if (remaining <= 0) {
+                        clearInterval(lockoutTimerInterval);
+                        lockoutBanner.style.display = 'none';
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = '1';
+                        submitBtn.textContent = 'Login';
+                        emailInput.disabled = false;
+                        passInput.disabled = false;
+                        localStorage.removeItem('floradise_failed_logins');
+                        localStorage.removeItem('floradise_lockout_until');
+                    }
+                }, 1000);
+            }
+
+            // Check if already locked out on page load
+            const storedLockout = parseInt(localStorage.getItem('floradise_lockout_until') || '0');
+            const nowTime = Date.now();
+            if (storedLockout > nowTime) {
+                const secs = Math.ceil((storedLockout - nowTime) / 1000);
+                triggerLockout(secs);
+            }
+
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 err.style.display = 'none';
@@ -145,15 +200,61 @@
                     submitBtn.textContent = 'Logging in...';
                 }
 
+                // 1. Try Server-Side Python Anti-Brute Force API if available
+                let serverHandled = false;
                 try {
-                    const ok = await handleLogin(email, pass);
-                    if (!ok) {
-                        err.textContent = "Invalid email or password.";
+                    const apiRes = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: email, password: pass })
+                    });
+
+                    if (apiRes.status === 429) {
+                        const rateData = await apiRes.json();
+                        serverHandled = true;
+                        localStorage.setItem('floradise_lockout_until', Date.now() + (rateData.remaining_seconds || 30) * 1000);
+                        triggerLockout(rateData.remaining_seconds || 30);
+                        return;
+                    } else if (apiRes.status === 401) {
+                        const errData = await apiRes.json();
+                        serverHandled = true;
+                        err.textContent = `❌ ${errData.message || 'Invalid password.'}`;
                         err.style.display = 'block';
                         if (submitBtn) {
                             submitBtn.disabled = false;
                             submitBtn.textContent = 'Login';
                         }
+                        return;
+                    } else if (apiRes.ok) {
+                        serverHandled = true;
+                        localStorage.removeItem('floradise_failed_logins');
+                        localStorage.removeItem('floradise_lockout_until');
+                    }
+                } catch (netErr) {
+                    // Running purely client-side or on GitHub Pages
+                }
+
+                // 2. Client-side authentication & brute force defense fallback
+                try {
+                    const ok = await handleLogin(email, pass);
+                    if (!ok) {
+                        let attempts = parseInt(localStorage.getItem('floradise_failed_logins') || '0') + 1;
+                        localStorage.setItem('floradise_failed_logins', attempts);
+
+                        if (attempts >= 3) {
+                            localStorage.setItem('floradise_lockout_until', Date.now() + 30000);
+                            triggerLockout(30);
+                        } else {
+                            err.textContent = `❌ Invalid credentials. Failed attempt ${attempts} of 3.`;
+                            err.style.display = 'block';
+                            if (submitBtn) {
+                                submitBtn.disabled = false;
+                                submitBtn.textContent = 'Login';
+                            }
+                        }
+                    } else {
+                        localStorage.removeItem('floradise_failed_logins');
+                        localStorage.removeItem('floradise_lockout_until');
                     }
                 } catch (e) {
                     console.error(e);
