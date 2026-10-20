@@ -123,10 +123,21 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-client.js?v=1.0"></script>
     <script src="products.js?v=6.0"></script>
-    <script src="script.js?v=7.0"></script>
+    <script src="script.js?v=8.0"></script>
     <script>
         function fillXSSPayload() {
             window.location.href = "products.html?search=" + encodeURIComponent("<script>alert('Reflected XSS Executed on Floradise!')<\/script>");
+        }
+
+        // Global HTML entity sanitization helper for IAS XSS Defense (CWE-79)
+        function escapeHTML(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
         }
 
         // =====================================================================
@@ -140,15 +151,11 @@
             if (query !== null && query !== undefined && query.trim() !== '') {
                 banner.style.display = 'flex';
 
-                // Check Defense Status (Syncs with start_defense_server.bat vs start_vulnerable_mode.bat)
+                // Check Defense Status: ON by default, only OFF if ?defense=off is in URL
                 const urlParams = new URLSearchParams(window.location.search);
-                let defenseActive = true; // Default: DEFENSE ACTIVE (Protected)
+                let defenseActive = true;
                 if (urlParams.get('defense') === 'off') {
                     defenseActive = false;
-                } else if (urlParams.get('defense') === 'on') {
-                    defenseActive = true;
-                } else if (typeof isDefenseEnabled === 'function') {
-                    defenseActive = await isDefenseEnabled();
                 }
 
                 if (defenseActive) {

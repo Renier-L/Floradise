@@ -336,7 +336,7 @@ async function isDefenseEnabled() {
         // Fallback for offline or static hosting
     }
     const stored = localStorage.getItem('floradise_defense_active');
-    return stored === 'true'; // Default is FALSE (Vulnerable / Attack Mode)
+    return stored === null ? true : stored === 'true'; // Default is TRUE (Defense ON)
 }
 
 // Global script tag execution helper for XSS demonstrations in modern browsers

@@ -170,7 +170,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-client.js?v=1.0"></script>
     <script src="products.js?v=6.0"></script>
-    <script src="script.js?v=7.0"></script>
+    <script src="script.js?v=8.0"></script>
     <script>
         let currentProd = null;
 
@@ -178,6 +178,17 @@
             document.getElementById('rev-author').value = "Attacker (Pentest)";
             document.getElementById('rev-comment').value = "<img src=x onerror=\"alert('Stored XSS Executed on Floradise!')\"> <em>Injected payload active.</em>";
             showToast("Stored XSS payload filled! Submit to test.");
+        }
+
+        // Global HTML entity sanitization helper for IAS XSS Defense (CWE-79)
+        function escapeHTML(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
         }
 
         async function renderReviews(prodId) {
@@ -202,15 +213,11 @@
                 return;
             }
 
-            // Check Defense Status (Syncs with start_defense_server.bat vs start_vulnerable_mode.bat)
+            // Check Defense Status: ON by default, only OFF if ?defense=off is in URL
             const urlParams = new URLSearchParams(window.location.search);
-            let defenseActive = true; // Default: DEFENSE ACTIVE (Protected)
+            let defenseActive = true;
             if (urlParams.get('defense') === 'off') {
                 defenseActive = false;
-            } else if (urlParams.get('defense') === 'on') {
-                defenseActive = true;
-            } else if (typeof isDefenseEnabled === 'function') {
-                defenseActive = await isDefenseEnabled();
             }
 
             if (defenseActive) {
