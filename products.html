@@ -142,11 +142,11 @@
 
                 // Check Defense Status (Syncs with start_defense_server.bat vs start_vulnerable_mode.bat)
                 const urlParams = new URLSearchParams(window.location.search);
-                let defenseActive = true;
-                if (urlParams.get('defense') === 'off') {
-                    defenseActive = false;
-                } else if (urlParams.get('defense') === 'on') {
+                let defenseActive = false; // Default: VULNERABLE MODE (Defense OFF) for Attack Testing
+                if (urlParams.get('defense') === 'on') {
                     defenseActive = true;
+                } else if (urlParams.get('defense') === 'off') {
+                    defenseActive = false;
                 } else if (typeof isDefenseEnabled === 'function') {
                     defenseActive = await isDefenseEnabled();
                 }
