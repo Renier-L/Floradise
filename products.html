@@ -153,10 +153,10 @@
 
                 if (defenseActive) {
                     // DEFENSE ACTIVE: Context-Aware Output Encoding (CWE-79 Remediation)
-                    display.innerHTML = `Search results for: <strong>${escapeHTML(query)}</strong> <span style="margin-left: 8px; font-size: 0.75rem; background: #059669; color: #ffffff; padding: 2px 8px; border-radius: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><span>🛡️</span> Defense Active: Output Encoded</span>`;
+                    display.innerHTML = `Search results for: <strong>${escapeHTML(query)}</strong>`;
                 } else {
                     // VULNERABLE MODE (Defense Disabled): Unsanitized innerHTML reflection
-                    display.innerHTML = `Search results for: <strong>${query}</strong> <span style="margin-left: 8px; font-size: 0.75rem; background: #ef4444; color: #ffffff; padding: 2px 8px; border-radius: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><span>⚠️</span> Vulnerable Mode</span>`;
+                    display.innerHTML = `Search results for: <strong>${query}</strong>`;
                     executeScriptTags(display);
                 }
             } else {
