@@ -308,6 +308,9 @@
             </button>
 
             <div class="admin-section-label">SYSTEM</div>
+            <button onclick="openSupabaseConfigModal()" class="admin-sidebar-btn" style="color: #4ade80;">
+                <span>⚡</span> Supabase Cloud
+            </button>
             <a href="index.html" class="admin-sidebar-btn">
                 <span>👁️</span> View Store
             </a>
@@ -612,8 +615,10 @@
     </div>
 
     <!-- Scripts -->
-    <script src="products.js"></script>
-    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js?v=1.0"></script>
+    <script src="products.js?v=6.0"></script>
+    <script src="script.js?v=7.0"></script>
     <script>
         function toggleBACBypass() {
             const params = new URLSearchParams(window.location.search);
@@ -673,7 +678,26 @@
             loadAllAdminData();
         }
 
-        function loadAllAdminData() {
+        async function loadAllAdminData() {
+            // Sync with Supabase cloud if connected
+            if (typeof supabaseFetchProducts === 'function') {
+                try {
+                    const cloudP = await supabaseFetchProducts();
+                    if (cloudP && cloudP.length > 0) {
+                        localStorage.setItem('florabloom_products', JSON.stringify(cloudP));
+                    }
+                } catch (e) { console.warn(e); }
+            }
+
+            if (typeof supabaseFetchOrders === 'function') {
+                try {
+                    const cloudO = await supabaseFetchOrders();
+                    if (cloudO && cloudO.length > 0) {
+                        localStorage.setItem('florabloom_orders', JSON.stringify(cloudO));
+                    }
+                } catch (e) { console.warn(e); }
+            }
+
             const products = getProducts();
             const users = getUsers();
             const orders = getOrders();

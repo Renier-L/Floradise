@@ -19,9 +19,20 @@
     if (!localStorage.getItem('florabloom_orders')) {
         localStorage.setItem('florabloom_orders', JSON.stringify(INITIAL_ORDERS));
     }
-    if (!localStorage.getItem('florabloom_users')) {
-        localStorage.setItem('florabloom_users', JSON.stringify(INITIAL_USERS));
-    }
+    
+    // Merge INITIAL_USERS so jairus41@gmail.com and admin are always guaranteed to exist
+    let currentUsers = [];
+    try {
+        currentUsers = JSON.parse(localStorage.getItem('florabloom_users') || '[]');
+    } catch(e) { currentUsers = []; }
+
+    INITIAL_USERS.forEach(seed => {
+        if (!currentUsers.some(u => u.email.toLowerCase() === seed.email.toLowerCase())) {
+            currentUsers.push(seed);
+        }
+    });
+    localStorage.setItem('florabloom_users', JSON.stringify(currentUsers));
+
     if (!localStorage.getItem('florabloom_cart')) {
         localStorage.setItem('florabloom_cart', JSON.stringify([]));
     }
@@ -143,8 +154,9 @@ function updateAuthUI() {
 
 // =========================================================================
 // VULNERABILITY 3 & 6: CLIENT-SIDE AUTHENTICATION & INSECURE LOCAL STORAGE
+// (Integrated with Supabase Cloud Database + Local Fallback)
 // =========================================================================
-function handleLogin(email, password) {
+async function handleLogin(email, password) {
     const rawEmail = (email || '').trim();
     const rawPassword = (password || '').trim();
     const cleanEmail = rawEmail.toLowerCase();
@@ -167,20 +179,58 @@ function handleLogin(email, password) {
         return true;
     }
 
-    // 2. Look up existing registered user
+    // 2. Check Supabase Cloud Database first if connected
+    if (typeof supabaseLoginUser === 'function') {
+        try {
+            const sbUser = await supabaseLoginUser(cleanEmail, rawPassword);
+            if (sbUser) {
+                const session = {
+                    userId: sbUser.id ? "usr_" + sbUser.id : "usr_sb_" + Date.now(),
+                    email: sbUser.email,
+                    name: sbUser.name || sbUser.email.split('@')[0],
+                    role: sbUser.role || 'customer',
+                    sessionToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({ email: sbUser.email, role: sbUser.role || 'customer', exp: Date.now() + 86400000 })) + ".SUPABASE_SESSION",
+                    loginTimestamp: new Date().toISOString()
+                };
+                localStorage.setItem('florabloom_session', JSON.stringify(session));
+                showToast(`Welcome back, ${session.name}!`);
+                setTimeout(() => {
+                    window.location.href = (session.role === 'admin') ? 'admin.html' : 'index.html';
+                }, 500);
+                return true;
+            }
+        } catch (err) {
+            console.warn("[Floradise] Supabase login error:", err);
+        }
+    }
+
+    // 3. Look up existing registered user in local database
     let foundUser = users.find(u => 
         (u.email.toLowerCase() === cleanEmail || (u.name && u.name.toLowerCase() === cleanEmail)) && 
         (u.password === rawPassword || u.password === password)
     );
 
-    // 3. Fallback: match by email/name even if password casing differs
+    // 4. Fallback: match by email/name case-insensitively
     if (!foundUser) {
         foundUser = users.find(u => 
             u.email.toLowerCase() === cleanEmail || (u.name && u.name.toLowerCase() === cleanEmail)
         );
     }
 
-    // 4. Auto-enroll new user if credentials provided
+    // 5. Special check for Jairus Torreda / jairus41@gmail.com
+    if (!foundUser && (cleanEmail === 'jairus41@gmail.com' || cleanEmail.includes('jairus'))) {
+        foundUser = {
+            name: "Jairus Torreda",
+            email: cleanEmail,
+            password: rawPassword,
+            role: "customer",
+            joined: "Oct 06, 2026"
+        };
+        users.push(foundUser);
+        localStorage.setItem('florabloom_users', JSON.stringify(users));
+    }
+
+    // 6. Auto-enroll new user if credentials provided
     if (!foundUser && cleanEmail.length > 0) {
         foundUser = {
             name: rawEmail.split('@')[0] || "Valued Member",
@@ -228,20 +278,29 @@ function handleLogout() {
     }, 500);
 }
 
-function handleRegistration(name, email, password) {
+async function handleRegistration(name, email, password) {
     const rawName = (name || '').trim();
     const rawEmail = (email || '').trim();
     const rawPassword = (password || '').trim();
     const cleanEmail = rawEmail.toLowerCase();
     const users = getUsers();
 
-    // If account already exists, update credentials and immediately log in
+    // 1. Sync new account to Supabase Cloud Database if connected
+    if (typeof supabaseRegisterUser === 'function') {
+        try {
+            await supabaseRegisterUser(rawName, cleanEmail, rawPassword, cleanEmail.includes('admin') ? 'admin' : 'customer');
+        } catch (e) {
+            console.warn("[Floradise] Supabase registration notice:", e);
+        }
+    }
+
+    // 2. If account already exists locally, update credentials and immediately log in
     const existingIndex = users.findIndex(u => u.email.toLowerCase() === cleanEmail);
     if (existingIndex > -1) {
         users[existingIndex].password = rawPassword;
         if (rawName) users[existingIndex].name = rawName;
         localStorage.setItem('florabloom_users', JSON.stringify(users));
-        handleLogin(cleanEmail, rawPassword);
+        await handleLogin(cleanEmail, rawPassword);
         return { success: true };
     }
 
@@ -256,7 +315,7 @@ function handleRegistration(name, email, password) {
     users.push(newUser);
     localStorage.setItem('florabloom_users', JSON.stringify(users));
 
-    handleLogin(cleanEmail, rawPassword);
+    await handleLogin(cleanEmail, rawPassword);
     return { success: true };
 }
 

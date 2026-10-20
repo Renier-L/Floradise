@@ -123,6 +123,7 @@
                     <li><a href="index.html">Home</a></li>
                     <li><a href="products.html">Delivery</a></li>
                     <li><a href="admin.html?role=admin">Admin Dashboard</a></li>
+                    <li><a href="javascript:void(0)" onclick="openSupabaseConfigModal()">⚡ Supabase Cloud</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -139,13 +140,27 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="products.js?v=5.0"></script>
-    <script src="script.js?v=6.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js?v=1.0"></script>
+    <script src="products.js?v=6.0"></script>
+    <script src="script.js?v=7.0"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const id = new URLSearchParams(window.location.search).get('id') || '1001';
-            const orders = getOrders();
-            const ord = orders.find(o => String(o.id) === String(id));
+            let orders = getOrders();
+            let ord = orders.find(o => String(o.id) === String(id));
+
+            // If not found in local cache, search Supabase Cloud Database (supports IDOR pentest across devices)
+            if (!ord && typeof supabaseFetchOrders === 'function') {
+                try {
+                    const cloudOrders = await supabaseFetchOrders();
+                    if (cloudOrders) {
+                        ord = cloudOrders.find(o => String(o.id) === String(id));
+                    }
+                } catch (e) {
+                    console.warn("[Floradise] Cloud order lookup notice:", e);
+                }
+            }
 
             if (ord) {
                 document.getElementById('ord-id-display').textContent = `#${ord.id}`;

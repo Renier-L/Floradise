@@ -31,7 +31,7 @@
                             🛒 Cart <span class="cart-count-bubble cart-count-badge">0</span>
                         </a>
                     </li>
-                    <li>
+                    <li id="user-nav-slot">
                         <a href="login.html" class="login-btn-nav">
                             <span>➜]</span> Login
                         </a>
@@ -77,6 +77,12 @@
                     Already have an account? 
                     <a href="login.html" style="color: var(--primary-green-dark); font-weight: 700;">Login</a>
                 </div>
+
+                <div style="margin-top: 1.2rem; padding-top: 1rem; border-top: 1px dashed var(--border-color); text-align: center;">
+                    <button type="button" onclick="openSupabaseConfigModal()" style="background: none; border: none; color: #16a34a; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
+                        <span>⚡</span> Connect Supabase Cloud Database
+                    </button>
+                </div>
             </form>
         </div>
     </main>
@@ -116,14 +122,16 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="products.js?v=5.0"></script>
-    <script src="script.js?v=6.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js?v=1.0"></script>
+    <script src="products.js?v=6.0"></script>
+    <script src="script.js?v=7.0"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('clean-reg-form');
             const err = document.getElementById('reg-error-msg');
 
-            form.addEventListener('submit', (e) => {
+            form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 err.style.display = 'none';
 
@@ -138,10 +146,30 @@
                     return;
                 }
 
-                const res = handleRegistration(name, email, pass);
-                if (!res.success) {
-                    err.textContent = res.message;
+                const submitBtn = form.querySelector('.btn-login-submit');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Creating account...';
+                }
+
+                try {
+                    const res = await handleRegistration(name, email, pass);
+                    if (!res.success) {
+                        err.textContent = res.message || "Registration failed.";
+                        err.style.display = 'block';
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'Sign Up';
+                        }
+                    }
+                } catch (e) {
+                    console.error(e);
+                    err.textContent = "An error occurred during registration.";
                     err.style.display = 'block';
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Sign Up';
+                    }
                 }
             });
         });

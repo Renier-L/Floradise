@@ -290,5 +290,12 @@ const INITIAL_USERS = [
         password: "UserPass123",
         role: "customer",
         joined: "Sep 28, 2026"
+    },
+    {
+        name: "Jairus Torreda",
+        email: "jairus41@gmail.com",
+        password: "UserPass123",
+        role: "customer",
+        joined: "Oct 06, 2026"
     }
 ];

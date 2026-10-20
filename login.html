@@ -31,7 +31,7 @@
                             🛒 Cart <span class="cart-count-bubble cart-count-badge">0</span>
                         </a>
                     </li>
-                    <li>
+                    <li id="user-nav-slot">
                         <a href="login.html" class="login-btn-nav">
                             <span>➜]</span> Login
                         </a>
@@ -66,6 +66,12 @@
                 <div style="margin-top: 1.5rem; font-size: 0.88rem; color: var(--text-muted);">
                     Don't have an account? 
                     <a href="register.html" style="color: var(--primary-green-dark); font-weight: 700;">Sign up</a>
+                </div>
+
+                <div style="margin-top: 1.2rem; padding-top: 1rem; border-top: 1px dashed var(--border-color); text-align: center;">
+                    <button type="button" onclick="openSupabaseConfigModal()" style="background: none; border: none; color: #16a34a; font-size: 0.82rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
+                        <span>⚡</span> Connect Supabase Cloud Database
+                    </button>
                 </div>
             </form>
         </div>
@@ -106,8 +112,10 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="products.js?v=5.0"></script>
-    <script src="script.js?v=6.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js?v=1.0"></script>
+    <script src="products.js?v=6.0"></script>
+    <script src="script.js?v=7.0"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('clean-login-form');
@@ -120,7 +128,7 @@
                 return;
             }
 
-            form.addEventListener('submit', (e) => {
+            form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 err.style.display = 'none';
 
@@ -131,10 +139,30 @@
                     email = 'admin@floradise.local';
                 }
 
-                const ok = handleLogin(email, pass);
-                if (!ok) {
-                    err.textContent = "Invalid email or password.";
+                const submitBtn = form.querySelector('.btn-login-submit');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Logging in...';
+                }
+
+                try {
+                    const ok = await handleLogin(email, pass);
+                    if (!ok) {
+                        err.textContent = "Invalid email or password.";
+                        err.style.display = 'block';
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'Login';
+                        }
+                    }
+                } catch (e) {
+                    console.error(e);
+                    err.textContent = "An error occurred during login. Please try again.";
                     err.style.display = 'block';
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Login';
+                    }
                 }
             });
         });

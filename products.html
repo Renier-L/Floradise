@@ -103,6 +103,7 @@
                     <li><a href="index.html#about-us">About us</a></li>
                     <li><a href="products.html">Delivery</a></li>
                     <li><a href="admin.html?role=admin">Admin Dashboard</a></li>
+                    <li><a href="javascript:void(0)" onclick="openSupabaseConfigModal()">⚡ Supabase Cloud</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -119,8 +120,10 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="products.js?v=5.0"></script>
-    <script src="script.js?v=6.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js?v=1.0"></script>
+    <script src="products.js?v=6.0"></script>
+    <script src="script.js?v=7.0"></script>
     <script>
         function fillXSSPayload() {
             window.location.href = "products.html?search=" + encodeURIComponent("<script>alert('Reflected XSS Executed on Floradise!')<\/script>");
@@ -144,10 +147,23 @@
             }
         }
 
-        function renderProducts(searchQuery = "") {
+        async function renderProducts(searchQuery = "") {
             const grid = document.getElementById('catalog-products-grid');
             const noMsg = document.getElementById('no-products-msg');
             const countBadge = document.getElementById('results-count-badge');
+
+            // 1. Check if Supabase products are available
+            if (typeof supabaseFetchProducts === 'function') {
+                try {
+                    const cloudList = await supabaseFetchProducts();
+                    if (cloudList && cloudList.length > 0) {
+                        localStorage.setItem('florabloom_products', JSON.stringify(cloudList));
+                    }
+                } catch (e) {
+                    console.warn("[Floradise] Cloud catalog fallback:", e);
+                }
+            }
+
             let list = getProducts();
 
             if (searchQuery) {

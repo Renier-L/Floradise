@@ -667,6 +667,7 @@
                     <li><a href="#about-us">About us</a></li>
                     <li><a href="products.html">Delivery</a></li>
                     <li><a href="admin.html?role=admin">Admin Dashboard</a></li>
+                    <li><a href="javascript:void(0)" onclick="openSupabaseConfigModal()">⚡ Supabase Cloud</a></li>
                 </ul>
             </div>
 
@@ -685,8 +686,10 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="products.js?v=5.0"></script>
-    <script src="script.js?v=6.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js?v=1.0"></script>
+    <script src="products.js?v=6.0"></script>
+    <script src="script.js?v=7.0"></script>
     <script>
         const heroSlides = [
             {
@@ -729,32 +732,49 @@
             setHeroSlide((currentSlideIdx - 1 + heroSlides.length) % heroSlides.length);
         }
 
-        // Always render products immediately
-        function renderProductsList() {
+        // Always render products immediately (with Supabase Cloud Sync if configured)
+        async function renderProductsList() {
             const grid = document.getElementById('homepage-products-grid');
             if (!grid) return;
 
-            // Safe fallback to FLORABLOOM_PRODUCTS if localStorage isn't populated
-            const list = (typeof getProducts === 'function' && getProducts().length > 0) 
+            // 1. Initial render from local cache or seed
+            let list = (typeof getProducts === 'function' && getProducts().length > 0) 
                 ? getProducts() 
                 : FLORABLOOM_PRODUCTS;
 
-            grid.innerHTML = list.map(flower => `
-                <div class="product-item-card">
-                    <div class="product-card-img-wrap">
-                        <a href="product.html?id=${flower.id}">
-                            <img src="${flower.image}" alt="${flower.name}" loading="lazy">
-                        </a>
+            const render = (items) => {
+                grid.innerHTML = items.map(flower => `
+                    <div class="product-item-card">
+                        <div class="product-card-img-wrap">
+                            <a href="product.html?id=${flower.id}">
+                                <img src="${flower.image}" alt="${flower.name}" loading="lazy">
+                            </a>
+                        </div>
+                        <div class="product-card-name">${flower.name}</div>
+                        <div class="product-card-bottom">
+                            <span class="product-card-price-tag">₱${Number(flower.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                            <button onclick="addToCart(${flower.id}, 1)" class="btn-card-add-green">
+                                🛒 Add
+                            </button>
+                        </div>
                     </div>
-                    <div class="product-card-name">${flower.name}</div>
-                    <div class="product-card-bottom">
-                        <span class="product-card-price-tag">₱${Number(flower.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                        <button onclick="addToCart(${flower.id}, 1)" class="btn-card-add-green">
-                            🛒 Add
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+                `).join('');
+            };
+
+            render(list);
+
+            // 2. Fetch live products from Supabase if connected
+            if (typeof supabaseFetchProducts === 'function') {
+                try {
+                    const cloudProducts = await supabaseFetchProducts();
+                    if (cloudProducts && cloudProducts.length > 0) {
+                        localStorage.setItem('florabloom_products', JSON.stringify(cloudProducts));
+                        render(cloudProducts);
+                    }
+                } catch (e) {
+                    console.warn("[Floradise] Cloud products fetch fallback to local:", e);
+                }
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {

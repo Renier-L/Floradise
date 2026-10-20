@@ -150,6 +150,7 @@
                     <li><a href="index.html#about-us">About us</a></li>
                     <li><a href="products.html">Delivery</a></li>
                     <li><a href="admin.html?role=admin">Admin Dashboard</a></li>
+                    <li><a href="javascript:void(0)" onclick="openSupabaseConfigModal()">⚡ Supabase Cloud</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -166,8 +167,10 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="products.js?v=5.0"></script>
-    <script src="script.js?v=6.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js?v=1.0"></script>
+    <script src="products.js?v=6.0"></script>
+    <script src="script.js?v=7.0"></script>
     <script>
         let currentProd = null;
 
@@ -177,8 +180,20 @@
             showToast("Stored XSS payload filled! Submit to test.");
         }
 
-        function renderReviews(prodId) {
-            const list = getReviews().filter(r => r.productId === parseInt(prodId));
+        async function renderReviews(prodId) {
+            let list = getReviews().filter(r => r.productId === parseInt(prodId));
+
+            if (typeof supabaseFetchReviews === 'function') {
+                try {
+                    const cloudReviews = await supabaseFetchReviews(prodId);
+                    if (cloudReviews && cloudReviews.length > 0) {
+                        list = cloudReviews;
+                    }
+                } catch (e) {
+                    console.warn("[Floradise] Cloud reviews fallback:", e);
+                }
+            }
+
             const container = document.getElementById('reviews-list-container');
             document.getElementById('rev-count').textContent = list.length;
 
@@ -222,22 +237,33 @@
                     addToCart(currentProd.id, qty);
                 });
 
-                document.getElementById('add-review-form').addEventListener('submit', (e) => {
+                document.getElementById('add-review-form').addEventListener('submit', async (e) => {
                     e.preventDefault();
                     const author = document.getElementById('rev-author').value.trim();
                     const rating = parseInt(document.getElementById('rev-rating').value);
                     const comment = document.getElementById('rev-comment').value.trim();
 
-                    const allRev = getReviews();
-                    allRev.unshift({
+                    const newRev = {
                         id: Date.now(),
                         productId: currentProd.id,
                         author: author,
                         rating: rating,
                         date: new Date().toISOString().split('T')[0],
                         comment: comment
-                    });
+                    };
+
+                    const allRev = getReviews();
+                    allRev.unshift(newRev);
                     localStorage.setItem('florabloom_reviews', JSON.stringify(allRev));
+
+                    if (typeof supabaseInsertReview === 'function') {
+                        try {
+                            await supabaseInsertReview(newRev);
+                        } catch (err) {
+                            console.warn("[Floradise] Cloud review save notice:", err);
+                        }
+                    }
+
                     document.getElementById('rev-comment').value = '';
                     showToast("Review submitted!");
                     renderReviews(currentProd.id);
