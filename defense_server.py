@@ -36,7 +36,7 @@ LOG_FILE = os.path.join(WEB_DIR, "security_audit.log")
 # Global Defense State (can be toggled during live demo!)
 # True  = Defense Active (Blocks Kali Linux privilege escalation & brute force)
 # False = Vulnerable Mode (Allows unauthorized access to demonstrate the attack)
-DEFENSE_ENABLED = False
+DEFENSE_ENABLED = True
 
 # Brute Force Defense Tracking: { ip: { 'attempts': int, 'lockout_until': float } }
 FAILED_LOGIN_ATTEMPTS = {}
