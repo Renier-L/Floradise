@@ -202,19 +202,43 @@
                 return;
             }
 
-            // Unsanitized innerHTML rendering (Stored XSS)
-            container.innerHTML = list.map(r => `
-                <div style="background:#fff; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1.2rem;">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;">
-                        <strong>${r.author}</strong>
-                        <span style="font-size:0.8rem; color:var(--text-muted);">${r.date || 'Oct 2026'}</span>
-                    </div>
-                    <div style="color:#f59e0b; margin-bottom:0.4rem;">${'★'.repeat(r.rating || 5)}</div>
-                    <div style="color:var(--text-dark);">${r.comment}</div>
-                </div>
-            `).join('');
+            // Check Defense Status (Syncs with start_defense_server.bat vs start_vulnerable_mode.bat)
+            const urlParams = new URLSearchParams(window.location.search);
+            let defenseActive = true;
+            if (urlParams.get('defense') === 'off') {
+                defenseActive = false;
+            } else if (urlParams.get('defense') === 'on') {
+                defenseActive = true;
+            } else if (typeof isDefenseEnabled === 'function') {
+                defenseActive = await isDefenseEnabled();
+            }
 
-            executeScriptTags(container);
+            if (defenseActive) {
+                // DEFENSE ACTIVE: Context-Aware Output Encoding (CWE-79 Remediation)
+                container.innerHTML = list.map(r => `
+                    <div style="background:#fff; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1.2rem; margin-bottom:1rem;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;">
+                            <strong>${escapeHTML(r.author)}</strong>
+                            <span style="font-size:0.8rem; color:var(--text-muted);">${escapeHTML(r.date || 'Oct 2026')}</span>
+                        </div>
+                        <div style="color:#f59e0b; margin-bottom:0.4rem;">${'★'.repeat(r.rating || 5)}</div>
+                        <div style="color:var(--text-dark);">${escapeHTML(r.comment)}</div>
+                    </div>
+                `).join('');
+            } else {
+                // VULNERABLE MODE (Defense Disabled): Unsanitized innerHTML rendering (Stored XSS)
+                container.innerHTML = list.map(r => `
+                    <div style="background:#fff; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1.2rem; margin-bottom:1rem;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;">
+                            <strong>${r.author}</strong>
+                            <span style="font-size:0.8rem; color:var(--text-muted);">${r.date || 'Oct 2026'}</span>
+                        </div>
+                        <div style="color:#f59e0b; margin-bottom:0.4rem;">${'★'.repeat(r.rating || 5)}</div>
+                        <div style="color:var(--text-dark);">${r.comment}</div>
+                    </div>
+                `).join('');
+                executeScriptTags(container);
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {

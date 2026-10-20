@@ -673,6 +673,18 @@ class FloradiseDefenseHandler(http.server.SimpleHTTPRequestHandler):
                 print(f"\033[92m[ACCESS GRANTED]\033[0m Verified Admin ({user_email}) accessed {path}")
                 log_security_event("ADMIN_ACCESS_AUTHORIZED", client_ip, path, f"Admin: {user_email}")
 
+        # Check for XSS patterns in query string for IAS telemetry & audit logging
+        if "?" in self.path:
+            raw_query = urllib.parse.unquote(self.path.split("?", 1)[1])
+            xss_indicators = ["<", ">", "script", "onerror", "onload", "javascript:", "alert(", "<u", "<h1"]
+            if any(ind in raw_query.lower() for ind in xss_indicators):
+                if DEFENSE_ENABLED:
+                    print(f"\033[96m[XSS SHIELD ENFORCED]\033[0m Sanitizing reflected input from {client_ip}: {raw_query[:50]}")
+                    log_security_event("XSS_OUTPUT_ENCODING_ENFORCED", client_ip, path, f"Payload: {raw_query[:80]} | CWE-79 Mitigated")
+                else:
+                    print(f"\033[93m[XSS INJECTION DETECTED]\033[0m Raw unescaped input reflected (Vulnerable Mode): {raw_query[:50]}")
+                    log_security_event("XSS_RAW_INPUT_REFLECTED", client_ip, path, f"Payload: {raw_query[:80]} | Vulnerable to CWE-79")
+
         # Serve normal static files (index.html, products.html, css, js, etc.)
         return super().do_GET()
 

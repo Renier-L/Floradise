@@ -313,6 +313,32 @@ async function handleRegistration(name, email, password) {
     return { success: true };
 }
 
+// Global HTML entity sanitization helper for IAS XSS Defense (CWE-79)
+function escapeHTML(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+// Global defense status checker (queries Python defense server or localStorage)
+async function isDefenseEnabled() {
+    try {
+        const res = await fetch('/api/defense/status');
+        if (res.ok) {
+            const data = await res.json();
+            return data.defense_active === true;
+        }
+    } catch (e) {
+        // Fallback for offline or static hosting
+    }
+    const stored = localStorage.getItem('floradise_defense_active');
+    return stored === null ? true : stored === 'true';
+}
+
 // Global script tag execution helper for XSS demonstrations in modern browsers
 function executeScriptTags(container) {
     if (!container) return;
